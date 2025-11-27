@@ -9,6 +9,7 @@ add_executable(pacman_game
         src/states/GameState.cpp
         src/states/StateManager.cpp
         src/Camera.cpp
+        src/states/PausedState.cpp
 )
 
 target_include_directories(pacman_game PRIVATE

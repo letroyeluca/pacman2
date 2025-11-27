@@ -5,10 +5,12 @@
 #ifndef PACMAN_WORLD_H
 #define PACMAN_WORLD_H
 
+namespace logic{
+    class World {
 
-class World {
+    };
+}
 
-};
 
 
 #endif //PACMAN_WORLD_H

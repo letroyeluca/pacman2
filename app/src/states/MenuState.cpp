@@ -3,6 +3,7 @@
 //
 
 #include "states/MenuState.h"
+#include "states/GameState.h"
 #include <iostream>
 
 MenuState::MenuState(StateManager& manager, sf::RenderWindow& window) : State(manager,window){
@@ -27,7 +28,7 @@ void MenuState::handleInput(sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
         if (event.key.code == sf::Keyboard::Enter) {
 
-            //m_manager.pushState(std::make_unique<GameState>(m_manager,m_window));
+            m_manager.pushState(std::make_unique<GameState>(m_manager,m_window));
         }
     }
 }
