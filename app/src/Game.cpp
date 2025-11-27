@@ -3,7 +3,10 @@
 //
 
 #include "Game.h"
+#include "states/StateManager.h"
+#include "states/MenuState.h"
 #include <SFML/Graphics.hpp>
+#include <memory>
 
 void Game::run(int width, int height){
 
@@ -11,6 +14,9 @@ void Game::run(int width, int height){
     sf::RenderWindow window(sf::VideoMode(width, height), "PACMAN");
     //zet de framerate limiet
     window.setFramerateLimit(60);
+
+    StateManager stateManager;
+    stateManager.pushState(std::make_unique<MenuState>(stateManager,window));
 
     //window loop
     while (window.isOpen()){
@@ -23,14 +29,18 @@ void Game::run(int width, int height){
             }
             //resizing
             if(event.type == sf::Event::Resized){
-                //statemanager verwerkt resize
+                stateManager.handleResize(event.size);
             }
-            // statemanager
+            stateManager.handleInput(event);
         }
 
-        //rendering logica
+        //stateManager.update(dt);
         window.clear();
-        //statemamanager Render
+        stateManager.render();
         window.display();
+
+        if(!stateManager.isRunning()){
+            window.close();
+        }
     }
 }

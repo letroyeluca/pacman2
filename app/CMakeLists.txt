@@ -5,6 +5,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 add_executable(pacman_game
         src/Game.cpp
         src/main.cpp
+        src/states/MenuState.cpp
+        src/states/GameState.cpp
+        src/states/StateManager.cpp
+        src/Camera.cpp
 )
 
 target_include_directories(pacman_game PRIVATE
