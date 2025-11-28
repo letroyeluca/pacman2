@@ -1,0 +1,8 @@
+//
+// Created by Luca Letroye on 28/11/2025.
+//
+
+#ifndef PACMAN_ABSTRACTFACTORY_H
+#define PACMAN_ABSTRACTFACTORY_H
+
+#endif //PACMAN_ABSTRACTFACTORY_H
