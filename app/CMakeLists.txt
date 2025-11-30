@@ -10,6 +10,11 @@ add_executable(pacman_game
         src/states/StateManager.cpp
         src/Camera.cpp
         src/states/PausedState.cpp
+        src/factories/ConcreteFactory.cpp
+        src/views/CoinView.cpp
+        src/views/EntityView.cpp
+        src/views/PacManView.cpp
+        src/views/WallView.cpp
 )
 
 target_include_directories(pacman_game PRIVATE

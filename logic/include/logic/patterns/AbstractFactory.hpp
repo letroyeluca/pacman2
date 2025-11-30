@@ -6,6 +6,7 @@
 #define PACMAN_ABSTRACTFACTORY_H
 
 #include <memory>
+#include <vector>
 
 class EntityView;
 
@@ -17,14 +18,15 @@ namespace logic{
     class ScoreModel;
 
     class AbstractFactory{
+    public:
         virtual ~AbstractFactory() = default;
 
         virtual std::unique_ptr<PacManModel> createPacMan(double x, double y, double w, double h) = 0;
         virtual std::unique_ptr<CoinModel> createCoin(double x, double y, double w, double h) = 0;
         virtual std::unique_ptr<WallModel> createWall(double x, double y, double w, double h) = 0;
-        virtual std::unique_ptr<GhostModel> createGhost(double x, double y, double w, double h) = 0;
-        virtual std::unique_ptr<ScoreModel> createScore(double x, double y, double w, double h) = 0;
-        virtual std::unique_ptr<std::unique_ptr<EntityView>> getCreatedViews() = 0;
+        //virtual std::unique_ptr<GhostModel> createGhost(double x, double y, double w, double h) = 0;
+        //virtual std::unique_ptr<ScoreModel> createScore(double x, double y, double w, double h) = 0;
+        virtual std::vector<std::unique_ptr<EntityView>> getCreatedViews() = 0;
 
 
     };

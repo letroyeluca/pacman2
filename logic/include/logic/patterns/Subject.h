@@ -8,26 +8,36 @@
 #include "Observer.h"
 #include <vector>
 #include <memory>
+#include <algorithm> // <--- Nodig voor std::remove (in detach)
 
 namespace logic{
     class Subject{
     private:
-        std::vector<std::shared_ptr<Observer>> m_observers;
+        // VERANDERING 1: Vector bewaart nu gewone pointers, geen shared_ptrs
+        std::vector<Observer*> m_observers;
+
     public:
         virtual ~Subject() = default;
 
-        void attach(std::shared_ptr<Observer> observer) {
+        // VERANDERING 2: Accepteer een raw pointer
+        void attach(Observer* observer) {
             m_observers.push_back(observer);
         }
 
-        void detach(std::shared_ptr<Observer> observer){
-            std::erase(m_observers, observer);
+        // VERANDERING 3: Zoek en verwijder de raw pointer
+        void detach(Observer* observer){
+            // Dit is de veilige standaardmanier om iets uit een vector te verwijderen
+            auto it = std::remove(m_observers.begin(), m_observers.end(), observer);
+            m_observers.erase(it, m_observers.end());
         }
 
     protected:
-        void notify(){
-            for(std::shared_ptr<Observer> observer : m_observers){
-                observer->onNotify(*this);
+        void notify(Event event){
+            // VERANDERING 4: Loop over raw pointers
+            for(Observer* observer : m_observers){
+                if (observer != nullptr) {
+                    observer->onNotify(*this, event);
+                }
             }
         }
     };

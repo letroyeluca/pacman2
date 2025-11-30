@@ -6,6 +6,7 @@
 #include "states/StateManager.h"
 #include "states/MenuState.h"
 #include <SFML/Graphics.hpp>
+#include "logic/utils/StopWatch.h"
 #include <memory>
 
 void Game::run(int width, int height){
@@ -18,9 +19,11 @@ void Game::run(int width, int height){
     StateManager stateManager;
     stateManager.pushState(std::make_unique<MenuState>(stateManager,window));
 
+    logic::Stopwatch::getInstance().tick();
+
     //window loop
     while (window.isOpen()){
-        //verwerk mogelijke events
+        float dt = logic::Stopwatch::getInstance().tick();
         sf::Event event;
         while(window.pollEvent(event)){
             //sluiten van window
@@ -34,7 +37,7 @@ void Game::run(int width, int height){
             stateManager.handleInput(event);
         }
 
-        //stateManager.update(dt);
+        stateManager.update(dt);
         window.clear();
         stateManager.render();
         window.display();

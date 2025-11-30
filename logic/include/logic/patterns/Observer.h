@@ -5,13 +5,15 @@
 #ifndef PACMAN_OBSERVER_H
 #define PACMAN_OBSERVER_H
 
+#include "logic/Event.h"
+
 namespace logic {
     class Subject;
 
     class Observer {
     public:
         virtual ~Observer() = default;
-        virtual void onNotify(const Subject& subject) = 0;
+        virtual void onNotify(const Subject& subject, Event event) = 0;
     };
 }
 

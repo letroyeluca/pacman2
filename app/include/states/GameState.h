@@ -1,17 +1,27 @@
 //
-// Created by Luca Letroye on 27/11/2025.
+// Created by Luca Letroye on 4/11/2025.
 //
 
 #ifndef PACMAN_GAMESTATE_H
 #define PACMAN_GAMESTATE_H
 
-#include "logic/World.h"
+#pragma once
 #include "State.h"
+#include "logic/World.h"
+#include "views/EntityView.h"
 #include "Camera.h"
 #include <memory>
 #include <vector>
 
 class GameState : public State {
+private:
+    std::unique_ptr<Camera> m_camera;
+    std::unique_ptr<logic::AbstractFactory> m_factory;
+    std::unique_ptr<logic::World> m_world;
+    std::vector<std::unique_ptr<EntityView>> m_views;
+
+
+
 public:
     GameState(StateManager& manager, sf::RenderWindow& window);
     ~GameState();
@@ -20,10 +30,5 @@ public:
     void update(float dt) override;
     void render() override;
     void handleResize(sf::Event::SizeEvent size) override;
-private:
-    std::unique_ptr<Camera> m_camera;
-    std::unique_ptr<logic::World> m_world;
 };
-
-
 #endif //PACMAN_GAMESTATE_H
