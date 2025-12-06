@@ -2,7 +2,7 @@
 // Created by Luca Letroye on 27/11/2025.
 //
 
-#include "logic/utils/Stopwatch.h"
+#include "logic/utils/StopWatch.h"
 namespace logic{
     Stopwatch& Stopwatch::getInstance() {
         static Stopwatch instance;
