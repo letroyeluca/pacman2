@@ -24,7 +24,6 @@ GameState::GameState(StateManager &manager, sf::RenderWindow &window)
 
   m_world = std::make_unique<logic::World>(m_factory.get());
 
-
   m_camera->setWorldDimensions(m_world->getWidth(), m_world->getHeight());
   m_views = m_factory->getCreatedViews();
 

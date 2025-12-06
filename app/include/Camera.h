@@ -19,10 +19,10 @@ private:
   float m_scale;
   float m_offsetX;
   float m_offsetY;
-    float m_worldWidth;
-    float m_worldHeight;
-    float m_windowWidth;
-    float m_windowHeight;
+  float m_worldWidth;
+  float m_worldHeight;
+  float m_windowWidth;
+  float m_windowHeight;
 };
 
 #endif // PACMAN_CAMERA_H

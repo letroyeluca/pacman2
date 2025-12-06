@@ -12,7 +12,8 @@
 void Game::run(int width, int height) {
 
   // initialiseer de window
-    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "PACMAN", sf::Style::Fullscreen);
+  sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "PACMAN",
+                          sf::Style::Fullscreen);
   // zet de framerate limiet
   window.setFramerateLimit(60);
 

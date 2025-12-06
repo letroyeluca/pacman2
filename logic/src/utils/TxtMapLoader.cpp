@@ -7,9 +7,8 @@
 #include <algorithm>
 
 namespace logic {
-#include <algorithm> // Voor std::max
-
     void TxtMapLoader::loadMap(std::string filename) {
+        // 1. Inlezen (Dit gedeelte was al goed)
         std::string path = "assets/" + filename;
         std::ifstream file(path);
 
@@ -27,58 +26,54 @@ namespace logic {
             if (line.length() > maxWidth) maxWidth = line.length();
         }
 
-        int mapCols = maxWidth;     // De breedte uit de file
-        int mapRows = mapData.size(); // De hoogte uit de file
-
-        if (mapCols == 0 || mapRows == 0) return;
-
-        // -----------------------------------------------------------
-        // 1. EXTRA RUIMTE RESERVEREN
-        // -----------------------------------------------------------
-        // We voegen 2 virtuele rijen toe aan de hoogte voor de UI onderaan.
-        int scoreRows = 2;
-        int totalRows = mapRows + scoreRows;
+        int cols = maxWidth;
+        int rows = mapData.size();
+        if (cols == 0 || rows == 0) return;
 
         // -----------------------------------------------------------
-        // 2. NORMALISATIE (Met de nieuwe totale hoogte)
+        // 2. NORMALISATIE BEREKENING (De Fix)
         // -----------------------------------------------------------
+
+        // De maximale grootte in logic units is 2.0 (van -1 tot 1).
+        // We moeten bepalen wat de beperkende factor is: breedte of hoogte?
         double maxLogicDimension = 2.0;
 
-        // We gebruiken hier 'totalRows' (map + score) om te bepalen hoe groot alles moet zijn.
-        // Hierdoor wordt er automatisch uitgezoomd als de map + score te hoog wordt.
-        int maxGridDimension = std::max(mapCols, totalRows);
+        // Als er meer kolommen zijn dan rijen, bepaalt de breedte de schaal.
+        // Als er meer rijen zijn, bepaalt de hoogte de schaal.
+        int maxGridDimension = std::max(cols, rows);
 
+        // Bereken de grootte van 1 tegel zodat de grootste zijde precies 2.0 is.
         double calculatedTileSize = maxLogicDimension / maxGridDimension;
 
-        // De totale wereldgrootte bevat nu ook het lege gebied onderaan
-        double worldWidth = mapCols * calculatedTileSize;
-        double worldHeight = totalRows * calculatedTileSize;
+        // Nu rekenen we de daadwerkelijke breedte en hoogte van de wereld uit.
+        // Eén van deze twee zal exact 2.0 zijn, de andere <= 2.0.
+        double worldWidth = cols * calculatedTileSize;
+        double worldHeight = rows * calculatedTileSize;
 
-        // Centreren: (0,0) ligt in het midden van de TOTALE wereld (inclusief score gebied).
+        // We centreren de wereld rond (0,0).
+        // Start X is de linkerkant (-de helft van de breedte)
+        // Start Y is de bovenkant (-de helft van de hoogte)
         double calcStartX = -(worldWidth / 2.0);
         double calcStartY = -(worldHeight / 2.0);
 
         // -----------------------------------------------------------
         // 3. WORLD UPDATEN
         // -----------------------------------------------------------
+
+        // Geef de nieuwe dimensies door aan de World
+        // (Zorg dat je deze setters hebt toegevoegd in World.h zoals eerder besproken)
         m_world.setGridDimensions(calcStartX, calcStartY, calculatedTileSize);
         m_world.setWorldDimensions(worldWidth, worldHeight);
 
         // -----------------------------------------------------------
         // 4. ENTITEITEN PLAATSEN
         // -----------------------------------------------------------
-        // BELANGRIJK: We loopen alleen over 'mapRows' (de echte data),
-        // niet over 'totalRows'. De onderste 2 rijen blijven dus leeg.
-        for (int row = 0; row < mapRows; ++row) {
+        for (int row = 0; row < rows; ++row) {
             std::string& currentRow = mapData[row];
-
-            // Zorg dat we niet crashen als een regel korter is dan maxWidth
-            // (Al zou je map file eigenlijk rechthoekig moeten zijn)
-            int colsInRow = currentRow.length();
-
-            for (int col = 0; col < colsInRow; ++col) {
+            for (int col = 0; col < currentRow.length(); ++col) {
                 char tile = currentRow[col];
 
+                // Bereken positie: Start + (index * size) + (half size voor center)
                 double x = calcStartX + (col * calculatedTileSize) + (calculatedTileSize / 2.0);
                 double y = calcStartY + (row * calculatedTileSize) + (calculatedTileSize / 2.0);
 
