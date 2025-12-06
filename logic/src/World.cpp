@@ -5,6 +5,7 @@
 #include "logic/World.h"
 #include "logic/models/CoinModel.h"
 #include "logic/models/PacManModel.h"
+#include "logic/models/ScoreModel.h"
 #include "logic/models/WallModel.h"
 #include "logic/patterns/Visitor.h"
 #include "logic/utils/TxtMapLoader.h"
@@ -24,11 +25,20 @@ void World::addWall(double x, double y, double w, double h) {
 }
 
 void World::addCoin(double x, double y, double w, double h) {
-  m_coins.push_back(m_factory->createCoin(x, y, w, h));
+    auto coin = m_factory->createCoin(x, y, w, h);
+    if (m_scoreModel) {
+        coin->attach(m_scoreModel.get());
+    }
+
+    m_coins.push_back(std::move(coin));
 }
 
 void World::addPacMan(double x, double y, double w, double h) {
   m_pacman = m_factory->createPacMan(x, y, w, h);
+}
+
+void World::createScore(double x, double y, double size) {
+    m_scoreModel = m_factory->createScore(x, y, size);
 }
 
 void World::setGridDimensions(double startX, double startY, double tileSize) {
@@ -36,6 +46,11 @@ void World::setGridDimensions(double startX, double startY, double tileSize) {
   m_startY = startY;
   m_tileSize = tileSize;
 }
+
+    void World::setWorldDimensions(double width, double height) {
+        m_width = width;
+        m_height = height;
+    }
 
 class CollisionVisitor : public Visitor {
 public:
@@ -56,14 +71,13 @@ public:
     }
   }
 
-  void visit(CoinModel &coin) override {
-    if (m_mode == Mode::COIN_CHECK && m_pacman) {
-      if (coin.isActive() && m_pacman->collidesWith(coin)) {
-        coin.setActive(false);
-        // TODO: SCORE TOEVEGEN
-      }
+    void visit(CoinModel &coin) override {
+        if (m_mode == Mode::COIN_CHECK && m_pacman) {
+            if (coin.isActive() && m_pacman->collidesWith(coin)) {
+                coin.collect();
+            }
+        }
     }
-  }
 
 private:
   enum class Mode { WALL_CHECK, COIN_CHECK };

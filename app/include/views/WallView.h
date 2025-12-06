@@ -5,18 +5,14 @@
 #ifndef PACMAN_WALLVIEW_H
 #define PACMAN_WALLVIEW_H
 #include "views/EntityView.h"
+#include <memory>
 
-namespace logic {
-class WallModel; // Voorwaartse declaratie
-}
+namespace logic { class WallModel; }
 
 class WallView : public EntityView {
 public:
-  WallView(logic::WallModel &model, Camera &camera);
-  // We hoeven onNotify, draw, of updateAnimation
-  // niet te overschrijven. De basis 'EntityView'
-  // is perfect voor een statisch object.
+    WallView(std::shared_ptr<logic::WallModel> model, Camera &camera);
 private:
-  sf::Texture m_texture;
+    sf::Texture m_texture;
 };
 #endif // PACMAN_WALLVIEW_H

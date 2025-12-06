@@ -19,7 +19,7 @@ enum class Event {
   PacManLEFT,
   PacManRIGHT,
   DEFAULT,
-  SCORE_CHANGED
+  ScoreChanged
 
 };
 }

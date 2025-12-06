@@ -14,18 +14,17 @@ GameState::GameState(StateManager &manager, sf::RenderWindow &window)
 // m_score wordt automatisch geinitialiseerd op 0
 {
   std::cout << "GameState initialiseren..." << std::endl;
+    m_camera = std::make_unique<Camera>(m_window.getSize().x, m_window.getSize().y);
+    m_factory = std::make_unique<ConcreteFactory>(*m_camera);
+    m_world = std::make_unique<logic::World>(m_factory.get());
+    m_camera->setWorldDimensions(m_world->getWidth(), m_world->getHeight());
+    m_views = m_factory->getCreatedViews();
 
-  // 1. Maak de ScoreView aan (Visuals)
-
-  // 2. Setup Camera & Factory
-  m_camera =
-      std::make_unique<Camera>(m_window.getSize().x, m_window.getSize().y);
-  m_factory = std::make_unique<ConcreteFactory>(*m_camera);
-
-  m_world = std::make_unique<logic::World>(m_factory.get());
-
-  m_camera->setWorldDimensions(m_world->getWidth(), m_world->getHeight());
-  m_views = m_factory->getCreatedViews();
+    if (!m_views.empty()) {
+        auto scoreView = std::move(m_views.front()); // Pak de eerste
+        m_views.erase(m_views.begin());              // Verwijder vooraan
+        m_views.push_back(std::move(scoreView));     // Zet achteraan
+    }
 
   // Eenmalige resize triggeren om alles goed te zetten
   for (auto &view : m_views) {
@@ -41,17 +40,14 @@ GameState::~GameState() {}
 
 // --- Handle Resize ---
 void GameState::handleResize(sf::Event::SizeEvent size) {
-  // 1. Update de SFML View
-  m_manager.pushState(std::make_unique<PausedState>(m_manager, m_window));
-  m_window.setView(sf::View(sf::FloatRect(0.f, 0.f, size.width, size.height)));
+    // 1. Update View en Camera
+    m_window.setView(sf::View(sf::FloatRect(0.f, 0.f, size.width, size.height)));
+    m_camera->onWindowResize(size.width, size.height);
 
-  // 2. Camera herberekenen
-  m_camera->onWindowResize(size.width, size.height);
-
-  // 3. Alle sprites updaten
-  for (auto &view : m_views) {
-    view->onWindowResize();
-  }
+    // 2. Update alle views (Pacman, Muren, Coins EN Score zitten hierin)
+    for (auto &view : m_views) {
+        view->onWindowResize();
+    }
 }
 
 // --- Handle Input ---

@@ -31,39 +31,43 @@ namespace logic {
         if (cols == 0 || rows == 0) return;
 
         // -----------------------------------------------------------
-        // 2. NORMALISATIE BEREKENING (De Fix)
+        // 2. NORMALISATIE BEREKENING (Aangepast voor Scorebalk)
         // -----------------------------------------------------------
 
-        // De maximale grootte in logic units is 2.0 (van -1 tot 1).
-        // We moeten bepalen wat de beperkende factor is: breedte of hoogte?
+        // STAP A: Definieer extra ruimte
+        int scoreRows = 2; // We willen 2 regels ruimte onderaan
+        int totalRows = rows + scoreRows; // Totale hoogte inclusief UI
+
         double maxLogicDimension = 2.0;
 
-        // Als er meer kolommen zijn dan rijen, bepaalt de breedte de schaal.
-        // Als er meer rijen zijn, bepaalt de hoogte de schaal.
-        int maxGridDimension = std::max(cols, rows);
+        // STAP B: Gebruik totalRows voor de schaalberekening!
+        // Hierdoor worden de tegels iets kleiner zodat er ruimte overblijft.
+        int maxGridDimension = std::max(cols, totalRows);
 
-        // Bereken de grootte van 1 tegel zodat de grootste zijde precies 2.0 is.
         double calculatedTileSize = maxLogicDimension / maxGridDimension;
 
-        // Nu rekenen we de daadwerkelijke breedte en hoogte van de wereld uit.
-        // Eén van deze twee zal exact 2.0 zijn, de andere <= 2.0.
+        // STAP C: World dimensions baseren op TOTALE grootte
         double worldWidth = cols * calculatedTileSize;
-        double worldHeight = rows * calculatedTileSize;
+        double worldHeight = totalRows * calculatedTileSize; // Inclusief de lege ruimte
 
-        // We centreren de wereld rond (0,0).
-        // Start X is de linkerkant (-de helft van de breedte)
-        // Start Y is de bovenkant (-de helft van de hoogte)
+        // Centreren
         double calcStartX = -(worldWidth / 2.0);
         double calcStartY = -(worldHeight / 2.0);
 
         // -----------------------------------------------------------
-        // 3. WORLD UPDATEN
+        // 3. WORLD UPDATEN & SCORE PLAATSEN
         // -----------------------------------------------------------
 
-        // Geef de nieuwe dimensies door aan de World
-        // (Zorg dat je deze setters hebt toegevoegd in World.h zoals eerder besproken)
         m_world.setGridDimensions(calcStartX, calcStartY, calculatedTileSize);
         m_world.setWorldDimensions(worldWidth, worldHeight);
+
+        double scoreX = 0.0;
+
+        // De absolute bodem is (worldHeight / 2.0).
+        // We gaan 1 tegel omhoog om in het midden van de lege balk te komen.
+        double scoreY = (worldHeight / 2.0) - (calculatedTileSize * 1.0);
+
+        m_world.createScore(scoreX, scoreY, calculatedTileSize);
 
         // -----------------------------------------------------------
         // 4. ENTITEITEN PLAATSEN

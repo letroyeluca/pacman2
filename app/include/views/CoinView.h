@@ -1,25 +1,23 @@
 //
 // Created by Luca Letroye on 17/11/2025.
 //
-
 #ifndef PACMAN_COINVIEW_H
 #define PACMAN_COINVIEW_H
 #pragma once
 #include "views/EntityView.h"
+#include <memory>
 
-namespace logic {
-class CoinModel; // Voorwaartse declaratie
-}
+namespace logic { class CoinModel; }
 
 class CoinView : public EntityView {
 public:
-  CoinView(logic::CoinModel &model, Camera &camera);
-  void draw(sf::RenderWindow &window) override;
-  void onNotify(const logic::Subject &subject, logic::Event event) override;
-  void onWindowResize() override;
+    CoinView(std::shared_ptr<logic::CoinModel> model, Camera &camera);
+    void draw(sf::RenderWindow &window) override;
+    void onNotify(const logic::Subject &subject, logic::Event event) override;
+    void onWindowResize() override;
 
 private:
-  sf::Texture m_texture;
-  bool m_isHidden; // Om te voorkomen dat we 'draw' aanroepen
+    sf::Texture m_texture;
+    bool m_isHidden;
 };
 #endif // PACMAN_COINVIEW_H

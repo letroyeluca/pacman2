@@ -13,6 +13,7 @@ add_library(pacman_logic STATIC
         src/utils/TxtMapLoader.cpp
         include/logic/Event.h
         src/utils/StopWatch.cpp
+        src/models/ScoreModel.cpp
 
 )
 target_include_directories(pacman_logic PUBLIC
