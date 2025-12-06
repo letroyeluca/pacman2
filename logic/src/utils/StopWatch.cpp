@@ -9,7 +9,11 @@ Stopwatch &Stopwatch::getInstance() {
   return instance;
 }
 
-Stopwatch::Stopwatch() { m_lastTime = std::chrono::steady_clock::now(),m_startTime = std::chrono::steady_clock::now();; }
+Stopwatch::Stopwatch() {
+  m_lastTime = std::chrono::steady_clock::now(),
+  m_startTime = std::chrono::steady_clock::now();
+  ;
+}
 
 float Stopwatch::tick() {
   const auto now = std::chrono::steady_clock::now();
@@ -19,9 +23,9 @@ float Stopwatch::tick() {
   return deltaTime.count();
 }
 
-    float Stopwatch::getTime() const {
-        const auto now = std::chrono::steady_clock::now();
-        std::chrono::duration<float> totalTime = now - m_startTime;
-        return totalTime.count();
-    }
+float Stopwatch::getTime() const {
+  const auto now = std::chrono::steady_clock::now();
+  std::chrono::duration<float> totalTime = now - m_startTime;
+  return totalTime.count();
+}
 } // namespace logic

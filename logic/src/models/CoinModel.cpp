@@ -15,14 +15,12 @@ CoinModel::CoinModel(double x, double y, double width, double height)
 
 void CoinModel::accept(Visitor &visitor) { visitor.visit(*this); }
 
-void CoinModel::update(float dt) {
-
+void CoinModel::update(float dt) {}
+void CoinModel::collect() {
+  if (m_isActive) {
+    m_isActive = false;              // 1. Zet inactief
+    notify(logic::Event::CoinEaten); // 2. Stuur bericht (Mag hier wel!)
+  }
 }
-    void CoinModel::collect() {
-        if (m_isActive) {
-            m_isActive = false;                 // 1. Zet inactief
-            notify(logic::Event::CoinEaten);    // 2. Stuur bericht (Mag hier wel!)
-        }
-    }
 
 } // namespace logic
