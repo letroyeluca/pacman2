@@ -18,10 +18,10 @@ namespace logic{
         virtual void update(float dt) = 0;
         virtual void accept(Visitor& visitor) = 0;
 
-        Nouble getX() const { return m_x.asFloat(); }
-        Nouble getY() const { return m_y.asFloat(); }
-        Nouble getWidth() const { return m_width.asFloat(); }
-        Nouble getHeight() const { return m_height.asFloat(); }
+        double getX() const { return m_x.asFloat(); }
+        double getY() const { return m_y.asFloat(); }
+        double getWidth() const { return m_width.asFloat(); }
+        double getHeight() const { return m_height.asFloat(); }
 
         bool isActive() const { return m_isActive; }
         void setActive(bool active) { m_isActive = active; }

@@ -24,6 +24,7 @@ namespace logic {
         std::pair<double, double> getPositionAt(float dt, Direction dir) const;
         Direction getDirection() const { return m_direction; }
         Direction getNextDirection() const { return m_nextDirection; }
+        float getSpeed() const { return m_speed; }
 
     private:
         Direction m_direction;

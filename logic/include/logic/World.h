@@ -32,6 +32,8 @@ namespace logic {
         void addCoin(double x, double y, double w, double h);
         void addPacMan(double x, double y, double w, double h);
 
+        void setGridDimensions(double startX, double startY, double tileSize);
+
     private:
         void readMap(std::string filename);
         bool isMapPositionFree(double x, double y);

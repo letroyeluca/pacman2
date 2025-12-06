@@ -33,6 +33,12 @@ namespace logic{
         m_pacman = m_factory->createPacMan(x, y, w, h);
     }
 
+    void World::setGridDimensions(double startX, double startY, double tileSize) {
+        m_startX = startX;
+        m_startY = startY;
+        m_tileSize = tileSize;
+    }
+
 
     class CollisionVisitor : public Visitor {
     public:
@@ -81,80 +87,135 @@ namespace logic{
     }
 
     void World::update(float dt) {
+        // -------------------------------------------------------------------------
+        // 1. PACMAN UPDATE LOGICA
+        // -------------------------------------------------------------------------
         if (m_pacman) {
-            int gridX = std::round((m_pacman->getX() - m_startX - (m_tileSize/2.0)) / m_tileSize);
-            int gridY = std::round((m_pacman->getY() - m_startY - (m_tileSize/2.0)) / m_tileSize);
+            // -- A. Grid Positie Berekeningen --
+            // We bepalen op welke grid-tegel Pac-Man zich bevindt en waar het
+            // absolute midden van die tegel is.
+            int gridX = std::round((m_pacman->getX() - m_startX - (m_tileSize / 2.0)) /
+                                   m_tileSize);
+            int gridY = std::round((m_pacman->getY() - m_startY - (m_tileSize / 2.0)) /
+                                   m_tileSize);
 
             double centerX = m_startX + (gridX * m_tileSize) + (m_tileSize / 2.0);
             double centerY = m_startY + (gridY * m_tileSize) + (m_tileSize / 2.0);
-            double distToCenter = std::sqrt(std::pow(m_pacman->getX() - centerX, 2) + std::pow(m_pacman->getY() - centerY, 2));
 
-            double snapThreshold = m_tileSize * 0.2;
+            // Bereken de afstand van Pac-Man tot het exacte midden van de tegel.
+            double distToCenter = std::sqrt(std::pow(m_pacman->getX() - centerX, 2) +
+                                            std::pow(m_pacman->getY() - centerY, 2));
 
             Direction nextDir = m_pacman->getNextDirection();
+            Direction currentDir = m_pacman->getDirection();
 
-            if (nextDir != Direction::STOP && nextDir != m_pacman->getDirection()) {
+            // -- B. Richting Veranderen (Bochten & Omdraaien) --
+
+            // Check 1: Wil de speler 180 graden draaien? (Direct omkeren)
+            // Dit mag altijd direct gebeuren, zonder te wachten op het midden.
+            bool isOpposite =
+                    (currentDir == Direction::UP && nextDir == Direction::DOWN) ||
+                    (currentDir == Direction::DOWN && nextDir == Direction::UP) ||
+                    (currentDir == Direction::LEFT && nextDir == Direction::RIGHT) ||
+                    (currentDir == Direction::RIGHT && nextDir == Direction::LEFT);
+
+            if (isOpposite) {
+                m_pacman->commitDirection();
+            } else if (nextDir != Direction::STOP && nextDir != currentDir) {
+                // Check 2: Normale bocht (90 graden)
+                // Dit mag alleen als we dicht genoeg bij het midden van de tegel zijn.
+
+                double moveStep = m_pacman->getSpeed() * dt;
+
+                // De threshold is de afstand die we in 1 frame afleggen + een kleine marge.
+                // Dit zorgt voor een vloeiende overgang zonder zichtbare "teleport".
+                double turnThreshold = moveStep + 0.005;
+
                 double targetX = centerX;
                 double targetY = centerY;
 
-                if (nextDir == Direction::UP) targetY -= m_tileSize;
-                else if (nextDir == Direction::DOWN) targetY += m_tileSize;
-                else if (nextDir == Direction::LEFT) targetX -= m_tileSize;
-                else if (nextDir == Direction::RIGHT) targetX += m_tileSize;
+                if (nextDir == Direction::UP)
+                    targetY -= m_tileSize;
+                else if (nextDir == Direction::DOWN)
+                    targetY += m_tileSize;
+                else if (nextDir == Direction::LEFT)
+                    targetX -= m_tileSize;
+                else if (nextDir == Direction::RIGHT)
+                    targetX += m_tileSize;
 
-                if (isMapPositionFree(targetX, targetY) && distToCenter < snapThreshold) {
-                    m_pacman->setPosition(centerX, centerY);
-                    m_pacman->commitDirection();
+                // Als de doeltegel vrij is EN we zijn op het "draaipunt":
+                if (isMapPositionFree(targetX, targetY) &&
+                    distToCenter <= turnThreshold) {
+                    m_pacman->setPosition(centerX, centerY); // Corrigeer positie miniem
+                    m_pacman->commitDirection();             // Voer draai uit
                 }
             }
 
-            Direction currentDir = m_pacman->getDirection();
+            // -- C. Botsing Detectie (Stoppen tegen muren) --
+
+            // Update de currentDir, want die kan hierboven net gewijzigd zijn.
+            currentDir = m_pacman->getDirection();
+
             if (currentDir != Direction::STOP) {
                 double forwardX = centerX;
                 double forwardY = centerY;
 
-                if (currentDir == Direction::UP) forwardY -= m_tileSize;
-                else if (currentDir == Direction::DOWN) forwardY += m_tileSize;
-                else if (currentDir == Direction::LEFT) forwardX -= m_tileSize;
-                else if (currentDir == Direction::RIGHT) forwardX += m_tileSize;
+                // Kijk één tegel vooruit in de huidige richting
+                if (currentDir == Direction::UP)
+                    forwardY -= m_tileSize;
+                else if (currentDir == Direction::DOWN)
+                    forwardY += m_tileSize;
+                else if (currentDir == Direction::LEFT)
+                    forwardX -= m_tileSize;
+                else if (currentDir == Direction::RIGHT)
+                    forwardX += m_tileSize;
 
                 if (!isMapPositionFree(forwardX, forwardY)) {
-
+                    // De weg voor ons is geblokkeerd.
+                    // Check of we per ongeluk voorbij het midden zijn geschoten.
                     bool pastCenter = false;
-                    if (currentDir == Direction::UP && m_pacman->getY() < centerY - 0.001) pastCenter = true;
-                    if (currentDir == Direction::DOWN && m_pacman->getY() > centerY + 0.001) pastCenter = true;
-                    if (currentDir == Direction::LEFT && m_pacman->getX() < centerX - 0.001) pastCenter = true;
-                    if (currentDir == Direction::RIGHT && m_pacman->getX() > centerX + 0.001) pastCenter = true;
+                    if (currentDir == Direction::UP && m_pacman->getY() < centerY)
+                        pastCenter = true;
+                    if (currentDir == Direction::DOWN && m_pacman->getY() > centerY)
+                        pastCenter = true;
+                    if (currentDir == Direction::LEFT && m_pacman->getX() < centerX)
+                        pastCenter = true;
+                    if (currentDir == Direction::RIGHT && m_pacman->getX() > centerX)
+                        pastCenter = true;
 
                     if (pastCenter) {
-
-                        m_pacman->setPosition(centerX, centerY);
-                        m_pacman->stop();
+                        m_pacman->setPosition(centerX, centerY); // Zet terug op midden
+                        m_pacman->stop();                        // Stop beweging
                     }
                 }
             }
+
+            // -- D. Fysieke Update --
             m_pacman->update(dt);
 
-            //TUNNEL LOGICA
+            // -- E. Tunnel Logica (Warp) --
             if (m_pacman->getX() < -1.0 - m_tileSize) {
                 m_pacman->setPosition(1.0 + m_tileSize, m_pacman->getY());
-            }
-            else if (m_pacman->getX() > 1.0 + m_tileSize) {
+            } else if (m_pacman->getX() > 1.0 + m_tileSize) {
                 m_pacman->setPosition(-1.0 - m_tileSize, m_pacman->getY());
             }
         }
 
-        //MUNTEN
+        // -------------------------------------------------------------------------
+        // 2. MUNTEN EN SCORE
+        // -------------------------------------------------------------------------
         if (m_pacman) {
             CollisionVisitor coinVisitor(*m_pacman);
-            for (auto& coin : m_coins) {
+            for (auto &coin : m_coins) {
                 coin->update(dt);
                 coin->accept(coinVisitor);
-
             }
         }
 
-        for (auto& wall : m_walls) {
+        // -------------------------------------------------------------------------
+        // 3. OVERIGE ENTITEITEN
+        // -------------------------------------------------------------------------
+        for (auto &wall : m_walls) {
             wall->update(dt);
         }
     }

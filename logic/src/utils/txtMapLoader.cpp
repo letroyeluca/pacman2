@@ -30,23 +30,25 @@ namespace logic{
 
         int totalRows = mapHeight + 2;
         int totalCols = mapWidth;
-        double m_width = 2.0;
-        double m_tileSize = m_width / totalCols;
-        double m_height = totalRows * m_tileSize;
-        double m_startX = -1.0;
-        double m_startY = -m_height / 2.0;
+        double worldWidth = 2.0;
+        double calculatedTileSize = worldWidth / totalCols;
 
+        double totalWorldHeight = totalRows * calculatedTileSize;
+        double calcStartX = -1.0;
+        double calcStartY = -(totalWorldHeight / 2.0);
+
+        m_world.setGridDimensions(calcStartX, calcStartY, calculatedTileSize);
         for (int row = 0; row < mapHeight; ++row) {
             std::string& currentRow = mapData[row];
             for (int col = 0; col < currentRow.length(); ++col) {
                 char tile = currentRow[col];
 
-                double x = m_startX + (col * m_tileSize) + (m_tileSize / 2.0);
-                double y = m_startY + (row * m_tileSize) + (m_tileSize / 2.0);
+                double x = calcStartX + (col * calculatedTileSize) + (calculatedTileSize / 2.0);
+                double y = calcStartY + (row * calculatedTileSize) + (calculatedTileSize / 2.0);
 
-                if (tile == '#') m_world.addWall(x, y , m_tileSize,m_tileSize);
-                else if (tile == '*' || tile == '.') m_world.addCoin(x, y , m_tileSize,m_tileSize);
-                else if (tile == 'P') m_world.addPacMan(x, y , m_tileSize,m_tileSize);
+                if (tile == '#') m_world.addWall(x, y, calculatedTileSize, calculatedTileSize);
+                else if (tile == '*' || tile == '.') m_world.addCoin(x, y, calculatedTileSize, calculatedTileSize);
+                else if (tile == 'P') m_world.addPacMan(x, y, calculatedTileSize, calculatedTileSize);
             }
         }
     }
