@@ -1,4 +1,4 @@
- //
+//
 // Created by Luca Letroye on 28/11/2025.
 //
 
@@ -8,13 +8,13 @@
 #include "logic/models/EntityModel.h"
 #include "logic/patterns/Visitor.h"
 
- namespace logic {
-     class CoinModel : public EntityModel {
-     public:
-         CoinModel(double x, double y, double width, double height);
-         void update(float dt) override;
-         void accept(Visitor& visitor) override;
-     };
- }
+namespace logic {
+class CoinModel : public EntityModel {
+public:
+  CoinModel(double x, double y, double width, double height);
+  void update(float dt) override;
+  void accept(Visitor &visitor) override;
+};
+} // namespace logic
 
-#endif //PACMAN_COINMODEL_H
+#endif // PACMAN_COINMODEL_H

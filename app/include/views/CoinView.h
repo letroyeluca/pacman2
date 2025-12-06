@@ -8,17 +8,18 @@
 #include "views/EntityView.h"
 
 namespace logic {
-    class CoinModel; // Voorwaartse declaratie
+class CoinModel; // Voorwaartse declaratie
 }
 
 class CoinView : public EntityView {
 public:
-    CoinView(logic::CoinModel& model, Camera& camera);
-    void draw(sf::RenderWindow& window) override;
-    void onNotify(const logic::Subject& subject, logic::Event event) override;
-    void onWindowResize() override;
+  CoinView(logic::CoinModel &model, Camera &camera);
+  void draw(sf::RenderWindow &window) override;
+  void onNotify(const logic::Subject &subject, logic::Event event) override;
+  void onWindowResize() override;
+
 private:
-    sf::Texture m_texture;
-    bool m_isHidden; // Om te voorkomen dat we 'draw' aanroepen
+  sf::Texture m_texture;
+  bool m_isHidden; // Om te voorkomen dat we 'draw' aanroepen
 };
-#endif //PACMAN_COINVIEW_H
+#endif // PACMAN_COINVIEW_H

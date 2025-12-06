@@ -8,13 +8,13 @@
 #include "logic/Event.h"
 
 namespace logic {
-    class Subject;
+class Subject;
 
-    class Observer {
-    public:
-        virtual ~Observer() = default;
-        virtual void onNotify(const Subject& subject, Event event) = 0;
-    };
-}
+class Observer {
+public:
+  virtual ~Observer() = default;
+  virtual void onNotify(const Subject &subject, Event event) = 0;
+};
+} // namespace logic
 
-#endif //PACMAN_OBSERVER_H
+#endif // PACMAN_OBSERVER_H
