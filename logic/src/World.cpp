@@ -7,13 +7,13 @@
 #include "logic/models/PacManModel.h"
 #include "logic/models/WallModel.h"
 #include "logic/patterns/Visitor.h"
-#include "logic/utils/txtMapLoader.h"
+#include "logic/utils/TxtMapLoader.h"
 #include <cmath>
 
 namespace logic {
 
 World::World(AbstractFactory *factory) : m_factory(factory) {
-  txtMapLoader loader(*this);
+  TxtMapLoader loader(*this);
   loader.loadMap("map.txt");
 }
 

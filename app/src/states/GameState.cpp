@@ -24,7 +24,7 @@ GameState::GameState(StateManager &manager, sf::RenderWindow &window)
 
   m_world = std::make_unique<logic::World>(m_factory.get());
 
-  // 4. Camera & Views configureren
+
   m_camera->setWorldDimensions(m_world->getWidth(), m_world->getHeight());
   m_views = m_factory->getCreatedViews();
 
@@ -78,7 +78,6 @@ void GameState::handleInput(sf::Event &event) {
 
 // --- Update ---
 void GameState::update(float dt) {
-  // 1. Logica updaten (Physics, AI, Score updates via World)
   m_world->update(dt);
 
   // 2. Animaties updaten

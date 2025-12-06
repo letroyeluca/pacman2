@@ -10,7 +10,7 @@ add_library(pacman_logic STATIC
         src/models/CoinModel.cpp
         src/models/PacManModel.cpp
         src/utils/MapLoader.cpp
-        src/utils/txtMapLoader.cpp
+        src/utils/TxtMapLoader.cpp
         include/logic/Event.h
         src/utils/StopWatch.cpp
 

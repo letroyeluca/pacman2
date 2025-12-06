@@ -33,6 +33,7 @@ public:
   void addPacMan(double x, double y, double w, double h);
 
   void setGridDimensions(double startX, double startY, double tileSize);
+    void setWorldDimensions(double w, double h) { m_width = w; m_height = h; }
 
 private:
   void readMap(std::string filename);

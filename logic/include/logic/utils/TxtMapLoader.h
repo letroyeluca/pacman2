@@ -8,9 +8,9 @@
 #include "logic/utils/MapLoader.h"
 
 namespace logic {
-class txtMapLoader : public MapLoader {
+class TxtMapLoader : public MapLoader {
 public:
-  txtMapLoader(World &world) : MapLoader(world) {}
+  TxtMapLoader(World &world) : MapLoader(world) {}
   void loadMap(std::string filename) override;
 };
 } // namespace logic
