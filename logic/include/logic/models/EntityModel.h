@@ -30,10 +30,13 @@ public:
   double getHitboxScale() const { return m_hitboxScale; }
 
   bool collidesWith(const EntityModel &other) const;
-  bool collidesWithBox(double otherX, double otherY, double otherW,double otherH) const;
+  bool collidesWithBox(double otherX, double otherY, double otherW,
+                       double otherH) const;
 
 protected:
-  EntityModel(double x, double y, double width, double height): m_x(x), m_y(y), m_width(width), m_height(height), m_isActive(true),m_hitboxScale(1.0) {}
+  EntityModel(double x, double y, double width, double height)
+      : m_x(x), m_y(y), m_width(width), m_height(height), m_isActive(true),
+        m_hitboxScale(1.0) {}
   Nouble m_x;
   Nouble m_y;
   Nouble m_width;
