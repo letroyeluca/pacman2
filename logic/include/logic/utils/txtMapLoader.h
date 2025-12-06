@@ -8,12 +8,11 @@
 #include "logic/utils/MapLoader.h"
 
 namespace logic {
-    class txtMapLoader : public MapLoader {
-    public:
+class txtMapLoader : public MapLoader {
+public:
+  txtMapLoader(World &world) : MapLoader(world) {}
+  void loadMap(std::string filename) override;
+};
+} // namespace logic
 
-        txtMapLoader(World& world) : MapLoader(world) {}
-        void loadMap(std::string filename) override;
-    };
-}
-
-#endif //PACMAN_TXTMAPLOADER_H
+#endif // PACMAN_TXTMAPLOADER_H

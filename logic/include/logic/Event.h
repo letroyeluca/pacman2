@@ -6,22 +6,22 @@
 #define PACMAN_EVENT_H
 
 namespace logic {
-    enum class Event {
-        Tick,
-        PacManMoved,
-        PacManDied,
-        CoinEaten,
-        FruitEaten,
-        GhostEaten,
-        GhostVulnerable,
-        PacManUP,
-        PacManDOWN,
-        PacManLEFT,
-        PacManRIGHT,
-        DEFAULT,
-        SCORE_CHANGED
+enum class Event {
+  Tick,
+  PacManMoved,
+  PacManDied,
+  CoinEaten,
+  FruitEaten,
+  GhostEaten,
+  GhostVulnerable,
+  PacManUP,
+  PacManDOWN,
+  PacManLEFT,
+  PacManRIGHT,
+  DEFAULT,
+  SCORE_CHANGED
 
-    };
+};
 }
 
-#endif //PACMAN_EVENT_H
+#endif // PACMAN_EVENT_H

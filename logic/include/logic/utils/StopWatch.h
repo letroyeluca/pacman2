@@ -7,18 +7,18 @@
 
 #include <chrono>
 
-namespace logic{
-    class Stopwatch {
-    public:
-        float tick();
-        static Stopwatch& getInstance();
+namespace logic {
+class Stopwatch {
+public:
+  float tick();
+  static Stopwatch &getInstance();
 
-    private:
-        Stopwatch();
-        Stopwatch(const Stopwatch&) = delete;
-        Stopwatch& operator=(const Stopwatch&) = delete;
-        std::chrono::steady_clock::time_point m_lastTime;
-    };
-}
+private:
+  Stopwatch();
+  Stopwatch(const Stopwatch &) = delete;
+  Stopwatch &operator=(const Stopwatch &) = delete;
+  std::chrono::steady_clock::time_point m_lastTime;
+};
+} // namespace logic
 
-#endif //PACMAN_STOPWATCH_H
+#endif // PACMAN_STOPWATCH_H

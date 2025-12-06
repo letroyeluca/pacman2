@@ -10,26 +10,28 @@
 
 class EntityView;
 
-namespace logic{
-    class PacManModel;
-    class CoinModel;
-    class WallModel;
-    class GhostModel;
-    class ScoreModel;
+namespace logic {
+class PacManModel;
+class CoinModel;
+class WallModel;
+class GhostModel;
+class ScoreModel;
 
-    class AbstractFactory{
-    public:
-        virtual ~AbstractFactory() = default;
+class AbstractFactory {
+public:
+  virtual ~AbstractFactory() = default;
 
-        virtual std::unique_ptr<PacManModel> createPacMan(double x, double y, double w, double h) = 0;
-        virtual std::unique_ptr<CoinModel> createCoin(double x, double y, double w, double h) = 0;
-        virtual std::unique_ptr<WallModel> createWall(double x, double y, double w, double h) = 0;
-        //virtual std::unique_ptr<GhostModel> createGhost(double x, double y, double w, double h) = 0;
-        //virtual std::unique_ptr<ScoreModel> createScore(double x, double y, double w, double h) = 0;
-        virtual std::vector<std::unique_ptr<EntityView>> getCreatedViews() = 0;
+  virtual std::unique_ptr<PacManModel> createPacMan(double x, double y,
+                                                    double w, double h) = 0;
+  virtual std::unique_ptr<CoinModel> createCoin(double x, double y, double w,
+                                                double h) = 0;
+  virtual std::unique_ptr<WallModel> createWall(double x, double y, double w,
+                                                double h) = 0;
+  // virtual std::unique_ptr<GhostModel> createGhost(double x, double y, double
+  // w, double h) = 0; virtual std::unique_ptr<ScoreModel> createScore(double x,
+  // double y, double w, double h) = 0;
+  virtual std::vector<std::unique_ptr<EntityView>> getCreatedViews() = 0;
+};
+} // namespace logic
 
-
-    };
-}
-
-#endif //PACMAN_ABSTRACTFACTORY_H
+#endif // PACMAN_ABSTRACTFACTORY_H

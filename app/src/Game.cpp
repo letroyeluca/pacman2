@@ -3,47 +3,47 @@
 //
 
 #include "Game.h"
-#include "states/StateManager.h"
-#include "states/MenuState.h"
-#include <SFML/Graphics.hpp>
 #include "logic/utils/StopWatch.h"
+#include "states/MenuState.h"
+#include "states/StateManager.h"
+#include <SFML/Graphics.hpp>
 #include <memory>
 
-void Game::run(int width, int height){
+void Game::run(int width, int height) {
 
-    // initialiseer de window
-    sf::RenderWindow window(sf::VideoMode(width, height), "PACMAN");
-    //zet de framerate limiet
-    window.setFramerateLimit(60);
+  // initialiseer de window
+  sf::RenderWindow window(sf::VideoMode(width, height), "PACMAN");
+  // zet de framerate limiet
+  window.setFramerateLimit(60);
 
-    StateManager stateManager;
-    stateManager.pushState(std::make_unique<MenuState>(stateManager,window));
+  StateManager stateManager;
+  stateManager.pushState(std::make_unique<MenuState>(stateManager, window));
 
-    logic::Stopwatch::getInstance().tick();
+  logic::Stopwatch::getInstance().tick();
 
-    //window loop
-    while (window.isOpen()){
-        float dt = logic::Stopwatch::getInstance().tick();
-        sf::Event event;
-        while(window.pollEvent(event)){
-            //sluiten van window
-            if(event.type == sf::Event::Closed){
-                window.close();
-            }
-            //resizing
-            if(event.type == sf::Event::Resized){
-                stateManager.handleResize(event.size);
-            }
-            stateManager.handleInput(event);
-        }
-
-        stateManager.update(dt);
-        window.clear();
-        stateManager.render();
-        window.display();
-
-        if(!stateManager.isRunning()){
-            window.close();
-        }
+  // window loop
+  while (window.isOpen()) {
+    float dt = logic::Stopwatch::getInstance().tick();
+    sf::Event event;
+    while (window.pollEvent(event)) {
+      // sluiten van window
+      if (event.type == sf::Event::Closed) {
+        window.close();
+      }
+      // resizing
+      if (event.type == sf::Event::Resized) {
+        stateManager.handleResize(event.size);
+      }
+      stateManager.handleInput(event);
     }
+
+    stateManager.update(dt);
+    window.clear();
+    stateManager.render();
+    window.display();
+
+    if (!stateManager.isRunning()) {
+      window.close();
+    }
+  }
 }
