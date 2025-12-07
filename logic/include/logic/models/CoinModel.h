@@ -9,10 +9,10 @@
 #include "logic/patterns/Visitor.h"
 
 namespace logic {
-    class CoinModel : public EntityModel {
+class CoinModel : public EntityModel {
 public:
   CoinModel(double x, double y, double width, double height);
-        void collect();
+  void collect();
   void update(float dt) override;
   void accept(Visitor &visitor) override;
 };

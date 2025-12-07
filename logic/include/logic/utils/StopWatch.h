@@ -14,7 +14,6 @@ public:
   static Stopwatch &getInstance();
   float getTime() const;
 
-
 private:
   Stopwatch();
   Stopwatch(const Stopwatch &) = delete;

@@ -7,26 +7,26 @@
 #include <stdexcept>
 
 WallView::WallView(std::shared_ptr<logic::WallModel> model, Camera &camera)
-        : EntityView(model, camera) {
+    : EntityView(model, camera) {
 
-    sf::Image image;
-    image.create(1, 1, sf::Color::White);
-    if (!m_texture.loadFromImage(image)) {
-        throw std::runtime_error("Failed to create 1x1 texture");
-    }
-    m_sprite.setTexture(m_texture);
-    m_sprite.setTextureRect(sf::IntRect(0, 0, 1, 1));
-    m_sprite.setColor(sf::Color::Blue);
+  sf::Image image;
+  image.create(1, 1, sf::Color::White);
+  if (!m_texture.loadFromImage(image)) {
+    throw std::runtime_error("Failed to create 1x1 texture");
+  }
+  m_sprite.setTexture(m_texture);
+  m_sprite.setTextureRect(sf::IntRect(0, 0, 1, 1));
+  m_sprite.setColor(sf::Color::Blue);
 
-    sf::FloatRect spriteBounds = m_sprite.getLocalBounds();
-    double logicW = m_model->getWidth();   // ->
-    double logicH = m_model->getHeight();  // ->
+  sf::FloatRect spriteBounds = m_sprite.getLocalBounds();
+  double logicW = m_model->getWidth();  // ->
+  double logicH = m_model->getHeight(); // ->
 
-    sf::Vector2f pixelSize = m_camera.computeSpriteSize(logicW, logicH);
-    float scaleX = pixelSize.x / spriteBounds.width;
-    float scaleY = pixelSize.y / spriteBounds.height;
-    m_sprite.setScale(scaleX, scaleY);
-    m_sprite.setOrigin(spriteBounds.width / 2.f, spriteBounds.height / 2.f);
+  sf::Vector2f pixelSize = m_camera.computeSpriteSize(logicW, logicH);
+  float scaleX = pixelSize.x / spriteBounds.width;
+  float scaleY = pixelSize.y / spriteBounds.height;
+  m_sprite.setScale(scaleX, scaleY);
+  m_sprite.setOrigin(spriteBounds.width / 2.f, spriteBounds.height / 2.f);
 
-    EntityView::onNotify(*model, logic::Event::DEFAULT);
+  EntityView::onNotify(*model, logic::Event::DEFAULT);
 }

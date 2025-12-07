@@ -25,12 +25,12 @@ void World::addWall(double x, double y, double w, double h) {
 }
 
 void World::addCoin(double x, double y, double w, double h) {
-    auto coin = m_factory->createCoin(x, y, w, h);
-    if (m_scoreModel) {
-        coin->attach(m_scoreModel.get());
-    }
+  auto coin = m_factory->createCoin(x, y, w, h);
+  if (m_scoreModel) {
+    coin->attach(m_scoreModel.get());
+  }
 
-    m_coins.push_back(std::move(coin));
+  m_coins.push_back(std::move(coin));
 }
 
 void World::addPacMan(double x, double y, double w, double h) {
@@ -38,7 +38,7 @@ void World::addPacMan(double x, double y, double w, double h) {
 }
 
 void World::createScore(double x, double y, double size) {
-    m_scoreModel = m_factory->createScore(x, y, size);
+  m_scoreModel = m_factory->createScore(x, y, size);
 }
 
 void World::setGridDimensions(double startX, double startY, double tileSize) {
@@ -47,10 +47,10 @@ void World::setGridDimensions(double startX, double startY, double tileSize) {
   m_tileSize = tileSize;
 }
 
-    void World::setWorldDimensions(double width, double height) {
-        m_width = width;
-        m_height = height;
-    }
+void World::setWorldDimensions(double width, double height) {
+  m_width = width;
+  m_height = height;
+}
 
 class CollisionVisitor : public Visitor {
 public:
@@ -71,13 +71,13 @@ public:
     }
   }
 
-    void visit(CoinModel &coin) override {
-        if (m_mode == Mode::COIN_CHECK && m_pacman) {
-            if (coin.isActive() && m_pacman->collidesWith(coin)) {
-                coin.collect();
-            }
-        }
+  void visit(CoinModel &coin) override {
+    if (m_mode == Mode::COIN_CHECK && m_pacman) {
+      if (coin.isActive() && m_pacman->collidesWith(coin)) {
+        coin.collect();
+      }
     }
+  }
 
 private:
   enum class Mode { WALL_CHECK, COIN_CHECK };
