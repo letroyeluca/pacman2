@@ -61,7 +61,7 @@ namespace logic {
         m_world.setGridDimensions(calcStartX, calcStartY, calculatedTileSize);
         m_world.setWorldDimensions(worldWidth, worldHeight);
 
-        double scoreX = 0.0;
+        double scoreX = calcStartX;
 
         // De absolute bodem is (worldHeight / 2.0).
         // We gaan 1 tegel omhoog om in het midden van de lege balk te komen.

@@ -26,8 +26,8 @@ ScoreView::ScoreView(std::shared_ptr<logic::ScoreModel> model, Camera& camera)
 
 void ScoreView::onNotify(const logic::Subject& subject, logic::Event event) {
     if (event == logic::Event::ScoreChanged) {
-        m_scoreText.setString("SCORE: " + std::to_string(m_scoreModel->getScore()));
-        m_highScoreText.setString("HIGH: " + std::to_string(m_scoreModel->getHighScore()));
+        m_scoreText.setString("SCORE:" + std::to_string(m_scoreModel->getScore()));
+        m_highScoreText.setString("HIGH:" + std::to_string(m_scoreModel->getHighScore()));
     }
 }
 
@@ -35,41 +35,44 @@ void ScoreView::onWindowResize() {
     EntityView::onWindowResize();
     if (!m_model) return;
 
-    // 1. Waar moet het staan? (Het exacte midden van de 2-tegel balk)
+    // 1. Projecteer het ankerpunt (dit is nu de linkerkant van de map)
     sf::Vector2f anchorPos = m_camera.project(m_model->getX(), m_model->getY());
 
-    // 2. Hoe groot is 1 tegel in pixels?
-    // We gebruiken de breedte/hoogte die we in de loader hebben meegegeven (calculatedTileSize)
-    double logicTileSize = m_model->getHeight();
-    sf::Vector2f pixelSize = m_camera.computeSpriteSize(logicTileSize, logicTileSize);
-
-    // 3. Font instellen
-    // We willen dat de tekst ongeveer even groot is als 1 tegel (zodat er ruimte boven/onder is in de 2-tegel balk)
+    // 2. Font grootte (blijft hetzelfde)
+    double logicSize = m_model->getHeight();
+    sf::Vector2f pixelSize = m_camera.computeSpriteSize(logicSize, logicSize);
     unsigned int fontSize = static_cast<unsigned int>(pixelSize.y);
     if (fontSize < 1) fontSize = 1;
 
     m_scoreText.setCharacterSize(fontSize);
     m_highScoreText.setCharacterSize(fontSize);
 
-    // 4. Positionering
-    // De anchorPos is het midden van het scherm.
-    // We zetten de Score links daarvan en Highscore rechts.
-    // We gebruiken een offset van een half schermbreedte (0.5 logic width)
-    float xOffset = m_camera.computeSpriteSize(0.6, 0).x;
+    // 3. ORIGIN AANPASSEN (Links uitlijnen)
+    // We zetten de X-origin op 0 (links) in plaats van bounds.width/2
+    // De Y-origin blijft gecentreerd zodat hij netjes in de balk hangt
 
-    m_scoreText.setPosition(anchorPos.x - xOffset, anchorPos.y);
-    m_highScoreText.setPosition(anchorPos.x + 0.2f * xOffset, anchorPos.y);
-
-    // 5. VERTICAAL CENTREREN (Cruciaal!)
-    // We zetten de origin van de tekst in het midden van de letters.
-    // Hierdoor lijnt het midden van de tekst uit met onze scoreY.
-
-    // Let op: getLocalBounds().top is belangrijk bij fonts voor exacte uitlijning
     sf::FloatRect boundsScore = m_scoreText.getLocalBounds();
-    m_scoreText.setOrigin(boundsScore.left, boundsScore.top + boundsScore.height / 2.0f);
+    m_scoreText.setOrigin(0, boundsScore.top + boundsScore.height / 2.0f);
 
     sf::FloatRect boundsHigh = m_highScoreText.getLocalBounds();
-    m_highScoreText.setOrigin(boundsHigh.left, boundsHigh.top + boundsHigh.height / 2.0f);
+    m_highScoreText.setOrigin(0, boundsHigh.top + boundsHigh.height / 2.0f);
+
+    // 4. POSITIES INSTELLEN
+
+    // SCORE: Staat direct op het ankerpunt (helemaal links)
+    // We voegen een heel klein beetje pixel-offset toe zodat hij niet tegen de rand plakt
+    float padding = pixelSize.x * 0.5f;
+    m_scoreText.setPosition(anchorPos.x, anchorPos.y);
+
+    // HIGHSCORE: Staat rechts van de score.
+    // We kunnen een vaste logische afstand nemen.
+    // De hele map is 'worldWidth' breed. Laten we hem op de helft zetten?
+    // Of gewoon een stuk naar rechts.
+
+    // Bereken afstand voor highscore (bijv. 0.8 logic units naar rechts)
+    float highscoreOffset = m_camera.computeSpriteSize(1.0, 0).x;
+
+    m_highScoreText.setPosition(anchorPos.x + highscoreOffset, anchorPos.y);
 }
 
 void ScoreView::draw(sf::RenderWindow& window) {
