@@ -55,6 +55,9 @@ void GameState::handleResize(sf::Event::SizeEvent size) {
 void GameState::handleInput(sf::Event &event) {
   if (event.type == sf::Event::KeyPressed) {
     if (event.key.code == sf::Keyboard::Escape) {
+        if (m_world->getScoreModel()) {
+            m_world->getScoreModel()->saveScoreIfPersonalBest();
+        }
       m_manager.pushState(std::make_unique<PausedState>(m_manager, m_window));
     }
 

@@ -16,67 +16,72 @@ ScoreView::ScoreView(std::shared_ptr<logic::ScoreModel> model, Camera &camera)
   m_highScoreText.setFont(m_font);
   m_highScoreText.setFillColor(sf::Color::Yellow);
 
-  m_scoreText.setString("SCORE: 0");
-  m_highScoreText.setString("HIGH: " +
+  m_scoreText.setString("SCORE:0");
+  m_highScoreText.setString("HIGH:" +
                             std::to_string(m_scoreModel->getHighScore()));
 
   // Attachen aan het model
   m_scoreModel->attach(this);
 }
 
-void ScoreView::onNotify(const logic::Subject &subject, logic::Event event) {
-  if (event == logic::Event::ScoreChanged) {
-    m_scoreText.setString("SCORE:" + std::to_string(m_scoreModel->getScore()));
-    m_highScoreText.setString("HIGH:" +
-                              std::to_string(m_scoreModel->getHighScore()));
-  }
+void ScoreView::onNotify(const logic::Subject& subject, logic::Event event) {
+    if (!m_scoreModel) return;
+
+    if (event == logic::Event::ScoreChanged) {
+        // 1. Update de tekst
+        m_scoreText.setString("SCORE:" + std::to_string(m_scoreModel->getScore()));
+        m_highScoreText.setString("HIGH:" + std::to_string(m_scoreModel->getHighScore()));
+
+        // 2. CRUCIAAL: Update de Origin van Highscore
+        // Omdat de tekst nu breder kan zijn (bv. 10 -> 100), moeten we het ankerpunt
+        // opnieuw rechts leggen. Hierdoor groeit de tekst naar LINKS.
+        sf::FloatRect highBounds = m_highScoreText.getLocalBounds();
+        m_highScoreText.setOrigin(highBounds.width, highBounds.top + highBounds.height / 2.0f);
+
+        // Voor Score (links uitgelijnd) hoeft dit niet, want Origin X blijft 0.
+    }
 }
 
 void ScoreView::onWindowResize() {
-  EntityView::onWindowResize();
-  if (!m_model)
-    return;
+    EntityView::onWindowResize();
+    if (!m_model) return;
 
-  // 1. Projecteer het ankerpunt (dit is nu de linkerkant van de map)
-  sf::Vector2f anchorPos = m_camera.project(m_model->getX(), m_model->getY());
+    // --- POSITIE BEPALEN ---
 
-  // 2. Font grootte (blijft hetzelfde)
-  double logicSize = m_model->getHeight();
-  sf::Vector2f pixelSize = m_camera.computeSpriteSize(logicSize, logicSize);
-  unsigned int fontSize = static_cast<unsigned int>(pixelSize.y);
-  if (fontSize < 1)
-    fontSize = 1;
+    // 1. Linkerkant van de map (Start X)
+    double leftLogicX = m_model->getX();
 
-  m_scoreText.setCharacterSize(fontSize);
-  m_highScoreText.setCharacterSize(fontSize);
+    // 2. Rechterkant van de map (End X)
+    // Omdat de map gecentreerd is rond 0, is de rechterkant het tegenovergestelde van links.
+    // (Bijv: Links = -1.0, Rechts = 1.0)
+    double rightLogicX = -leftLogicX;
 
-  // 3. ORIGIN AANPASSEN (Links uitlijnen)
-  // We zetten de X-origin op 0 (links) in plaats van bounds.width/2
-  // De Y-origin blijft gecentreerd zodat hij netjes in de balk hangt
+    double logicY = m_model->getY();
 
-  sf::FloatRect boundsScore = m_scoreText.getLocalBounds();
-  m_scoreText.setOrigin(0, boundsScore.top + boundsScore.height / 2.0f);
+    // 3. Projecteer naar pixels
+    sf::Vector2f leftAnchor = m_camera.project(leftLogicX, logicY);
+    sf::Vector2f rightAnchor = m_camera.project(rightLogicX, logicY);
 
-  sf::FloatRect boundsHigh = m_highScoreText.getLocalBounds();
-  m_highScoreText.setOrigin(0, boundsHigh.top + boundsHigh.height / 2.0f);
+    // --- FONT GROOTTE ---
+    double logicSize = m_model->getHeight();
+    sf::Vector2f pixelSize = m_camera.computeSpriteSize(logicSize, logicSize);
+    unsigned int fontSize = static_cast<unsigned int>(pixelSize.y);
+    if (fontSize < 1) fontSize = 1;
 
-  // 4. POSITIES INSTELLEN
+    m_scoreText.setCharacterSize(fontSize);
+    m_highScoreText.setCharacterSize(fontSize);
 
-  // SCORE: Staat direct op het ankerpunt (helemaal links)
-  // We voegen een heel klein beetje pixel-offset toe zodat hij niet tegen de
-  // rand plakt
-  float padding = pixelSize.x * 0.5f;
-  m_scoreText.setPosition(anchorPos.x, anchorPos.y);
+    // SCORE (Links): Ankerpunt links + padding
+    m_scoreText.setPosition(leftAnchor.x, leftAnchor.y);
+    sf::FloatRect scoreBounds = m_scoreText.getLocalBounds();
+    m_scoreText.setOrigin(0, scoreBounds.top + scoreBounds.height / 2.0f);
 
-  // HIGHSCORE: Staat rechts van de score.
-  // We kunnen een vaste logische afstand nemen.
-  // De hele map is 'worldWidth' breed. Laten we hem op de helft zetten?
-  // Of gewoon een stuk naar rechts.
+    // HIGHSCORE (Rechts): Ankerpunt rechts - padding
+    m_highScoreText.setPosition(rightAnchor.x, rightAnchor.y);
 
-  // Bereken afstand voor highscore (bijv. 0.8 logic units naar rechts)
-  float highscoreOffset = m_camera.computeSpriteSize(1.0, 0).x;
-
-  m_highScoreText.setPosition(anchorPos.x + highscoreOffset, anchorPos.y);
+    // Origin updaten (voor zekerheid bij resize)
+    sf::FloatRect highBounds = m_highScoreText.getLocalBounds();
+    m_highScoreText.setOrigin(highBounds.width, highBounds.top + highBounds.height / 2.0f);
 }
 
 void ScoreView::draw(sf::RenderWindow &window) {

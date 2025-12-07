@@ -44,6 +44,8 @@ public:
   void addPacMan(double x, double y, double w, double h);
   void createScore(double x, double y, double size);
 
+    std::shared_ptr<ScoreModel> getScoreModel() { return m_scoreModel; }
+
 private:
   void readMap(std::string filename);
   bool isMapPositionFree(double x, double y);

@@ -12,7 +12,7 @@ ScoreModel::ScoreModel(double x, double y, double size)
     : EntityModel(x, y, size, size), // Geef x, y door. Width/Height (1.0) maakt
                                      // niet uit voor tekst.
       m_currentScore(0), m_highScore(0), m_lastCoinEatTime(0.0f) {
-  loadHighScore();
+  loadHighScores();
 }
 
 void ScoreModel::onNotify(const Subject &subject, Event event) {
@@ -44,23 +44,49 @@ void ScoreModel::addPoints(int points) {
   m_currentScore += points;
   if (m_currentScore > m_highScore) {
     m_highScore = m_currentScore;
-    saveHighScore();
+    saveHighScores();
   }
   notify(Event::ScoreChanged);
 }
 
-void ScoreModel::loadHighScore() {
-  std::ifstream file("highscore.txt");
-  if (file.is_open()) {
-    file >> m_highScore;
-  }
+void ScoreModel::loadHighScores() {
+    m_highScores.clear();
+    std::ifstream file("highscore.txt");
+    int score;
+    // Lees alle scores in het bestand (max 5 verwacht, maar we lezen alles)
+    while (file >> score) {
+        m_highScores.push_back(score);
+    }
+    // Voor de zekerheid sorteren (hoogste eerst)
+    std::sort(m_highScores.rbegin(), m_highScores.rend());
+
+    // Zorg dat we er max 5 hebben
+    if (m_highScores.size() > 5) {
+        m_highScores.resize(5);
+    }
+}
+void ScoreModel::saveScoreIfPersonalBest() {
+    // Voeg huidige score toe
+    m_highScores.push_back(m_currentScore);
+
+    // Sorteer van groot naar klein
+    std::sort(m_highScores.rbegin(), m_highScores.rend());
+
+    // Houd alleen de top 5
+    if (m_highScores.size() > 5) {
+        m_highScores.resize(5);
+    }
+
+    saveHighScores();
 }
 
-void ScoreModel::saveHighScore() {
-  std::ofstream file("highscore.txt");
-  if (file.is_open()) {
-    file << m_highScore;
-  }
+void ScoreModel::saveHighScores() {
+    std::ofstream file("highscore.txt");
+    if (file.is_open()) {
+        for (int score : m_highScores) {
+            file << score << "\n";
+        }
+    }
 }
 
 void ScoreModel::update(float dt) {}
