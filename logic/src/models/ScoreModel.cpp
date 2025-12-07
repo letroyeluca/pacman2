@@ -50,43 +50,43 @@ void ScoreModel::addPoints(int points) {
 }
 
 void ScoreModel::loadHighScores() {
-    m_highScores.clear();
-    std::ifstream file("highscore.txt");
-    int score;
-    // Lees alle scores in het bestand (max 5 verwacht, maar we lezen alles)
-    while (file >> score) {
-        m_highScores.push_back(score);
-    }
-    // Voor de zekerheid sorteren (hoogste eerst)
-    std::sort(m_highScores.rbegin(), m_highScores.rend());
+  m_highScores.clear();
+  std::ifstream file("highscore.txt");
+  int score;
+  // Lees alle scores in het bestand (max 5 verwacht, maar we lezen alles)
+  while (file >> score) {
+    m_highScores.push_back(score);
+  }
+  // Voor de zekerheid sorteren (hoogste eerst)
+  std::sort(m_highScores.rbegin(), m_highScores.rend());
 
-    // Zorg dat we er max 5 hebben
-    if (m_highScores.size() > 5) {
-        m_highScores.resize(5);
-    }
+  // Zorg dat we er max 5 hebben
+  if (m_highScores.size() > 5) {
+    m_highScores.resize(5);
+  }
 }
 void ScoreModel::saveScoreIfPersonalBest() {
-    // Voeg huidige score toe
-    m_highScores.push_back(m_currentScore);
+  // Voeg huidige score toe
+  m_highScores.push_back(m_currentScore);
 
-    // Sorteer van groot naar klein
-    std::sort(m_highScores.rbegin(), m_highScores.rend());
+  // Sorteer van groot naar klein
+  std::sort(m_highScores.rbegin(), m_highScores.rend());
 
-    // Houd alleen de top 5
-    if (m_highScores.size() > 5) {
-        m_highScores.resize(5);
-    }
+  // Houd alleen de top 5
+  if (m_highScores.size() > 5) {
+    m_highScores.resize(5);
+  }
 
-    saveHighScores();
+  saveHighScores();
 }
 
 void ScoreModel::saveHighScores() {
-    std::ofstream file("highscore.txt");
-    if (file.is_open()) {
-        for (int score : m_highScores) {
-            file << score << "\n";
-        }
+  std::ofstream file("highscore.txt");
+  if (file.is_open()) {
+    for (int score : m_highScores) {
+      file << score << "\n";
     }
+  }
 }
 
 void ScoreModel::update(float dt) {}
