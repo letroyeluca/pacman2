@@ -28,7 +28,6 @@ private:
     std::unique_ptr<Camera> m_camera;
     void initLeaderboard();
 
-
     sf::Text m_leaderboardTitle;
     std::vector<sf::Text> m_scoreTexts;
     std::unique_ptr<logic::ScoreModel> m_tempScoreModel;

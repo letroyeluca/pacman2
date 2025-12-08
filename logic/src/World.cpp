@@ -202,7 +202,6 @@ void World::update(float dt) {
         }
     }
 
-
     if (m_scoreModel) {
         m_scoreModel->update(dt);
     }

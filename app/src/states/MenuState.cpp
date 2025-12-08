@@ -41,9 +41,7 @@ MenuState::MenuState(StateManager& manager, sf::RenderWindow& window) : State(ma
     handleResize(size);
 }
 
-void MenuState::resume(){
-    initLeaderboard();
-}
+void MenuState::resume() { initLeaderboard(); }
 
 void MenuState::initLeaderboard() {
     // BELANGRIJK: Maak de oude lijst leeg, anders krijg je dubbele scores
@@ -63,10 +61,8 @@ void MenuState::initLeaderboard() {
     }
 
     // Forceer een resize update om de nieuwe teksten direct goed te positioneren
-    sf::Event::SizeEvent size = {
-            static_cast<unsigned int>(m_window.getSize().x),
-            static_cast<unsigned int>(m_window.getSize().y)
-    };
+    sf::Event::SizeEvent size = {static_cast<unsigned int>(m_window.getSize().x),
+                                 static_cast<unsigned int>(m_window.getSize().y)};
     handleResize(size);
 }
 
