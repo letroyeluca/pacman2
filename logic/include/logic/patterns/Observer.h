@@ -12,8 +12,8 @@ class Subject;
 
 class Observer {
 public:
-  virtual ~Observer() = default;
-  virtual void onNotify(const Subject &subject, Event event) = 0;
+    virtual ~Observer() = default;
+    virtual void onNotify(const Subject& subject, Event event) = 0;
 };
 } // namespace logic
 

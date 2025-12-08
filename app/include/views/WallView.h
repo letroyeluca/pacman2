@@ -13,9 +13,9 @@ class WallModel;
 
 class WallView : public EntityView {
 public:
-  WallView(std::shared_ptr<logic::WallModel> model, Camera &camera);
+    WallView(std::shared_ptr<logic::WallModel> model, Camera& camera);
 
 private:
-  sf::Texture m_texture;
+    sf::Texture m_texture;
 };
 #endif // PACMAN_WALLVIEW_H

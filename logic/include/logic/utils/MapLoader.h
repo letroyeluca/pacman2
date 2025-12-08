@@ -11,12 +11,12 @@
 namespace logic {
 class MapLoader {
 public:
-  MapLoader(World &world) : m_world(world) {};
-  virtual ~MapLoader() = default;
-  virtual void loadMap(std::string filename) = 0;
+    MapLoader(World& world) : m_world(world) {};
+    virtual ~MapLoader() = default;
+    virtual void loadMap(std::string filename) = 0;
 
 protected:
-  World &m_world;
+    World& m_world;
 };
 } // namespace logic
 

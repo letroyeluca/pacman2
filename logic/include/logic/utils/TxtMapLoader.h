@@ -10,8 +10,8 @@
 namespace logic {
 class TxtMapLoader : public MapLoader {
 public:
-  TxtMapLoader(World &world) : MapLoader(world) {}
-  void loadMap(std::string filename) override;
+    TxtMapLoader(World& world) : MapLoader(world) {}
+    void loadMap(std::string filename) override;
 };
 } // namespace logic
 

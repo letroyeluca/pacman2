@@ -12,10 +12,10 @@ class WallModel;
 
 class Visitor {
 public:
-  virtual ~Visitor() = default;
-  virtual void visit(PacManModel &pacman) = 0;
-  virtual void visit(CoinModel &coin) = 0;
-  virtual void visit(WallModel &wall) = 0;
+    virtual ~Visitor() = default;
+    virtual void visit(PacManModel& pacman) = 0;
+    virtual void visit(CoinModel& coin) = 0;
+    virtual void visit(WallModel& wall) = 0;
 };
 } // namespace logic
 

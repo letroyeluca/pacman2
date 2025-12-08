@@ -10,9 +10,9 @@
 namespace logic {
 class WallModel : public EntityModel {
 public:
-  WallModel(double x, double y, double width, double height);
-  void update(float dt) override;
-  void accept(Visitor &visitor) override;
+    WallModel(double x, double y, double width, double height);
+    void update(float dt) override;
+    void accept(Visitor& visitor) override;
 };
 } // namespace logic
 

@@ -4,28 +4,27 @@
 
 #include "logic/utils/StopWatch.h"
 namespace logic {
-Stopwatch &Stopwatch::getInstance() {
-  static Stopwatch instance;
-  return instance;
+Stopwatch& Stopwatch::getInstance() {
+    static Stopwatch instance;
+    return instance;
 }
 
 Stopwatch::Stopwatch() {
-  m_lastTime = std::chrono::steady_clock::now(),
-  m_startTime = std::chrono::steady_clock::now();
-  ;
+    m_lastTime = std::chrono::steady_clock::now(), m_startTime = std::chrono::steady_clock::now();
+    ;
 }
 
 float Stopwatch::tick() {
-  const auto now = std::chrono::steady_clock::now();
-  std::chrono::duration<float> deltaTime = now - m_lastTime;
-  m_lastTime = now;
+    const auto now = std::chrono::steady_clock::now();
+    std::chrono::duration<float> deltaTime = now - m_lastTime;
+    m_lastTime = now;
 
-  return deltaTime.count();
+    return deltaTime.count();
 }
 
 float Stopwatch::getTime() const {
-  const auto now = std::chrono::steady_clock::now();
-  std::chrono::duration<float> totalTime = now - m_startTime;
-  return totalTime.count();
+    const auto now = std::chrono::steady_clock::now();
+    std::chrono::duration<float> totalTime = now - m_startTime;
+    return totalTime.count();
 }
 } // namespace logic

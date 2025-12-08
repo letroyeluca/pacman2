@@ -7,11 +7,11 @@
 
 class Game {
 public:
-  Game() = default;
-  ~Game() = default;
+    Game() = default;
+    ~Game() = default;
 
-  // main game start functie.
-  void run(int width, int height);
+    // main game start functie.
+    void run(int width, int height);
 };
 
 #endif // PACMAN_GAME_H

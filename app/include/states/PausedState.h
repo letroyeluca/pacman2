@@ -12,19 +12,19 @@
 
 class PausedState : public State {
 private:
-  sf::Font m_font;
-  sf::Text m_title;
-  sf::Text m_instruction;
-  std::unique_ptr<Camera> m_camera;
+    sf::Font m_font;
+    sf::Text m_title;
+    sf::Text m_instruction;
+    std::unique_ptr<Camera> m_camera;
 
 public:
-  PausedState(StateManager &manager, sf::RenderWindow &window);
+    PausedState(StateManager& manager, sf::RenderWindow& window);
 
-  void handleInput(sf::Event &event) override;
-  void update(float dt) override;
-  void render() override;
-  void handleResize(sf::Event::SizeEvent size) override;
-  void setupText();
+    void handleInput(sf::Event& event) override;
+    void update(float dt) override;
+    void render() override;
+    void handleResize(sf::Event::SizeEvent size) override;
+    void setupText();
 };
 
 #endif // PACMAN_PAUSEDSTATE_H

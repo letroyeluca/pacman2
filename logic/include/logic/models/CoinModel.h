@@ -11,10 +11,10 @@
 namespace logic {
 class CoinModel : public EntityModel {
 public:
-  CoinModel(double x, double y, double width, double height);
-  void collect();
-  void update(float dt) override;
-  void accept(Visitor &visitor) override;
+    CoinModel(double x, double y, double width, double height);
+    void collect();
+    void update(float dt) override;
+    void accept(Visitor& visitor) override;
 };
 } // namespace logic
 

@@ -11,20 +11,19 @@
 // GEEN 'public logic::Observer' hier, want EntityView is al een Observer!
 class ScoreView : public EntityView {
 public:
-  ScoreView(std::shared_ptr<logic::ScoreModel> model, Camera &camera);
+    ScoreView(std::shared_ptr<logic::ScoreModel> model, Camera& camera);
 
-  void onNotify(const logic::Subject &subject, logic::Event event) override;
+    void onNotify(const logic::Subject& subject, logic::Event event) override;
 
-  void onWindowResize() override;
+    void onWindowResize() override;
 
-  void draw(sf::RenderWindow &window) override;
+    void draw(sf::RenderWindow& window) override;
 
 private:
-  std::shared_ptr<logic::ScoreModel>
-      m_scoreModel; // Specifiek score model opslaan
-  sf::Font m_font;
-  sf::Text m_scoreText;
-  sf::Text m_highScoreText;
+    std::shared_ptr<logic::ScoreModel> m_scoreModel; // Specifiek score model opslaan
+    sf::Font m_font;
+    sf::Text m_scoreText;
+    sf::Text m_highScoreText;
 };
 
 #endif // PACMAN_SCOREVIEW_H

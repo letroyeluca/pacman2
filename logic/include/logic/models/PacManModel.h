@@ -14,22 +14,22 @@ enum class Direction { STOP, UP, DOWN, LEFT, RIGHT };
 
 class PacManModel : public EntityModel {
 public:
-  PacManModel(double x, double y, double width, double height);
-  void update(float dt) override;
-  void accept(Visitor &visitor) override;
-  void queueDirection(Direction dir);
-  void commitDirection();
-  void stop();
-  void setPosition(double x, double y);
-  std::pair<double, double> getPositionAt(float dt, Direction dir) const;
-  Direction getDirection() const { return m_direction; }
-  Direction getNextDirection() const { return m_nextDirection; }
-  float getSpeed() const { return m_speed; }
+    PacManModel(double x, double y, double width, double height);
+    void update(float dt) override;
+    void accept(Visitor& visitor) override;
+    void queueDirection(Direction dir);
+    void commitDirection();
+    void stop();
+    void setPosition(double x, double y);
+    std::pair<double, double> getPositionAt(float dt, Direction dir) const;
+    Direction getDirection() const { return m_direction; }
+    Direction getNextDirection() const { return m_nextDirection; }
+    float getSpeed() const { return m_speed; }
 
 private:
-  Direction m_direction;
-  Direction m_nextDirection;
-  float m_speed;
+    Direction m_direction;
+    Direction m_nextDirection;
+    float m_speed;
 };
 
 } // namespace logic

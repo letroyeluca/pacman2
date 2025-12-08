@@ -7,19 +7,19 @@
 
 namespace logic {
 enum class Event {
-  Tick,
-  PacManMoved,
-  PacManDied,
-  CoinEaten,
-  FruitEaten,
-  GhostEaten,
-  GhostVulnerable,
-  PacManUP,
-  PacManDOWN,
-  PacManLEFT,
-  PacManRIGHT,
-  DEFAULT,
-  ScoreChanged
+    Tick,
+    PacManMoved,
+    PacManDied,
+    CoinEaten,
+    FruitEaten,
+    GhostEaten,
+    GhostVulnerable,
+    PacManUP,
+    PacManDOWN,
+    PacManLEFT,
+    PacManRIGHT,
+    DEFAULT,
+    ScoreChanged
 
 };
 }

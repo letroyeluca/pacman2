@@ -13,13 +13,13 @@ class CoinModel;
 
 class CoinView : public EntityView {
 public:
-  CoinView(std::shared_ptr<logic::CoinModel> model, Camera &camera);
-  void draw(sf::RenderWindow &window) override;
-  void onNotify(const logic::Subject &subject, logic::Event event) override;
-  void onWindowResize() override;
+    CoinView(std::shared_ptr<logic::CoinModel> model, Camera& camera);
+    void draw(sf::RenderWindow& window) override;
+    void onNotify(const logic::Subject& subject, logic::Event event) override;
+    void onWindowResize() override;
 
 private:
-  sf::Texture m_texture;
-  bool m_isHidden;
+    sf::Texture m_texture;
+    bool m_isHidden;
 };
 #endif // PACMAN_COINVIEW_H

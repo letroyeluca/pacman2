@@ -10,16 +10,16 @@
 namespace logic {
 class Stopwatch {
 public:
-  float tick();
-  static Stopwatch &getInstance();
-  float getTime() const;
+    float tick();
+    static Stopwatch& getInstance();
+    float getTime() const;
 
 private:
-  Stopwatch();
-  Stopwatch(const Stopwatch &) = delete;
-  Stopwatch &operator=(const Stopwatch &) = delete;
-  std::chrono::steady_clock::time_point m_lastTime;
-  std::chrono::steady_clock::time_point m_startTime;
+    Stopwatch();
+    Stopwatch(const Stopwatch&) = delete;
+    Stopwatch& operator=(const Stopwatch&) = delete;
+    std::chrono::steady_clock::time_point m_lastTime;
+    std::chrono::steady_clock::time_point m_startTime;
 };
 } // namespace logic
 
