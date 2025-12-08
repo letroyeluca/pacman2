@@ -33,6 +33,24 @@ MenuState::MenuState(StateManager& manager, sf::RenderWindow& window) : State(ma
     // We maken een tijdelijk model aan puur om de 'highscore.txt' te parsen
     m_tempScoreModel = std::make_unique<logic::ScoreModel>(0, 0, 0);
 
+    initLeaderboard();
+
+    // Zet alles direct goed neer
+    sf::Event::SizeEvent size = {static_cast<unsigned int>(window.getSize().x),
+                                 static_cast<unsigned int>(window.getSize().y)};
+    handleResize(size);
+}
+
+void MenuState::resume(){
+    initLeaderboard();
+}
+
+void MenuState::initLeaderboard() {
+    // BELANGRIJK: Maak de oude lijst leeg, anders krijg je dubbele scores
+    m_scoreTexts.clear();
+
+    // Data opnieuw laden
+    m_tempScoreModel = std::make_unique<logic::ScoreModel>(0, 0, 0);
     const auto& scores = m_tempScoreModel->getTopScores();
 
     for (size_t i = 0; i < scores.size(); ++i) {
@@ -44,9 +62,11 @@ MenuState::MenuState(StateManager& manager, sf::RenderWindow& window) : State(ma
         m_scoreTexts.push_back(text);
     }
 
-    // Zet alles direct goed neer
-    sf::Event::SizeEvent size = {static_cast<unsigned int>(window.getSize().x),
-                                 static_cast<unsigned int>(window.getSize().y)};
+    // Forceer een resize update om de nieuwe teksten direct goed te positioneren
+    sf::Event::SizeEvent size = {
+            static_cast<unsigned int>(m_window.getSize().x),
+            static_cast<unsigned int>(m_window.getSize().y)
+    };
     handleResize(size);
 }
 

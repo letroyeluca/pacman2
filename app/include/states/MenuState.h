@@ -19,11 +19,15 @@ public:
     void render() override;
     void handleResize(sf::Event::SizeEvent size) override;
 
+    void resume();
+
 private:
     sf::Font m_font;
     sf::Text m_titleText;
     sf::Text m_playText;
     std::unique_ptr<Camera> m_camera;
+    void initLeaderboard();
+
 
     sf::Text m_leaderboardTitle;
     std::vector<sf::Text> m_scoreTexts;

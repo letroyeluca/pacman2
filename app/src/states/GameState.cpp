@@ -56,6 +56,7 @@ void GameState::handleInput(sf::Event& event) {
             if (m_world->getScoreModel()) {
                 m_world->getScoreModel()->saveScoreIfPersonalBest();
             }
+            std::make_unique<PausedState>(m_manager, m_window);
             m_manager.pushState(std::make_unique<PausedState>(m_manager, m_window));
         }
 

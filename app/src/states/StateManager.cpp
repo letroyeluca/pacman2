@@ -10,6 +10,11 @@ void StateManager::popState() {
     if (!m_states.empty()) {
         m_states.pop();
     }
+
+    if (!m_states.empty()) {
+        m_states.top()->resume();
+    }
+
 }
 
 void StateManager::handleInput(sf::Event& event) {

@@ -15,6 +15,19 @@ ScoreModel::ScoreModel(double x, double y, double size)
     loadHighScores();
 }
 
+void ScoreModel::update(float dt) {
+    m_timer += dt;
+
+    // Is er een halve seconde voorbij?
+    while (m_timer >= 0.5f) {
+        m_timer -= 0.5f; // Reset de timer (behoud het overschot)
+
+        if (m_currentScore > 0) { // Optioneel: voorkom negatieve score
+            addPoints(-1);
+        }
+    }
+}
+
 void ScoreModel::onNotify(const Subject& subject, Event event) {
     // Check welk event er gebeurt. De 'subject' parameter vertelt ons WIE het
     // stuurde (bijv. de specifieke Coin), maar dat hebben we voor de score niet
@@ -77,6 +90,7 @@ void ScoreModel::saveScoreIfPersonalBest() {
     }
 
     saveHighScores();
+    loadHighScores();
 }
 
 void ScoreModel::saveHighScores() {
@@ -87,8 +101,6 @@ void ScoreModel::saveHighScores() {
         }
     }
 }
-
-void ScoreModel::update(float dt) {}
 
 void ScoreModel::accept(Visitor& visitor) {}
 

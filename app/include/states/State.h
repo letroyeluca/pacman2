@@ -15,6 +15,8 @@ public:
     virtual void handleInput(sf::Event& event) = 0;
     virtual void update(float dt) = 0;
     virtual void render() = 0;
+
+    virtual void resume() {}
     virtual void handleResize(sf::Event::SizeEvent size) {}
 
 protected:
