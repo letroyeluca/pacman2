@@ -13,7 +13,7 @@ class CoinModel;
 
 class CoinView : public EntityView {
 public:
-    CoinView(std::shared_ptr<logic::CoinModel> model, Camera& camera);
+    CoinView(std::shared_ptr<logic::CoinModel> model, Camera& camera, sf::Texture& texture);
     void draw(sf::RenderWindow& window) override;
     void onNotify(const logic::Subject& subject, logic::Event event) override;
     void onWindowResize() override;

@@ -93,7 +93,6 @@ void MenuState::handleInput(sf::Event& event) {
 }
 
 void MenuState::update(float dt) {
-    // Knipperend effect voor "Press Enter"
     static float timer = 0;
     timer += dt;
     if (timer > 0.5f) {

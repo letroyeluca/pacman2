@@ -13,7 +13,7 @@ class WallModel;
 
 class WallView : public EntityView {
 public:
-    WallView(std::shared_ptr<logic::WallModel> model, Camera& camera);
+    WallView(std::shared_ptr<logic::WallModel> model, Camera& camera, sf::Texture& texture);
 
 private:
     sf::Texture m_texture;

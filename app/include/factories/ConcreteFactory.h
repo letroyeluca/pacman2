@@ -31,6 +31,7 @@ public:
 
 private:
     std::vector<std::unique_ptr<EntityView>> m_views;
+    sf::Texture m_sharedTexture;
     Camera& m_camera;
 };
 #endif // PACMAN_CONCRETEFACTORY_H

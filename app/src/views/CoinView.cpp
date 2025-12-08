@@ -6,13 +6,10 @@
 #include "logic/models/CoinModel.h"
 #include <stdexcept>
 
-CoinView::CoinView(std::shared_ptr<logic::CoinModel> model, Camera& camera)
-    : EntityView(model, camera), m_isHidden(false) {
+CoinView::CoinView(std::shared_ptr<logic::CoinModel> model, Camera& camera, sf::Texture& texture)
+        : EntityView(model, camera), m_isHidden(false) {
 
-    if (!m_texture.loadFromFile("assets/sprite.png")) {
-        throw std::runtime_error("Failed to load assets/sprite.png");
-    }
-    m_sprite.setTexture(m_texture);
+    m_sprite.setTexture(texture);
     sf::IntRect coinRect(411, 313, 16, 16); // Voorbeeld coords
     m_sprite.setTextureRect(coinRect);
 

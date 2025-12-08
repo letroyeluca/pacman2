@@ -11,7 +11,10 @@
 #include "views/ScoreView.h"
 #include "views/WallView.h"
 
-ConcreteFactory::ConcreteFactory(Camera& camera) : m_camera(camera) {}
+ConcreteFactory::ConcreteFactory(Camera& camera) : m_camera(camera) {
+    if (!m_sharedTexture.loadFromFile("assets/sprite.png")) {
+    }
+}
 
 std::shared_ptr<logic::PacManModel> ConcreteFactory::createPacMan(double x, double y, double width, double height) {
     // 1. Maak Model als SHARED
@@ -30,7 +33,7 @@ std::shared_ptr<logic::CoinModel> ConcreteFactory::createCoin(double x, double y
 
     // 2. Maak View als UNIQUE
     // Let op: Geen '*' meer voor model, want de View verwacht nu een shared_ptr!
-    auto view = std::make_unique<CoinView>(model, m_camera);
+    auto view = std::make_unique<CoinView>(model, m_camera, m_sharedTexture);
 
     m_views.push_back(std::move(view));
     return model;
@@ -41,7 +44,7 @@ std::shared_ptr<logic::WallModel> ConcreteFactory::createWall(double x, double y
     auto model = std::make_shared<logic::WallModel>(x, y, width, height);
 
     // 2. Maak View als UNIQUE
-    auto view = std::make_unique<WallView>(model, m_camera);
+    auto view = std::make_unique<WallView>(model, m_camera, m_sharedTexture);
 
     m_views.push_back(std::move(view));
     return model;

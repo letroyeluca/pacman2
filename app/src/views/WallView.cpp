@@ -6,13 +6,11 @@
 #include "logic/models/WallModel.h"
 #include <stdexcept>
 
-WallView::WallView(std::shared_ptr<logic::WallModel> model, Camera& camera) : EntityView(model, camera) {
+WallView::WallView(std::shared_ptr<logic::WallModel> model, Camera& camera, sf::Texture& texture) : EntityView(model, camera) {
 
     sf::Image image;
     image.create(1, 1, sf::Color::White);
-    if (!m_texture.loadFromImage(image)) {
-        throw std::runtime_error("Failed to create 1x1 texture");
-    }
+    m_sprite.setTexture(texture);
     m_sprite.setTexture(m_texture);
     m_sprite.setTextureRect(sf::IntRect(0, 0, 1, 1));
     m_sprite.setColor(sf::Color::Blue);
