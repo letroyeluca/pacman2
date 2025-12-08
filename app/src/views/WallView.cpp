@@ -6,7 +6,8 @@
 #include "logic/models/WallModel.h"
 #include <stdexcept>
 
-WallView::WallView(std::shared_ptr<logic::WallModel> model, Camera& camera, sf::Texture& texture) : EntityView(model, camera) {
+WallView::WallView(std::shared_ptr<logic::WallModel> model, Camera& camera, sf::Texture& texture)
+    : EntityView(model, camera) {
 
     sf::Image image;
     image.create(1, 1, sf::Color::White);

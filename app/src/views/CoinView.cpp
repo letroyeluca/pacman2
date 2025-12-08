@@ -7,7 +7,7 @@
 #include <stdexcept>
 
 CoinView::CoinView(std::shared_ptr<logic::CoinModel> model, Camera& camera, sf::Texture& texture)
-        : EntityView(model, camera), m_isHidden(false) {
+    : EntityView(model, camera), m_isHidden(false) {
 
     m_sprite.setTexture(texture);
     sf::IntRect coinRect(411, 313, 16, 16); // Voorbeeld coords
