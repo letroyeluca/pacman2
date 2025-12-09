@@ -64,27 +64,28 @@ GhostView::GhostView(std::shared_ptr<logic::GhostModel> model, Camera& camera)
 void GhostView::onNotify(const logic::Subject& subject, logic::Event event) {
     // Determine which animation list to use based on event
     switch (event) {
-        case logic::Event::GhostUP:
-            m_animFrames = m_animUpFrames;
-            break;
-        case logic::Event::GhostDOWN:
-            m_animFrames = m_animDownFrames;
-            break;
-        case logic::Event::GhostLEFT:
-            m_animFrames = m_animLeftFrames;
-            break;
-        case logic::Event::GhostRIGHT:
-            m_animFrames = m_animRightFrames;
-            break;
-        default:
-            break;
+    case logic::Event::GhostUP:
+        m_animFrames = m_animUpFrames;
+        break;
+    case logic::Event::GhostDOWN:
+        m_animFrames = m_animDownFrames;
+        break;
+    case logic::Event::GhostLEFT:
+        m_animFrames = m_animLeftFrames;
+        break;
+    case logic::Event::GhostRIGHT:
+        m_animFrames = m_animRightFrames;
+        break;
+    default:
+        break;
     }
     EntityView::onNotify(subject, event);
 }
 
 void GhostView::updateAnimation(float dt) {
     auto ghostModel = std::dynamic_pointer_cast<logic::GhostModel>(m_model);
-    if (!ghostModel) return;
+    if (!ghostModel)
+        return;
 
     // Use TextureRect only to avoid resetting position
     m_animationTimer += dt;
@@ -93,13 +94,11 @@ void GhostView::updateAnimation(float dt) {
         if (m_currentFrame >= m_animFrames.size()) {
             m_currentFrame = 0;
         }
-        if(!m_animFrames.empty()) {
+        if (!m_animFrames.empty()) {
             m_sprite.setTextureRect(m_animFrames[m_currentFrame]);
         }
         m_animationTimer -= m_animationSpeed;
     }
 }
 
-void GhostView::onWindowResize() {
-    EntityView::onWindowResize();
-}
+void GhostView::onWindowResize() { EntityView::onWindowResize(); }

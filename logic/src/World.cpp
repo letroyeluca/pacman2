@@ -31,8 +31,9 @@ void World::addCoin(double x, double y, double w, double h) {
     m_coins.push_back(std::move(coin));
 }
 
-void World::addPacMan(double x, double y, double w, double h, int mapsize) { m_pacman = m_factory->createPacMan(x, y, w, h);
-m_pacman->setSpeed((3.0f/mapsize)*2.0f);
+void World::addPacMan(double x, double y, double w, double h, int mapsize) {
+    m_pacman = m_factory->createPacMan(x, y, w, h);
+    m_pacman->setSpeed((3.0f / mapsize) * 2.0f);
 }
 
 void World::addGhost(double x, double y, double w, double h, char type) {
