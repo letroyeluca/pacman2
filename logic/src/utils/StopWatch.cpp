@@ -11,7 +11,7 @@ Stopwatch& Stopwatch::getInstance() {
 
 Stopwatch::Stopwatch() {
     m_lastTime = std::chrono::steady_clock::now(), m_startTime = std::chrono::steady_clock::now();
-    ;
+
 }
 
 float Stopwatch::tick() {

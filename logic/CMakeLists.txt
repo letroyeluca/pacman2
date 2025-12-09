@@ -14,6 +14,7 @@ add_library(pacman_logic STATIC
         include/logic/Event.h
         src/utils/StopWatch.cpp
         src/models/ScoreModel.cpp
+        src/models/GhostModel.cpp
 
 )
 target_include_directories(pacman_logic PUBLIC

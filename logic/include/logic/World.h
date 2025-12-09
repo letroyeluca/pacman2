@@ -42,6 +42,7 @@ public:
     void addWall(double x, double y, double w, double h);
     void addCoin(double x, double y, double w, double h);
     void addPacMan(double x, double y, double w, double h);
+    void addGhost(double x, double y, double w, double h, char type);
     void createScore(double x, double y, double size);
 
     std::shared_ptr<ScoreModel> getScoreModel() { return m_scoreModel; }
@@ -58,6 +59,7 @@ private:
     std::shared_ptr<PacManModel> m_pacman;
     std::vector<std::shared_ptr<CoinModel>> m_coins;
     std::vector<std::shared_ptr<WallModel>> m_walls;
+    std::vector<std::shared_ptr<GhostModel>> m_ghosts;
 
     double m_width = 2.0;
     double m_height = 2.0;

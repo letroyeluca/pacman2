@@ -22,6 +22,7 @@ public:
 
     // Overrides moeten shared_ptr teruggeven
     std::shared_ptr<logic::PacManModel> createPacMan(double x, double y, double w, double h) override;
+    std::shared_ptr<logic::GhostModel> createGhost(double x, double y, double w, double h,  char type) override;
     std::shared_ptr<logic::CoinModel> createCoin(double x, double y, double w, double h) override;
     std::shared_ptr<logic::WallModel> createWall(double x, double y, double w, double h) override;
 

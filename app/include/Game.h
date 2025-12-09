@@ -10,7 +10,6 @@ public:
     Game() = default;
     ~Game() = default;
 
-    // main game start functie.
     void run(int width, int height);
 };
 

@@ -19,7 +19,11 @@ enum class Event {
     PacManLEFT,
     PacManRIGHT,
     DEFAULT,
-    ScoreChanged
+    ScoreChanged,
+    GhostUP,
+    GhostDOWN,
+    GhostLEFT,
+    GhostRIGHT
 
 };
 }

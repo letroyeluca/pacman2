@@ -25,6 +25,7 @@ public:
     // AANGEPAST: Return types zijn nu shared_ptr voor consistente ownership in
     // World én Views
     virtual std::shared_ptr<PacManModel> createPacMan(double x, double y, double w, double h) = 0;
+    virtual std::shared_ptr<GhostModel> createGhost(double x, double y, double w, double h,  char type) = 0;
     virtual std::shared_ptr<CoinModel> createCoin(double x, double y, double w, double h) = 0;
     virtual std::shared_ptr<WallModel> createWall(double x, double y, double w, double h) = 0;
 
