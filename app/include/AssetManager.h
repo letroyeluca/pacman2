@@ -7,11 +7,12 @@
 
 #include <SFML/Graphics.hpp>
 
-namespace Asset{
-class AssetManager{
+namespace Asset {
+class AssetManager {
 private:
     AssetManager();
     sf::Texture m_texture;
+
 public:
     AssetManager(const AssetManager&) = delete;
     AssetManager& operator=(const AssetManager&) = delete;
@@ -20,6 +21,6 @@ public:
     const sf::Texture& getTexture() const;
     static std::vector<sf::IntRect> getAnimationFrames(int x, int y, int count = 3, int size = 50);
 };
-}
+} // namespace Asset
 
-#endif //PACMAN_ASSETMANAGER_H
+#endif // PACMAN_ASSETMANAGER_H

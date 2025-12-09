@@ -33,7 +33,9 @@ void World::addCoin(double x, double y, double w, double h) {
 
 void World::addPacMan(double x, double y, double w, double h) { m_pacman = m_factory->createPacMan(x, y, w, h); }
 
-    void World::addGhost(double x, double y, double w, double h, char type) { m_ghosts.push_back(m_factory->createGhost(x, y, w, h, type)); }
+void World::addGhost(double x, double y, double w, double h, char type) {
+    m_ghosts.push_back(m_factory->createGhost(x, y, w, h, type));
+}
 
 void World::createScore(double x, double y, double size) { m_scoreModel = m_factory->createScore(x, y, size); }
 

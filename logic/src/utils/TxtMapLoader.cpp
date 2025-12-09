@@ -90,16 +90,15 @@ void TxtMapLoader::loadMap(std::string filename) {
                 m_world.addCoin(x, y, calculatedTileSize, calculatedTileSize);
             else if (tile == 'P')
                 m_world.addPacMan(x, y, calculatedTileSize, calculatedTileSize);
-            else if (tile == 'B'){
+            else if (tile == 'B') {
                 m_world.addGhost(x, y, calculatedTileSize, calculatedTileSize, tile);
-            }else if (tile == 'R'){
+            } else if (tile == 'R') {
                 m_world.addGhost(x, y, calculatedTileSize, calculatedTileSize, tile);
-            }else if (tile == 'S'){
-                m_world.addGhost(x, y, calculatedTileSize, calculatedTileSize, tile);
-
-            }else if (tile == 'O'){
+            } else if (tile == 'S') {
                 m_world.addGhost(x, y, calculatedTileSize, calculatedTileSize, tile);
 
+            } else if (tile == 'O') {
+                m_world.addGhost(x, y, calculatedTileSize, calculatedTileSize, tile);
             }
         }
     }

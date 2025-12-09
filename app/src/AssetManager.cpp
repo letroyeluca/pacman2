@@ -2,28 +2,26 @@
 // Created by Luca Letroye on 9/12/2025.
 //
 #include "AssetManager.h"
-namespace Asset{
+namespace Asset {
 
-AssetManager& AssetManager::getInstance(){
+AssetManager& AssetManager::getInstance() {
     static AssetManager instance;
     return instance;
 }
 
-AssetManager::AssetManager(){
+AssetManager::AssetManager() {
     if (!m_texture.loadFromFile("assets/sprite.png")) {
         throw std::runtime_error("Failed to load assets/sprite.png");
     }
     m_texture.setSmooth(true);
 }
 
-sf::Sprite AssetManager::getSpriteAtIndex(int x, int y, int size){
+sf::Sprite AssetManager::getSpriteAtIndex(int x, int y, int size) {
     sf::Sprite sprite(m_texture);
-    sprite.setTextureRect(sf::IntRect({(x*50)+(-6), (y*50)+(-4)}, {size, size}));
+    sprite.setTextureRect(sf::IntRect({(x * 50) + (-6), (y * 50) + (-4)}, {size, size}));
     return sprite;
 }
-const sf::Texture& AssetManager::getTexture() const {
-    return m_texture;
-}
+const sf::Texture& AssetManager::getTexture() const { return m_texture; }
 
 std::vector<sf::IntRect> AssetManager::getAnimationFrames(int x, int y, int count, int size) {
     std::vector<sf::IntRect> frames;
@@ -38,5 +36,4 @@ std::vector<sf::IntRect> AssetManager::getAnimationFrames(int x, int y, int coun
     return frames;
 }
 
-
-}
+} // namespace Asset

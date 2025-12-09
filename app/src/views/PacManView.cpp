@@ -2,9 +2,9 @@
 // Created by Luca Letroye on 9/11/2025.
 //
 #include "views/PacManView.h"
+#include "AssetManager.h"
 #include "Camera.h"
 #include "logic/models/PacManModel.h"
-#include "AssetManager.h"
 #include <iostream>
 #include <stdexcept>
 
@@ -17,9 +17,9 @@ PacManView::PacManView(std::shared_ptr<logic::PacManModel> model, Camera& camera
     auto& assets = Asset::AssetManager::getInstance();
     m_sprite.setTexture(assets.getTexture());
     m_animRightFrames = Asset::AssetManager::getAnimationFrames(17, 0);
-    m_animDownFrames  = Asset::AssetManager::getAnimationFrames(17, 3);
-    m_animLeftFrames  = Asset::AssetManager::getAnimationFrames(17, 6);
-    m_animUpFrames    = Asset::AssetManager::getAnimationFrames(17, 9);
+    m_animDownFrames = Asset::AssetManager::getAnimationFrames(17, 3);
+    m_animLeftFrames = Asset::AssetManager::getAnimationFrames(17, 6);
+    m_animUpFrames = Asset::AssetManager::getAnimationFrames(17, 9);
 
     m_animFrames = m_animRightFrames;
     m_sprite.setTextureRect(m_animFrames[0]);
@@ -48,7 +48,8 @@ void PacManView::onNotify(const logic::Subject& subject, logic::Event event) {
 
 void PacManView::updateAnimation(float dt) {
     auto pacmanModel = std::dynamic_pointer_cast<logic::PacManModel>(m_model);
-    if (!pacmanModel) return;
+    if (!pacmanModel)
+        return;
 
     // Handle STOP state
     if (pacmanModel->getDirection() == logic::Direction::STOP) {
@@ -79,5 +80,5 @@ void PacManView::updateAnimation(float dt) {
 
 void PacManView::onWindowResize() {
     EntityView::onWindowResize();
-    //m_sprite.scale(0.8f, 0.8f);
+    // m_sprite.scale(0.8f, 0.8f);
 }

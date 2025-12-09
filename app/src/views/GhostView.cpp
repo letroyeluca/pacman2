@@ -2,16 +2,14 @@
 // Created by Luca Letroye on 8/12/2025.
 //
 #include "views/GhostView.h"
+#include "AssetManager.h"
 #include "Camera.h"
 #include "logic/models/GhostModel.h"
-#include "AssetManager.h"
 #include <iostream>
 #include <stdexcept>
 
 GhostView::GhostView(std::shared_ptr<logic::GhostModel> model, Camera& camera)
-        : EntityView(model, camera),
-          m_currentFrame(0),
-          m_animationTimer(0.f) {
+    : EntityView(model, camera), m_currentFrame(0), m_animationTimer(0.f) {
 
     // 1. Get AssetManager instance
     auto& assets = Asset::AssetManager::getInstance();
@@ -28,21 +26,21 @@ GhostView::GhostView(std::shared_ptr<logic::GhostModel> model, Camera& camera)
     char type = model->getType(); // Make sure GhostModel has this getter!
     std::cout << type << std::endl;
     switch (type) {
-        case 'R': // Red (Blinky)
-            startX = 0;
-            break;
-        case 'S': // Pink (Pinky)
-            startX = 1; // Example: 2 columns to the right
-            break;
-        case 'B': // Blue (Inky)
-            startX = 2;
-            break;
-        case 'O': // Orange (Clyde)
-            startX = 3;
-            break;
-        default:
-            startX = 0; // Default to Red
-            break;
+    case 'R': // Red (Blinky)
+        startX = 0;
+        break;
+    case 'S':       // Pink (Pinky)
+        startX = 1; // Example: 2 columns to the right
+        break;
+    case 'B': // Blue (Inky)
+        startX = 2;
+        break;
+    case 'O': // Orange (Clyde)
+        startX = 3;
+        break;
+    default:
+        startX = 0; // Default to Red
+        break;
     }
 
     // 4. Load Frames
@@ -50,13 +48,13 @@ GhostView::GhostView(std::shared_ptr<logic::GhostModel> model, Camera& camera)
     // The 4 directions usually follow a specific pattern in the sheet relative to the start position.
     // Adjust the "offset" (e.g., +0, +2, +4, +6) based on your specific PNG layout.
     m_animRightFrames = assets.getAnimationFrames(startX, 0, 2); // Row 0
-    m_animLeftFrames  = assets.getAnimationFrames(startX, 2, 2); // Row 2
-    m_animUpFrames    = assets.getAnimationFrames(startX, 4, 2); // Row 4
-    m_animDownFrames  = assets.getAnimationFrames(startX, 6, 2); // Row 6
+    m_animLeftFrames = assets.getAnimationFrames(startX, 2, 2);  // Row 2
+    m_animUpFrames = assets.getAnimationFrames(startX, 4, 2);    // Row 4
+    m_animDownFrames = assets.getAnimationFrames(startX, 6, 2);  // Row 6
 
     // 5. Init
     m_animFrames = m_animRightFrames;
-    if(!m_animFrames.empty()){
+    if (!m_animFrames.empty()) {
         m_sprite.setTextureRect(m_animFrames[0]);
     }
     m_sprite.setOrigin(25.0f, 25.0f);
@@ -113,6 +111,4 @@ void GhostView::updateAnimation(float dt) {
      */
 }
 
-void GhostView::onWindowResize() {
-    EntityView::onWindowResize();
-}
+void GhostView::onWindowResize() { EntityView::onWindowResize(); }
