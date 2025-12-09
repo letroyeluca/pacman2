@@ -32,7 +32,7 @@ private:
     std::vector<sf::IntRect> m_animRightFrames;
     int m_currentFrame;
     float m_animationTimer;
-    const float m_animationSpeed = 0.05f;
+    const float m_animationSpeed = 0.1f;
 };
 
 #endif // PACMAN_GHOSTVIEW_H

@@ -31,6 +31,6 @@ private:
     std::vector<sf::IntRect> m_animRightFrames;
     int m_currentFrame;
     float m_animationTimer;
-    const float m_animationSpeed = 0.1f;
+    const float m_animationSpeed = 0.15f;
 };
 #endif // PACMAN_PACMANVIEW_H

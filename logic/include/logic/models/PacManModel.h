@@ -25,6 +25,7 @@ public:
     Direction getDirection() const { return m_direction; }
     Direction getNextDirection() const { return m_nextDirection; }
     float getSpeed() const { return m_speed; }
+    void setSpeed(float newspeed){m_speed = newspeed;}
 
 private:
     Direction m_direction;

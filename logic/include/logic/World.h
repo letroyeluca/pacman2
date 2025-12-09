@@ -41,7 +41,7 @@ public:
     // Add functies
     void addWall(double x, double y, double w, double h);
     void addCoin(double x, double y, double w, double h);
-    void addPacMan(double x, double y, double w, double h);
+    void addPacMan(double x, double y, double w, double h, int mapsize);
     void addGhost(double x, double y, double w, double h, char type);
     void createScore(double x, double y, double size);
 

@@ -20,7 +20,6 @@ GhostView::GhostView(std::shared_ptr<logic::GhostModel> model, Camera& camera)
     // 3. Determine Sprite Coordinates based on Ghost Type
     // Assuming standard Pacman spritesheet layout.
     // You might need to adjust these 'y' or 'x' values to match your specific png image.
-    int startY = 0;
     int startX = 0; // Column index
 
     char type = model->getType(); // Make sure GhostModel has this getter!
@@ -63,7 +62,7 @@ GhostView::GhostView(std::shared_ptr<logic::GhostModel> model, Camera& camera)
 }
 
 void GhostView::onNotify(const logic::Subject& subject, logic::Event event) {
-    /*
+    // Determine which animation list to use based on event
     switch (event) {
         case logic::Event::GhostUP:
             m_animFrames = m_animUpFrames;
@@ -80,35 +79,27 @@ void GhostView::onNotify(const logic::Subject& subject, logic::Event event) {
         default:
             break;
     }
-     */
     EntityView::onNotify(subject, event);
 }
 
 void GhostView::updateAnimation(float dt) {
-    /*
-    // Cast de base shared_ptr naar GhostModel shared_ptr
-    auto pacmanModel = std::dynamic_pointer_cast<logic::GhostModel>(m_model);
+    auto ghostModel = std::dynamic_pointer_cast<logic::GhostModel>(m_model);
+    if (!ghostModel) return;
 
-    if (!pacmanModel)
-        return;
-
-    if (pacmanModel->getDirection() == logic::Direction::STOP) {
-        m_animationTimer = 0.f;
-        m_currentFrame = 0;
-        m_sprite.setTextureRect(m_animFrames[m_currentFrame]);
-        return;
-    }
-
+    // Use TextureRect only to avoid resetting position
     m_animationTimer += dt;
     if (m_animationTimer >= m_animationSpeed) {
         m_currentFrame++;
         if (m_currentFrame >= m_animFrames.size()) {
             m_currentFrame = 0;
         }
-        m_sprite.setTextureRect(m_animFrames[m_currentFrame]);
+        if(!m_animFrames.empty()) {
+            m_sprite.setTextureRect(m_animFrames[m_currentFrame]);
+        }
         m_animationTimer -= m_animationSpeed;
     }
-     */
 }
 
-void GhostView::onWindowResize() { EntityView::onWindowResize(); }
+void GhostView::onWindowResize() {
+    EntityView::onWindowResize();
+}

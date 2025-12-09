@@ -89,7 +89,7 @@ void TxtMapLoader::loadMap(std::string filename) {
             else if (tile == '*' || tile == '.')
                 m_world.addCoin(x, y, calculatedTileSize, calculatedTileSize);
             else if (tile == 'P')
-                m_world.addPacMan(x, y, calculatedTileSize, calculatedTileSize);
+                m_world.addPacMan(x, y, calculatedTileSize, calculatedTileSize, cols);
             else if (tile == 'B') {
                 m_world.addGhost(x, y, calculatedTileSize, calculatedTileSize, tile);
             } else if (tile == 'R') {
