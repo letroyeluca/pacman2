@@ -67,7 +67,12 @@ private:
     std::vector<std::shared_ptr<WallModel>> m_walls;
     std::vector<std::shared_ptr<GhostModel>> m_ghosts;
 
-    struct Gate {double x;double y;double w;double h;};
+    struct Gate {
+        double x;
+        double y;
+        double w;
+        double h;
+    };
     std::vector<Gate> m_gates;
 
     double m_width = 2.0;

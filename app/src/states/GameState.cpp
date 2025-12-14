@@ -6,8 +6,8 @@
 #include "factories/ConcreteFactory.h"
 #include "logic/models/GhostModel.h" // <--- BELANGRIJK: Vergeet deze include niet!
 #include "logic/models/PacManModel.h"
-#include "states/PausedState.h"
 #include "states/GameOverState.h"
+#include "states/PausedState.h"
 #include <iostream>
 
 // --- Constructor ---

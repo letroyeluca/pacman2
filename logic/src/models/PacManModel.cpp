@@ -8,7 +8,8 @@
 namespace logic {
 
 PacManModel::PacManModel(double x, double y, double width, double height)
-    : EntityModel(x, y, width, height), m_direction(Direction::STOP), m_nextDirection(Direction::STOP), m_speed(0.35f), m_startX(x), m_startY(y) {
+    : EntityModel(x, y, width, height), m_direction(Direction::STOP), m_nextDirection(Direction::STOP), m_speed(0.35f),
+      m_startX(x), m_startY(y) {
 
     setHitboxScale(1.0);
 }
@@ -28,9 +29,7 @@ void PacManModel::setPosition(double x, double y) {
     notify(logic::Event::DEFAULT);
 }
 
-int PacManModel::getLives(){
-    return m_lives;
-}
+int PacManModel::getLives() { return m_lives; }
 
 void PacManModel::stop() { m_direction = Direction::STOP; }
 
@@ -85,10 +84,10 @@ void PacManModel::update(float dt) {
     }
 }
 
-void PacManModel::die(){
-    if(m_lives >= 1){
+void PacManModel::die() {
+    if (m_lives >= 1) {
         m_lives--;
-        setPosition(m_startX,m_startY);
+        setPosition(m_startX, m_startY);
     }
 }
 

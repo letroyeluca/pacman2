@@ -6,8 +6,7 @@
 #include <iostream>
 #include <string>
 
-GameOverState::GameOverState(StateManager& manager, sf::RenderWindow& window, int finalScore)
-        : State(manager, window) {
+GameOverState::GameOverState(StateManager& manager, sf::RenderWindow& window, int finalScore) : State(manager, window) {
 
     if (!m_font.loadFromFile("assets/font.ttf")) {
         std::cerr << "Could not load font" << std::endl;
