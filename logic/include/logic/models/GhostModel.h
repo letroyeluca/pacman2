@@ -36,6 +36,8 @@ namespace logic {
 
         bool isLocked() const { return m_locked; }
         void setLocked(bool locked) { m_locked = locked; }
+        void reset();
+        void setSpawnDelay(float delay);
 
     private:
         Direction m_direction;
@@ -43,6 +45,11 @@ namespace logic {
         float m_speed;
         char m_type;
         bool m_locked = false;
+        double m_startX;
+        double m_startY;
+        float m_spawnDelay = 0.0f; // Hoe lang moet hij wachten?
+        float m_spawnTimer = 0.0f; // Huidige teller
+        bool m_isActive = false;   // Mag hij al bewegen?
 
         // Het brein
         std::unique_ptr<GhostStrategy> m_strategy;

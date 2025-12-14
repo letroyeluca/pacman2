@@ -37,6 +37,12 @@ namespace logic {
         m_gates.push_back({x, y, w, h});
     }
 
+    void World::resetGhosts(){
+        for (auto& ghost : m_ghosts) {
+            ghost->reset();
+        }
+    }
+
 // Update isGateAt: Check of positie X/Y BINNEN de rechthoek van de gate valt
     bool World::isGateAt(double x, double y) const {
         for (const auto& gate : m_gates) {
@@ -86,7 +92,8 @@ namespace logic {
     public:
         CollisionVisitor(double x, double y, double w, double h)
                 : m_checkX(x), m_checkY(y), m_checkW(w), m_checkH(h), m_mode(Mode::WALL_CHECK) {}
-        CollisionVisitor(PacManModel& pacman) : m_pacman(&pacman), m_mode(Mode::ENTITY_CHECK) {}
+        CollisionVisitor(PacManModel& pacman, World& world)
+                : m_pacman(&pacman), m_world(&world), m_mode(Mode::ENTITY_CHECK) {}
 
         void visit(PacManModel& pacman) override {}
         bool hasCollided() const { return m_hasCollided; }
@@ -110,10 +117,11 @@ namespace logic {
         void visit(GhostModel& ghost) override {
             if (m_mode == Mode::ENTITY_CHECK && m_pacman) {
                 if (ghost.collidesWith(*m_pacman)) {
-                    // Simpele logica: PacMan gaat dood bij aanraking (tenzij ghost bang is, maar AI is weggehaald)
-                    // m_pacman->die();
-                    // Of reset positie:
-                    // m_pacman->setPosition(0,0); // Voorbeeld
+                     m_pacman->die();
+                    if(m_world) {
+                        m_world->resetGhosts();
+                    }
+
                 }
             }
         }
@@ -124,6 +132,7 @@ namespace logic {
         double m_checkX = 0, m_checkY = 0, m_checkW = 0, m_checkH = 0;
         bool m_hasCollided = false;
         PacManModel* m_pacman = nullptr;
+        World* m_world = nullptr;
     };
 
 // ----------------------------------------------------------------------------
@@ -275,13 +284,14 @@ namespace logic {
                     // Lock zodat hij niet 60x per seconde nadenkt op dezelfde tegel
                     ghost->setLocked(true);
 
-                    // Debug Print
+                    /*
                     std::cout << "Ghost AI Decision @ [" << gridX << "," << gridY << "] -> ";
                     if(ghost->getDirection() == Direction::UP) std::cout << "UP";
                     else if(ghost->getDirection() == Direction::DOWN) std::cout << "DOWN";
                     else if(ghost->getDirection() == Direction::LEFT) std::cout << "LEFT";
                     else if(ghost->getDirection() == Direction::RIGHT) std::cout << "RIGHT";
                     std::cout << std::endl;
+                     */
                 }
             }
 
@@ -298,7 +308,7 @@ namespace logic {
 
         // --- 3. COLLISIONS ---
         if (m_pacman) {
-            CollisionVisitor entityVisitor(*m_pacman);
+            CollisionVisitor entityVisitor(*m_pacman, *this);
 
             for (auto& coin : m_coins) {
                 coin->update(dt);

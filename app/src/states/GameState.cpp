@@ -7,6 +7,7 @@
 #include "logic/models/PacManModel.h"
 #include "logic/models/GhostModel.h" // <--- BELANGRIJK: Vergeet deze include niet!
 #include "states/PausedState.h"
+#include "states/GameOverState.h"
 #include <iostream>
 
 // --- Constructor ---
@@ -59,13 +60,11 @@ void GameState::handleInput(sf::Event& event) {
             if (m_world->getScoreModel()) {
                 m_world->getScoreModel()->saveScoreIfPersonalBest();
             }
-            // Let op: je maakte hier 2x een PausedState aan in je originele code, eentje lekte geheugen.
-            // Dit is de correcte manier:
+
             m_manager.pushState(std::make_unique<PausedState>(m_manager, m_window));
             return; // Stop verdere input verwerking als we pauzeren
         }
 
-        // --- PACMAN CONTROLS (Pijltjes) ---
         auto pacman = m_world->getPacMan();
         if (pacman) {
             if (event.key.code == sf::Keyboard::Up)
@@ -77,31 +76,27 @@ void GameState::handleInput(sf::Event& event) {
             else if (event.key.code == sf::Keyboard::Right)
                 pacman->queueDirection(logic::Direction::RIGHT);
         }
-
-        // --- GHOST CONTROLS (WASD) ---
-        // We halen de lijst met spoken op.
-        // Zorg dat 'getGhosts()' bestaat in World.h!
-        auto& ghosts = m_world->getGhosts();
-
-        if (!ghosts.empty()) {
-            // We besturen het eerste spook in de lijst (Index 0)
-            auto ghost = ghosts[0];
-
-            if (event.key.code == sf::Keyboard::W)
-                ghost->queueDirection(logic::Direction::UP);
-            else if (event.key.code == sf::Keyboard::S)
-                ghost->queueDirection(logic::Direction::DOWN);
-            else if (event.key.code == sf::Keyboard::A)
-                ghost->queueDirection(logic::Direction::LEFT);
-            else if (event.key.code == sf::Keyboard::D)
-                ghost->queueDirection(logic::Direction::RIGHT);
-        }
     }
 }
 
 // --- Update ---
 void GameState::update(float dt) {
     m_world->update(dt);
+
+    if (m_world->getPacMan()->getLives() <= 0) {
+
+        // Haal de score op
+        int finalScore = 0;
+        if (m_world->getScoreModel()) {
+            finalScore = m_world->getScoreModel()->getScore();
+            // Sla eventueel de highscore op
+            m_world->getScoreModel()->saveScoreIfPersonalBest();
+        }
+
+        // Wissel naar Game Over State
+        m_manager.pushState(std::make_unique<GameOverState>(m_manager, m_window, finalScore));
+        return;
+    }
 
     // 2. Animaties updaten
     for (auto& view : m_views) {

@@ -51,6 +51,7 @@ public:
     void createScore(double x, double y, double size);
     void addGate(double x, double y, double w, double h);
     bool isGateAt(double x, double y) const;
+    void resetGhosts();
 
     std::shared_ptr<ScoreModel> getScoreModel() { return m_scoreModel; }
     bool isMapPositionFree(double x, double y);
@@ -61,15 +62,13 @@ private:
     AbstractFactory* m_factory;
     std::shared_ptr<logic::ScoreModel> m_scoreModel;
 
-    // --- HIER ZIT DE FIX ---
-    // Verander unique_ptr naar shared_ptr
     std::shared_ptr<PacManModel> m_pacman;
     std::vector<std::shared_ptr<CoinModel>> m_coins;
     std::vector<std::shared_ptr<WallModel>> m_walls;
     std::vector<std::shared_ptr<GhostModel>> m_ghosts;
 
     struct Gate {double x;double y;double w;double h;};
-    std::vector<Gate> m_gates; // Lijst met alle poortjes
+    std::vector<Gate> m_gates;
 
     double m_width = 2.0;
     double m_height = 2.0;

@@ -2,6 +2,7 @@
 #include "logic/patterns/Visitor.h"
 #include "logic/models/PacManModel.h"
 #include "logic/strategies/GhostStrategy.h" // <--- Includeer de strategy
+#include <iostream>
 
 namespace logic {
 
@@ -9,11 +10,28 @@ namespace logic {
             : EntityModel(x, y, width, height),
               m_direction(Direction::LEFT), // Begin bewegend (niet STOP)
               m_nextDirection(Direction::LEFT),
-              m_speed(0.35f),
+              m_speed(0.25f),
               m_type(type),
-              m_locked(false) {
+              m_locked(false)
+            , m_startX(x), m_startY(y){
 
-        setHitboxScale(0.9);
+        setHitboxScale(0.7);
+        std::cout << m_x << " || ";
+        std::cout << m_y << std::endl;
+        if (type == 'R') {
+            setSpawnDelay(0.0f); // Direct
+        }
+        else if (type == 'S') { // Pinky
+            setSpawnDelay(0.0f); // Direct (eerste twee spoken)
+        }
+        else if (type == 'B') { // Inky (Blue)
+            setSpawnDelay(5.0f); // Na 5 seconden
+        }
+        else if (type == 'O') { // Clyde (Orange)
+            setSpawnDelay(10.0f); // Na 10 seconden
+        } else {
+            setSpawnDelay(0.0f);
+        }
 
         // Geef elk spook een RandomStrategy
         m_strategy = std::make_unique<RandomStrategy>();
@@ -21,6 +39,29 @@ namespace logic {
 
     // Destructor implementatie
     GhostModel::~GhostModel() = default;
+
+    void GhostModel::setSpawnDelay(float delay) {
+        m_spawnDelay = delay;
+        m_spawnTimer = delay;
+        m_isActive = (delay <= 0.0f); // Als delay 0 is, direct actief
+    }
+
+// Pas de reset aan
+    void GhostModel::reset() {
+        m_x = m_startX;
+        m_y = m_startY;
+
+        // Reset beweging
+        m_direction = Direction::UP;
+        m_nextDirection = Direction::UP;
+        m_locked = false;
+
+        // NIEUW: Reset de timer
+        m_spawnTimer = m_spawnDelay;
+        m_isActive = (m_spawnDelay <= 0.0f); // Reset active status
+
+        notify(logic::Event::DEFAULT);
+    }
 
     // --- DE THINK FUNCTIE ---
     void GhostModel::think(World& world) {
@@ -30,7 +71,6 @@ namespace logic {
         }
     }
 
-    // ... (De rest blijft hetzelfde als voorheen) ...
     void GhostModel::queueDirection(Direction newDir) {
         m_nextDirection = newDir;
         if (m_direction == Direction::STOP) m_direction = newDir;
@@ -41,6 +81,16 @@ namespace logic {
     void GhostModel::accept(Visitor& visitor) { visitor.visit(*this); }
 
     void GhostModel::update(float dt) {
+
+        if (!m_isActive) {
+            m_spawnTimer -= dt;
+            if (m_spawnTimer <= 0.0f) {
+                m_isActive = true;
+            } else {
+                // Nog niet actief? Doe niks (return) of update alleen animatie
+                return;
+            }
+        }
         double delta = m_speed * dt;
         switch (m_direction) {
             case Direction::UP:    m_y -= delta; notify(logic::Event::GhostUP); break;

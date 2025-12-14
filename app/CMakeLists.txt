@@ -18,6 +18,7 @@ add_executable(pacman_game
         src/views/ScoreView.cpp
         src/views/GhostView.cpp
         src/AssetManager.cpp
+        src/states/GameOverState.cpp
 )
 
 target_include_directories(pacman_game PRIVATE

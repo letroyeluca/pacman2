@@ -26,10 +26,15 @@ public:
     Direction getNextDirection() const { return m_nextDirection; }
     float getSpeed() const { return m_speed; }
     void setSpeed(float newspeed) { m_speed = newspeed; }
+    void die();
+    int getLives();
 
 private:
     Direction m_direction;
     Direction m_nextDirection;
+    double m_startX;
+    double m_startY;
+    int m_lives = 3;
     float m_speed;
 };
 
