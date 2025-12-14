@@ -48,8 +48,8 @@ GhostView::GhostView(std::shared_ptr<logic::GhostModel> model, Camera& camera)
     // Adjust the "offset" (e.g., +0, +2, +4, +6) based on your specific PNG layout.
     m_animRightFrames = assets.getAnimationFrames(startX, 0, 2); // Row 0
     m_animDownFrames = assets.getAnimationFrames(startX, 2, 2);  // Row 2
-    m_animLeftFrames = assets.getAnimationFrames(startX, 4, 2);    // Row 4
-    m_animUpFrames = assets.getAnimationFrames(startX, 6, 2);  // Row 6
+    m_animLeftFrames = assets.getAnimationFrames(startX, 4, 2);  // Row 4
+    m_animUpFrames = assets.getAnimationFrames(startX, 6, 2);    // Row 6
 
     // 5. Init
     m_animFrames = m_animRightFrames;
