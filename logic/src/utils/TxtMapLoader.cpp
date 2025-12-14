@@ -92,8 +92,7 @@ void TxtMapLoader::loadMap(std::string filename) {
                 m_world.addPacMan(x, y, calculatedTileSize, calculatedTileSize, cols);
             else if (tile == '-') {
                 m_world.addGate(x, y, calculatedTileSize, calculatedTileSize);
-            }
-            else if (tile == 'B') {
+            } else if (tile == 'B') {
                 m_world.addGhost(x, y, calculatedTileSize, calculatedTileSize, tile);
             } else if (tile == 'R') {
                 m_world.addGhost(x, y, calculatedTileSize, calculatedTileSize, tile);

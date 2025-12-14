@@ -4,15 +4,15 @@
 
 #include "states/GameState.h"
 #include "factories/ConcreteFactory.h"
-#include "logic/models/PacManModel.h"
 #include "logic/models/GhostModel.h" // <--- BELANGRIJK: Vergeet deze include niet!
+#include "logic/models/PacManModel.h"
 #include "states/PausedState.h"
 #include "states/GameOverState.h"
 #include <iostream>
 
 // --- Constructor ---
 GameState::GameState(StateManager& manager, sf::RenderWindow& window)
-        : State(manager, window)
+    : State(manager, window)
 // m_score wordt automatisch geinitialiseerd op 0
 {
     std::cout << "GameState initialiseren..." << std::endl;
