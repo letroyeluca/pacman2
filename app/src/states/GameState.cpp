@@ -5,12 +5,13 @@
 #include "states/GameState.h"
 #include "factories/ConcreteFactory.h"
 #include "logic/models/PacManModel.h"
+#include "logic/models/GhostModel.h" // <--- BELANGRIJK: Vergeet deze include niet!
 #include "states/PausedState.h"
 #include <iostream>
 
 // --- Constructor ---
 GameState::GameState(StateManager& manager, sf::RenderWindow& window)
-    : State(manager, window)
+        : State(manager, window)
 // m_score wordt automatisch geinitialiseerd op 0
 {
     std::cout << "GameState initialiseren..." << std::endl;
@@ -52,14 +53,19 @@ void GameState::handleResize(sf::Event::SizeEvent size) {
 // --- Handle Input ---
 void GameState::handleInput(sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
+
+        // --- PAUSE MENU ---
         if (event.key.code == sf::Keyboard::Escape) {
             if (m_world->getScoreModel()) {
                 m_world->getScoreModel()->saveScoreIfPersonalBest();
             }
-            std::make_unique<PausedState>(m_manager, m_window);
+            // Let op: je maakte hier 2x een PausedState aan in je originele code, eentje lekte geheugen.
+            // Dit is de correcte manier:
             m_manager.pushState(std::make_unique<PausedState>(m_manager, m_window));
+            return; // Stop verdere input verwerking als we pauzeren
         }
 
+        // --- PACMAN CONTROLS (Pijltjes) ---
         auto pacman = m_world->getPacMan();
         if (pacman) {
             if (event.key.code == sf::Keyboard::Up)
@@ -70,6 +76,25 @@ void GameState::handleInput(sf::Event& event) {
                 pacman->queueDirection(logic::Direction::LEFT);
             else if (event.key.code == sf::Keyboard::Right)
                 pacman->queueDirection(logic::Direction::RIGHT);
+        }
+
+        // --- GHOST CONTROLS (WASD) ---
+        // We halen de lijst met spoken op.
+        // Zorg dat 'getGhosts()' bestaat in World.h!
+        auto& ghosts = m_world->getGhosts();
+
+        if (!ghosts.empty()) {
+            // We besturen het eerste spook in de lijst (Index 0)
+            auto ghost = ghosts[0];
+
+            if (event.key.code == sf::Keyboard::W)
+                ghost->queueDirection(logic::Direction::UP);
+            else if (event.key.code == sf::Keyboard::S)
+                ghost->queueDirection(logic::Direction::DOWN);
+            else if (event.key.code == sf::Keyboard::A)
+                ghost->queueDirection(logic::Direction::LEFT);
+            else if (event.key.code == sf::Keyboard::D)
+                ghost->queueDirection(logic::Direction::RIGHT);
         }
     }
 }

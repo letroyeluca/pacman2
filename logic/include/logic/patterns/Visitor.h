@@ -9,6 +9,7 @@ namespace logic {
 class PacManModel;
 class CoinModel;
 class WallModel;
+class GhostModel;
 
 class Visitor {
 public:
@@ -16,6 +17,7 @@ public:
     virtual void visit(PacManModel& pacman) = 0;
     virtual void visit(CoinModel& coin) = 0;
     virtual void visit(WallModel& wall) = 0;
+    virtual void visit(GhostModel& wall) = 0;
 };
 } // namespace logic
 

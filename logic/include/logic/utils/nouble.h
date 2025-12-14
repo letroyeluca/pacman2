@@ -31,6 +31,7 @@ struct Nouble {
     // Basisoperatoren (je kan er meer toevoegen indien gewenst)
     Nouble operator+(double v) const { return Nouble(m_value + v); }
     Nouble operator-(double v) const { return Nouble(m_value - v); }
+    Nouble operator-(float v) const { return Nouble(m_value - v); }
     Nouble operator*(double v) const { return Nouble(m_value * v); }
     Nouble operator/(double v) const { return Nouble(v == 0.0 ? m_value : m_value / v); }
     Nouble operator/(int v) const { return Nouble(v == 0.0 ? m_value : m_value / v); }

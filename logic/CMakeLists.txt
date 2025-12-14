@@ -15,6 +15,7 @@ add_library(pacman_logic STATIC
         src/utils/StopWatch.cpp
         src/models/ScoreModel.cpp
         src/models/GhostModel.cpp
+        src/strategies/GhostStrategy.cpp
 
 )
 target_include_directories(pacman_logic PUBLIC
