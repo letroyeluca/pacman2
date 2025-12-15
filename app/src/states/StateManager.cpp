@@ -68,7 +68,6 @@ void StateManager::update(float dt) {
     }
 }
 
-
 void StateManager::render() {
     if (!m_states.empty()) {
         m_states.top()->render();

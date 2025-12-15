@@ -1,8 +1,8 @@
 // states/StateManager.h
 
-#include <stack>
-#include <memory>
 #include "State.h"
+#include <memory>
+#include <stack>
 
 class StateManager {
 public:
