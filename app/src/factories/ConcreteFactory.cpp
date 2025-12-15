@@ -2,18 +2,18 @@
 
 #include "factories/ConcreteFactory.h"
 #include "Camera.h"
+#include "logic/models/AppleModel.h"
 #include "logic/models/CoinModel.h"
 #include "logic/models/GhostModel.h"
-#include "logic/models/AppleModel.h"
 #include "logic/models/PacManModel.h"
 #include "logic/models/ScoreModel.h"
 #include "logic/models/WallModel.h"
+#include "views/AppleView.h"
 #include "views/CoinView.h"
 #include "views/GhostView.h"
 #include "views/PacManView.h"
 #include "views/ScoreView.h"
 #include "views/WallView.h"
-#include "views/AppleView.h"
 
 ConcreteFactory::ConcreteFactory(Camera& camera) : m_camera(camera) {
     if (!m_sharedTexture.loadFromFile("assets/sprite.png")) {

@@ -8,7 +8,8 @@ namespace logic {
 
 GhostModel::GhostModel(double x, double y, double width, double height, char type)
     : EntityModel(x, y, width, height), m_direction(Direction::LEFT), // Begin bewegend (niet STOP)
-      m_nextDirection(Direction::LEFT), m_speed(0.25f), m_type(type), m_locked(false), m_startX(x), m_startY(y) , m_isDead(false){
+      m_nextDirection(Direction::LEFT), m_speed(0.25f), m_type(type), m_locked(false), m_startX(x), m_startY(y),
+      m_isDead(false) {
 
     setHitboxScale(0.2);
     m_frightenedStrategy = std::make_unique<RandomStrategy>();
@@ -32,12 +33,12 @@ GhostModel::GhostModel(double x, double y, double width, double height, char typ
     // Geef elk spook een RandomStrategy
 }
 
-    void GhostModel::frighten(float duration) {
-        m_isFrightened = true;
-        m_frightenedTimer = duration;
+void GhostModel::frighten(float duration) {
+    m_isFrightened = true;
+    m_frightenedTimer = duration;
 
-        notify(logic::Event::GhostVulnerable);
-    }
+    notify(logic::Event::GhostVulnerable);
+}
 
 // Destructor implementatie
 GhostModel::~GhostModel() = default;
@@ -48,13 +49,12 @@ void GhostModel::setSpawnDelay(float delay) {
     m_isActive = (delay <= 0.0f); // Als delay 0 is, direct actief
 }
 
-
-    void GhostModel::die(){
-        m_isDead = true;
-        if (m_isActive) {
-            m_isActive = false;              // 1. Zet inactief
-            notify(logic::Event::GhostEaten); // 2. Stuur bericht (Mag hier wel!)
-        }
+void GhostModel::die() {
+    m_isDead = true;
+    if (m_isActive) {
+        m_isActive = false;               // 1. Zet inactief
+        notify(logic::Event::GhostEaten); // 2. Stuur bericht (Mag hier wel!)
+    }
 }
 // Pas de reset aan
 void GhostModel::reset() {
@@ -70,8 +70,6 @@ void GhostModel::reset() {
     m_spawnTimer = m_spawnDelay;
     m_isActive = (m_spawnDelay <= 0.0f); // Reset active status
 }
-
-
 
 // --- DE THINK FUNCTIE ---
 void GhostModel::think(World& world) {

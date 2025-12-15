@@ -46,10 +46,10 @@ GhostView::GhostView(std::shared_ptr<logic::GhostModel> model, Camera& camera)
     // We pass startX and startY.
     // The 4 directions usually follow a specific pattern in the sheet relative to the start position.
     // Adjust the "offset" (e.g., +0, +2, +4, +6) based on your specific PNG layout.
-    m_animRightFrames = assets.getAnimationFrames(startX, 0, 2); // Row 0
-    m_animDownFrames = assets.getAnimationFrames(startX, 2, 2);  // Row 2
-    m_animLeftFrames = assets.getAnimationFrames(startX, 4, 2);  // Row 4
-    m_animUpFrames = assets.getAnimationFrames(startX, 6, 2);    // Row 6
+    m_animRightFrames = assets.getAnimationFrames(startX, 0, 2);   // Row 0
+    m_animDownFrames = assets.getAnimationFrames(startX, 2, 2);    // Row 2
+    m_animLeftFrames = assets.getAnimationFrames(startX, 4, 2);    // Row 4
+    m_animUpFrames = assets.getAnimationFrames(startX, 6, 2);      // Row 6
     m_animRightFramesScared = assets.getAnimationFrames(0, 11, 2); // Row 0
     m_animDownFramesScared = assets.getAnimationFrames(0, 13, 2);  // Row 2
     m_animLeftFramesScared = assets.getAnimationFrames(0, 15, 2);  // Row 4
@@ -68,38 +68,38 @@ GhostView::GhostView(std::shared_ptr<logic::GhostModel> model, Camera& camera)
 void GhostView::onNotify(const logic::Subject& subject, logic::Event event) {
     // Determine which animation list to use based on event
     switch (event) {
-        case logic::Event::GhostVulnerable:
-            m_scared = true;
-            break;
-        case logic::Event::GhostNormal:
-            m_scared = false;
-            break;
+    case logic::Event::GhostVulnerable:
+        m_scared = true;
+        break;
+    case logic::Event::GhostNormal:
+        m_scared = false;
+        break;
     case logic::Event::GhostUP:
-        if(!m_scared){
+        if (!m_scared) {
             m_animFrames = m_animUpFrames;
-        }else{
+        } else {
             m_animFrames = m_animUpFramesScared;
         }
 
         break;
     case logic::Event::GhostDOWN:
-        if(!m_scared){
+        if (!m_scared) {
             m_animFrames = m_animDownFrames;
-        }else{
+        } else {
             m_animFrames = m_animDownFramesScared;
         }
         break;
     case logic::Event::GhostLEFT:
-        if(!m_scared){
+        if (!m_scared) {
             m_animFrames = m_animLeftFrames;
-        }else{
+        } else {
             m_animFrames = m_animLeftFramesScared;
         }
         break;
     case logic::Event::GhostRIGHT:
-        if(!m_scared){
+        if (!m_scared) {
             m_animFrames = m_animRightFrames;
-        }else{
+        } else {
             m_animFrames = m_animRightFramesScared;
         }
         break;
