@@ -4,15 +4,15 @@
 
 #include "states/GameState.h"
 #include "factories/ConcreteFactory.h"
-#include "logic/models/WallModel.h"
 #include "logic/models/CoinModel.h"
 #include "logic/models/GhostModel.h"
 #include "logic/models/PacManModel.h"
 #include "logic/models/ScoreModel.h"
+#include "logic/models/WallModel.h"
 #include "states/GameOverState.h"
 #include "states/PausedState.h"
-#include <iostream>
 #include <algorithm>
+#include <iostream>
 
 // --- Constructor ---
 GameState::GameState(StateManager& manager, sf::RenderWindow& window)
@@ -26,9 +26,8 @@ GameState::GameState(StateManager& manager, sf::RenderWindow& window)
     m_camera->setWorldDimensions(m_world->getWidth(), m_world->getHeight());
     m_views = m_factory->getCreatedViews();
 
-    std::sort(m_views.begin(), m_views.end(), [](const auto& viewA, const auto& viewB) {
-        return viewA->getRenderLayer() < viewB->getRenderLayer();
-    });
+    std::sort(m_views.begin(), m_views.end(),
+              [](const auto& viewA, const auto& viewB) { return viewA->getRenderLayer() < viewB->getRenderLayer(); });
 
     // Eenmalige resize triggeren om alles goed te zetten
     for (auto& view : m_views) {
