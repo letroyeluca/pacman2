@@ -41,7 +41,7 @@ private:
     int m_highScore;
     std::vector<int> m_highScores;
     float m_lastCoinEatTime;
-    float m_timer;
+    float m_timer = 0.0f;
 };
 } // namespace logic
 #endif

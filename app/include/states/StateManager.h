@@ -21,6 +21,7 @@ public:
     void update(float dt);
     void render();
     void handleResize(sf::Event::SizeEvent size);
+    void resetToMenu();
 
     bool isRunning() const { return !m_states.empty(); }
 

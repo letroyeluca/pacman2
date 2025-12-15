@@ -4,17 +4,32 @@
 
 #include "states/StateManager.h"
 
-void StateManager::pushState(std::unique_ptr<State> newState) { m_states.push(std::move(newState)); }
+void StateManager::pushState(std::unique_ptr<State> newState) {
+    m_states.push(std::move(newState));
+}
 
 void StateManager::popState() {
     if (!m_states.empty()) {
         m_states.pop();
     }
-
     if (!m_states.empty()) {
         m_states.top()->resume();
     }
 }
+
+// --- NIEUWE FUNCTIE ---
+// Zorgt dat we veilig teruggaan naar de onderste state (Menu)
+void StateManager::resetToMenu() {
+    // Verwijder states tot er nog maar 1 over is (MenuState)
+    while (m_states.size() > 1) {
+        m_states.pop();
+    }
+    // Resume het menu als het er nog is
+    if (!m_states.empty()) {
+        m_states.top()->resume();
+    }
+}
+// ----------------------
 
 void StateManager::handleInput(sf::Event& event) {
     if (!m_states.empty()) {

@@ -58,11 +58,9 @@ void GameOverState::setupText() {
 
 void GameOverState::handleInput(sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
-        // Bij ELKE toetsaanslag gaan we terug naar het menu
-        // 1. Pop GameOverState
-        m_manager.popState();
-        // 2. Pop GameState (zodat die gereset wordt en we in MenuState landen)
-        m_manager.popState();
+        // FIX: Gebruik de veilige methode in de StateManager
+        // Dit voorkomt dat we 'm_manager' aanroepen vanuit een vernietigd object.
+        m_manager.resetToMenu();
     }
 }
 
