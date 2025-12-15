@@ -1,10 +1,10 @@
 #ifndef PACMAN_STATEMANAGER_H // <--- FIX 1: INCLUDE GUARDS
 #define PACMAN_STATEMANAGER_H
 
-#include <stack>
-#include <memory>
-#include <SFML/Graphics.hpp>
 #include "State.h"
+#include <SFML/Graphics.hpp>
+#include <memory>
+#include <stack>
 
 class StateManager {
 public:
