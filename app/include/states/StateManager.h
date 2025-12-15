@@ -1,14 +1,20 @@
-// states/StateManager.h
+#ifndef PACMAN_STATEMANAGER_H // <--- FIX 1: INCLUDE GUARDS
+#define PACMAN_STATEMANAGER_H
 
 #include <stack>
 #include <memory>
+#include <SFML/Graphics.hpp>
 #include "State.h"
 
 class StateManager {
 public:
-    // ... bestaande functies ...
+    StateManager() = default;
+    ~StateManager() = default;
+
     void pushState(std::unique_ptr<State> newState);
     void popState();
+
+    // Veilige reset functie (voor Game Over -> Menu)
     void resetToMenu();
 
     void handleInput(sf::Event& event);
@@ -16,14 +22,19 @@ public:
     void render();
     void handleResize(sf::Event::SizeEvent size);
 
-    // NIEUW: Functie om de wijzigingen echt uit te voeren
+    // FIX 2: De functie die Game.cpp zoekt
+    bool isRunning() const { return !m_states.empty(); }
+
+    // De functie die de wijzigingen veilig doorvoert (voor Valgrind fix)
     void processStateChanges();
 
 private:
     std::stack<std::unique_ptr<State>> m_states;
 
-    // NIEUW: Buffer voor nieuwe state en flags voor acties
+    // Buffer variabelen voor safe deletion/transition
     std::unique_ptr<State> m_pendingState = nullptr;
     bool m_isRemoving = false;
     bool m_isResetting = false;
 };
+
+#endif // PACMAN_STATEMANAGER_H
