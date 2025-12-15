@@ -12,7 +12,7 @@ GhostModel::GhostModel(double x, double y, double width, double height, char typ
 
     setHitboxScale(0.5);
     if (type == 'R') {
-        setSpawnDelay(0.0f);  // Direct
+        setSpawnDelay(0.0f); // Direct
         m_strategy = std::make_unique<LockedStrategy>();
     } else if (type == 'S') { // Pinky
         setSpawnDelay(0.0f);  // Direct (eerste twee spoken)
@@ -29,7 +29,6 @@ GhostModel::GhostModel(double x, double y, double width, double height, char typ
     }
 
     // Geef elk spook een RandomStrategy
-
 }
 
 // Destructor implementatie
