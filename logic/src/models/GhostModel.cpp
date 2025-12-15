@@ -10,23 +10,26 @@ GhostModel::GhostModel(double x, double y, double width, double height, char typ
     : EntityModel(x, y, width, height), m_direction(Direction::LEFT), // Begin bewegend (niet STOP)
       m_nextDirection(Direction::LEFT), m_speed(0.25f), m_type(type), m_locked(false), m_startX(x), m_startY(y) {
 
-    setHitboxScale(0.7);
-    std::cout << m_x << " || ";
-    std::cout << m_y << std::endl;
+    setHitboxScale(0.5);
     if (type == 'R') {
         setSpawnDelay(0.0f);  // Direct
+        m_strategy = std::make_unique<LockedStrategy>();
     } else if (type == 'S') { // Pinky
         setSpawnDelay(0.0f);  // Direct (eerste twee spoken)
+        m_strategy = std::make_unique<FrontChaseStrategy>();
     } else if (type == 'B') { // Inky (Blue)
         setSpawnDelay(5.0f);  // Na 5 seconden
+        m_strategy = std::make_unique<FrontChaseStrategy>();
     } else if (type == 'O') { // Clyde (Orange)
         setSpawnDelay(10.0f); // Na 10 seconden
+        m_strategy = std::make_unique<DirectChaseStrategy>();
     } else {
         setSpawnDelay(0.0f);
+        m_strategy = std::make_unique<RandomStrategy>();
     }
 
     // Geef elk spook een RandomStrategy
-    m_strategy = std::make_unique<RandomStrategy>();
+
 }
 
 // Destructor implementatie

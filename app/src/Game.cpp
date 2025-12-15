@@ -18,6 +18,7 @@ void Game::run(int width, int height) {
     window.setPosition(sf::Vector2i(0, 0));
     // zet de framerate limiet
     window.setFramerateLimit(60);
+    window.setVerticalSyncEnabled(true);
 
     StateManager stateManager;
     stateManager.pushState(std::make_unique<MenuState>(stateManager, window));

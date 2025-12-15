@@ -11,7 +11,7 @@ PacManModel::PacManModel(double x, double y, double width, double height)
     : EntityModel(x, y, width, height), m_direction(Direction::STOP), m_nextDirection(Direction::STOP), m_speed(0.35f),
       m_startX(x), m_startY(y) {
 
-    setHitboxScale(1.0);
+    setHitboxScale(0.990);
 }
 
 void PacManModel::queueDirection(Direction newDir) {

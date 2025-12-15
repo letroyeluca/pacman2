@@ -246,7 +246,7 @@ void World::update(float dt) {
         double distToCenter = std::sqrt(std::pow(ghost->getX() - centerX, 2) + std::pow(ghost->getY() - centerY, 2));
 
         // Ben ik op het beslismoment (het center)?
-        bool atCenter = distToCenter <= (moveStep + 0.015);
+        bool atCenter = distToCenter <= (moveStep + 0.005);
 
         // Reset Lock als we center verlaten
         if (!atCenter) {
@@ -299,15 +299,6 @@ void World::update(float dt) {
 
                 // Lock zodat hij niet 60x per seconde nadenkt op dezelfde tegel
                 ghost->setLocked(true);
-
-                /*
-                std::cout << "Ghost AI Decision @ [" << gridX << "," << gridY << "] -> ";
-                if(ghost->getDirection() == Direction::UP) std::cout << "UP";
-                else if(ghost->getDirection() == Direction::DOWN) std::cout << "DOWN";
-                else if(ghost->getDirection() == Direction::LEFT) std::cout << "LEFT";
-                else if(ghost->getDirection() == Direction::RIGHT) std::cout << "RIGHT";
-                std::cout << std::endl;
-                 */
             }
         }
 
