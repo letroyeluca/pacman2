@@ -48,7 +48,8 @@ void PacManView::onNotify(const logic::Subject& subject, logic::Event event) {
 
 void PacManView::updateAnimation(float dt) {
     auto pacmanModel = std::dynamic_pointer_cast<logic::PacManModel>(m_model);
-    if (!pacmanModel) return;
+    if (!pacmanModel)
+        return;
 
     // Handle STOP state
     if (pacmanModel->getDirection() == logic::Direction::STOP) {
