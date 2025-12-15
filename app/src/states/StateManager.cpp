@@ -4,9 +4,7 @@
 
 #include "states/StateManager.h"
 
-void StateManager::pushState(std::unique_ptr<State> newState) {
-    m_states.push(std::move(newState));
-}
+void StateManager::pushState(std::unique_ptr<State> newState) { m_states.push(std::move(newState)); }
 
 void StateManager::popState() {
     if (!m_states.empty()) {
