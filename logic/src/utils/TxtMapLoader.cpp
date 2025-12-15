@@ -102,6 +102,9 @@ void TxtMapLoader::loadMap(std::string filename) {
             } else if (tile == 'O') {
                 m_world.addGhost(x, y, calculatedTileSize, calculatedTileSize, tile);
             }
+            else if (tile == 'A') {
+                m_world.addApple(x, y, calculatedTileSize, calculatedTileSize);
+            }
         }
     }
 }

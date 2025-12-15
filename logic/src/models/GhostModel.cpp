@@ -8,9 +8,10 @@ namespace logic {
 
 GhostModel::GhostModel(double x, double y, double width, double height, char type)
     : EntityModel(x, y, width, height), m_direction(Direction::LEFT), // Begin bewegend (niet STOP)
-      m_nextDirection(Direction::LEFT), m_speed(0.25f), m_type(type), m_locked(false), m_startX(x), m_startY(y) {
+      m_nextDirection(Direction::LEFT), m_speed(0.25f), m_type(type), m_locked(false), m_startX(x), m_startY(y) , m_isDead(false){
 
-    setHitboxScale(0.5);
+    setHitboxScale(0.2);
+    m_frightenedStrategy = std::make_unique<RandomStrategy>();
     if (type == 'R') {
         setSpawnDelay(0.0f); // Direct
         m_strategy = std::make_unique<LockedStrategy>();
@@ -31,6 +32,13 @@ GhostModel::GhostModel(double x, double y, double width, double height, char typ
     // Geef elk spook een RandomStrategy
 }
 
+    void GhostModel::frighten(float duration) {
+        m_isFrightened = true;
+        m_frightenedTimer = duration;
+
+        notify(logic::Event::GhostVulnerable);
+    }
+
 // Destructor implementatie
 GhostModel::~GhostModel() = default;
 
@@ -40,6 +48,14 @@ void GhostModel::setSpawnDelay(float delay) {
     m_isActive = (delay <= 0.0f); // Als delay 0 is, direct actief
 }
 
+
+    void GhostModel::die(){
+        m_isDead = true;
+        if (m_isActive) {
+            m_isActive = false;              // 1. Zet inactief
+            notify(logic::Event::GhostEaten); // 2. Stuur bericht (Mag hier wel!)
+        }
+}
 // Pas de reset aan
 void GhostModel::reset() {
     m_x = m_startX;
@@ -53,9 +69,9 @@ void GhostModel::reset() {
     // NIEUW: Reset de timer
     m_spawnTimer = m_spawnDelay;
     m_isActive = (m_spawnDelay <= 0.0f); // Reset active status
-
-    notify(logic::Event::DEFAULT);
 }
+
+
 
 // --- DE THINK FUNCTIE ---
 void GhostModel::think(World& world) {
@@ -84,13 +100,23 @@ void GhostModel::update(float dt) {
     if (!m_isActive) {
         m_spawnTimer -= dt;
         if (m_spawnTimer <= 0.0f) {
+            m_isFrightened = false;
             m_isActive = true;
         } else {
             // Nog niet actief? Doe niks (return) of update alleen animatie
             return;
         }
     }
-    double delta = m_speed * dt;
+
+    if (m_isFrightened) {
+        m_frightenedTimer -= dt;
+        if (m_frightenedTimer <= 0.0f) {
+            m_isFrightened = false;
+            notify(logic::Event::GhostNormal);
+        }
+    }
+    float currentSpeed = m_isFrightened ? (m_speed * 0.6f) : m_speed;
+    double delta = currentSpeed * dt;
     switch (m_direction) {
     case Direction::UP:
         m_y -= delta;

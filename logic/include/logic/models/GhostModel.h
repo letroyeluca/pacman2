@@ -39,6 +39,14 @@ public:
     void reset();
     void setSpawnDelay(float delay);
 
+    void frighten(float duration);
+    bool isFrightened() const { return m_isFrightened; }
+
+    void die(); // Mark for removal
+    bool isDead() const { return m_isDead; } // Check status
+
+
+
 private:
     Direction m_direction;
     Direction m_nextDirection;
@@ -50,9 +58,13 @@ private:
     float m_spawnDelay = 0.0f; // Hoe lang moet hij wachten?
     float m_spawnTimer = 0.0f; // Huidige teller
     bool m_isActive = false;   // Mag hij al bewegen?
+    bool m_isFrightened = false;
+    float m_frightenedTimer = 0.0f;
+    bool m_isDead = false;
 
     // Het brein
     std::unique_ptr<GhostStrategy> m_strategy;
+    std::unique_ptr<GhostStrategy> m_frightenedStrategy;
 };
 
 } // namespace logic

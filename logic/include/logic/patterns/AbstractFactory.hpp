@@ -17,7 +17,7 @@ class CoinModel;
 class WallModel;
 class GhostModel;
 class ScoreModel;
-
+class AppleModel;
 class AbstractFactory {
 public:
     virtual ~AbstractFactory() = default;
@@ -27,6 +27,7 @@ public:
     virtual std::shared_ptr<PacManModel> createPacMan(double x, double y, double w, double h) = 0;
     virtual std::shared_ptr<GhostModel> createGhost(double x, double y, double w, double h, char type) = 0;
     virtual std::shared_ptr<CoinModel> createCoin(double x, double y, double w, double h) = 0;
+    virtual std::shared_ptr<AppleModel> createApple(double x, double y, double w, double h) = 0;
     virtual std::shared_ptr<WallModel> createWall(double x, double y, double w, double h) = 0;
 
     // Voeg 'size' toe aan de parameters

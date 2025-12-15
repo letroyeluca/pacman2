@@ -30,6 +30,12 @@ private:
     std::vector<sf::IntRect> m_animDownFrames;
     std::vector<sf::IntRect> m_animLeftFrames;
     std::vector<sf::IntRect> m_animRightFrames;
+    std::vector<sf::IntRect> m_animFramesScared;
+    std::vector<sf::IntRect> m_animUpFramesScared;
+    std::vector<sf::IntRect> m_animDownFramesScared;
+    std::vector<sf::IntRect> m_animLeftFramesScared;
+    std::vector<sf::IntRect> m_animRightFramesScared;
+    bool m_scared;
     int m_currentFrame;
     float m_animationTimer;
     const float m_animationSpeed = 0.1f;

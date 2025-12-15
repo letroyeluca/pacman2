@@ -10,6 +10,7 @@ class PacManModel;
 class CoinModel;
 class WallModel;
 class GhostModel;
+class AppleModel;
 
 class Visitor {
 public:
@@ -18,6 +19,7 @@ public:
     virtual void visit(CoinModel& coin) = 0;
     virtual void visit(WallModel& wall) = 0;
     virtual void visit(GhostModel& wall) = 0;
+    virtual void visit(AppleModel& wall) = 0;
 };
 } // namespace logic
 

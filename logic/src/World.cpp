@@ -7,6 +7,7 @@
 #include "logic/models/GhostModel.h"
 #include "logic/models/PacManModel.h"
 #include "logic/models/ScoreModel.h"
+#include "logic/models/AppleModel.h"
 #include "logic/models/WallModel.h"
 #include "logic/patterns/Visitor.h"
 #include "logic/utils/TxtMapLoader.h"
@@ -32,6 +33,12 @@ void World::addCoin(double x, double y, double w, double h) {
     }
     m_coins.push_back(std::move(coin));
 }
+
+    void World::addApple(double x, double y, double w, double h) {
+        auto apple = m_factory->createApple(x, y, w, h);
+
+        m_apples.push_back(std::move(apple));
+    }
 
 void World::addGate(double x, double y, double w, double h) { m_gates.push_back({x, y, w, h}); }
 
@@ -72,6 +79,11 @@ void World::addGhost(double x, double y, double w, double h, char type) {
 
 void World::createScore(double x, double y, double size) { m_scoreModel = m_factory->createScore(x, y, size); }
 
+    void World::activateFrightenedMode() {
+        for (auto& ghost : m_ghosts) {
+            ghost->frighten(1000.0f); // 10 seconden bang
+        }
+    }
 void World::setGridDimensions(double startX, double startY, double tileSize) {
     m_startX = startX;
     m_startY = startY;
@@ -112,12 +124,30 @@ public:
         }
     }
 
+    void visit(AppleModel& apple) override {
+        if (m_mode == Mode::ENTITY_CHECK && m_pacman) {
+            if (apple.isActive() && m_pacman->collidesWith(apple)) {
+                apple.collect();
+                if (m_world) {
+                    m_world->activateFrightenedMode();
+                }
+            }
+        }
+    }
+
     void visit(GhostModel& ghost) override {
         if (m_mode == Mode::ENTITY_CHECK && m_pacman) {
             if (ghost.collidesWith(*m_pacman)) {
-                m_pacman->die();
-                if (m_world) {
-                    m_world->resetGhosts();
+                if (ghost.isFrightened()) {
+                    ghost.die();
+                        if(m_world && m_world->getScoreModel()) {
+
+                        }
+
+
+                } else {
+                    m_pacman->die();
+                    if (m_world) m_world->resetGhosts();
                 }
             }
         }
@@ -326,6 +356,9 @@ void World::update(float dt) {
         for (auto& ghost : m_ghosts) {
             ghost->accept(entityVisitor);
         }
+        for (auto& apple : m_apples) {
+            apple->accept(entityVisitor);
+        }
     }
 
     // --- 4. OVERIG ---
@@ -333,6 +366,9 @@ void World::update(float dt) {
         m_scoreModel->update(dt);
     for (auto& wall : m_walls)
         wall->update(dt);
+    std::erase_if(m_ghosts, [](const auto& ghost) {
+        return ghost->isDead();
+    });
 }
 
 } // namespace logic

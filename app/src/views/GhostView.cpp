@@ -50,6 +50,10 @@ GhostView::GhostView(std::shared_ptr<logic::GhostModel> model, Camera& camera)
     m_animDownFrames = assets.getAnimationFrames(startX, 2, 2);  // Row 2
     m_animLeftFrames = assets.getAnimationFrames(startX, 4, 2);  // Row 4
     m_animUpFrames = assets.getAnimationFrames(startX, 6, 2);    // Row 6
+    m_animRightFramesScared = assets.getAnimationFrames(0, 11, 2); // Row 0
+    m_animDownFramesScared = assets.getAnimationFrames(0, 13, 2);  // Row 2
+    m_animLeftFramesScared = assets.getAnimationFrames(0, 15, 2);  // Row 4
+    m_animUpFramesScared = assets.getAnimationFrames(0, 17, 2);    // Row 6
 
     // 5. Init
     m_animFrames = m_animRightFrames;
@@ -64,17 +68,40 @@ GhostView::GhostView(std::shared_ptr<logic::GhostModel> model, Camera& camera)
 void GhostView::onNotify(const logic::Subject& subject, logic::Event event) {
     // Determine which animation list to use based on event
     switch (event) {
+        case logic::Event::GhostVulnerable:
+            m_scared = true;
+            break;
+        case logic::Event::GhostNormal:
+            m_scared = false;
+            break;
     case logic::Event::GhostUP:
-        m_animFrames = m_animUpFrames;
+        if(!m_scared){
+            m_animFrames = m_animUpFrames;
+        }else{
+            m_animFrames = m_animUpFramesScared;
+        }
+
         break;
     case logic::Event::GhostDOWN:
-        m_animFrames = m_animDownFrames;
+        if(!m_scared){
+            m_animFrames = m_animDownFrames;
+        }else{
+            m_animFrames = m_animDownFramesScared;
+        }
         break;
     case logic::Event::GhostLEFT:
-        m_animFrames = m_animLeftFrames;
+        if(!m_scared){
+            m_animFrames = m_animLeftFrames;
+        }else{
+            m_animFrames = m_animLeftFramesScared;
+        }
         break;
     case logic::Event::GhostRIGHT:
-        m_animFrames = m_animRightFrames;
+        if(!m_scared){
+            m_animFrames = m_animRightFrames;
+        }else{
+            m_animFrames = m_animRightFramesScared;
+        }
         break;
     default:
         break;

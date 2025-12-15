@@ -24,6 +24,7 @@ public:
     std::shared_ptr<logic::PacManModel> createPacMan(double x, double y, double w, double h) override;
     std::shared_ptr<logic::GhostModel> createGhost(double x, double y, double w, double h, char type) override;
     std::shared_ptr<logic::CoinModel> createCoin(double x, double y, double w, double h) override;
+    std::shared_ptr<logic::AppleModel> createApple(double x, double y, double w, double h) override;
     std::shared_ptr<logic::WallModel> createWall(double x, double y, double w, double h) override;
 
     std::shared_ptr<logic::ScoreModel> createScore(double x, double y, double size) override;

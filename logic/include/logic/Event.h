@@ -14,6 +14,7 @@ enum class Event {
     FruitEaten,
     GhostEaten,
     GhostVulnerable,
+    GhostNormal,
     PacManUP,
     PacManDOWN,
     PacManLEFT,
@@ -23,7 +24,8 @@ enum class Event {
     GhostUP,
     GhostDOWN,
     GhostLEFT,
-    GhostRIGHT
+    GhostRIGHT,
+    AppleEaten
 
 };
 }

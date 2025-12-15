@@ -16,6 +16,7 @@ class PacManModel;
 class CoinModel;
 class WallModel;
 class ScoreModel;
+class AppleModel;
 } // namespace logic
 
 namespace logic {
@@ -46,12 +47,14 @@ public:
     // Add functies
     void addWall(double x, double y, double w, double h);
     void addCoin(double x, double y, double w, double h);
+    void addApple(double x, double y, double w, double h);
     void addPacMan(double x, double y, double w, double h, int mapsize);
     void addGhost(double x, double y, double w, double h, char type);
     void createScore(double x, double y, double size);
     void addGate(double x, double y, double w, double h);
     bool isGateAt(double x, double y) const;
     void resetGhosts();
+    void activateFrightenedMode();
 
     std::shared_ptr<ScoreModel> getScoreModel() { return m_scoreModel; }
     bool isMapPositionFree(double x, double y);
@@ -64,6 +67,7 @@ private:
 
     std::shared_ptr<PacManModel> m_pacman;
     std::vector<std::shared_ptr<CoinModel>> m_coins;
+    std::vector<std::shared_ptr<AppleModel>> m_apples;
     std::vector<std::shared_ptr<WallModel>> m_walls;
     std::vector<std::shared_ptr<GhostModel>> m_ghosts;
 
