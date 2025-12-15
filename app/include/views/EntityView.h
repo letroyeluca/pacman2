@@ -21,11 +21,14 @@ public:
     virtual void onWindowResize();
     virtual void draw(sf::RenderWindow& window);
     virtual void onNotify(const logic::Subject& subject, logic::Event event) override;
+    int getRenderLayer() const { return m_renderLayer; }
+    void setRenderLayer(int layer) { m_renderLayer = layer; }
 
 protected:
     std::shared_ptr<logic::EntityModel> m_model;
     Camera& m_camera;
     sf::Sprite m_sprite; // Deze variabele is nodig voor alle subklassen!
+    int m_renderLayer = 0;
 };
 
 #endif // PACMAN_ENTITYVIEW_H

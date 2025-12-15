@@ -4,11 +4,15 @@
 
 #include "states/GameState.h"
 #include "factories/ConcreteFactory.h"
-#include "logic/models/GhostModel.h" // <--- BELANGRIJK: Vergeet deze include niet!
+#include "logic/models/WallModel.h"
+#include "logic/models/CoinModel.h"
+#include "logic/models/GhostModel.h"
 #include "logic/models/PacManModel.h"
+#include "logic/models/ScoreModel.h"
 #include "states/GameOverState.h"
 #include "states/PausedState.h"
 #include <iostream>
+#include <algorithm>
 
 // --- Constructor ---
 GameState::GameState(StateManager& manager, sf::RenderWindow& window)
@@ -22,11 +26,9 @@ GameState::GameState(StateManager& manager, sf::RenderWindow& window)
     m_camera->setWorldDimensions(m_world->getWidth(), m_world->getHeight());
     m_views = m_factory->getCreatedViews();
 
-    if (!m_views.empty()) {
-        auto scoreView = std::move(m_views.front()); // Pak de eerste
-        m_views.erase(m_views.begin());              // Verwijder vooraan
-        m_views.push_back(std::move(scoreView));     // Zet achteraan
-    }
+    std::sort(m_views.begin(), m_views.end(), [](const auto& viewA, const auto& viewB) {
+        return viewA->getRenderLayer() < viewB->getRenderLayer();
+    });
 
     // Eenmalige resize triggeren om alles goed te zetten
     for (auto& view : m_views) {
@@ -55,12 +57,10 @@ void GameState::handleResize(sf::Event::SizeEvent size) {
 void GameState::handleInput(sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
 
-        // --- PAUSE MENU ---
         if (event.key.code == sf::Keyboard::Escape) {
             if (m_world->getScoreModel()) {
                 m_world->getScoreModel()->saveScoreIfPersonalBest();
             }
-
             m_manager.pushState(std::make_unique<PausedState>(m_manager, m_window));
             return; // Stop verdere input verwerking als we pauzeren
         }
