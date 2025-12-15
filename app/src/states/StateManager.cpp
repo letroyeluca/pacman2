@@ -10,24 +10,11 @@ void StateManager::popState() {
     if (!m_states.empty()) {
         m_states.pop();
     }
-    if (!m_states.empty()) {
-        m_states.top()->resume();
-    }
-}
 
-// --- NIEUWE FUNCTIE ---
-// Zorgt dat we veilig teruggaan naar de onderste state (Menu)
-void StateManager::resetToMenu() {
-    // Verwijder states tot er nog maar 1 over is (MenuState)
-    while (m_states.size() > 1) {
-        m_states.pop();
-    }
-    // Resume het menu als het er nog is
     if (!m_states.empty()) {
         m_states.top()->resume();
     }
 }
-// ----------------------
 
 void StateManager::handleInput(sf::Event& event) {
     if (!m_states.empty()) {
@@ -35,11 +22,52 @@ void StateManager::handleInput(sf::Event& event) {
     }
 }
 
+void StateManager::resetToMenu() {
+    // Zet vlaggetje
+    m_isResetting = true;
+}
+
+void StateManager::processStateChanges() {
+    // 1. Verwijderen (Pop)
+    if (m_isRemoving && !m_states.empty()) {
+        m_states.pop();
+        if (!m_states.empty()) {
+            m_states.top()->resume();
+        }
+        m_isRemoving = false;
+    }
+
+    // 2. Resetten naar Menu
+    if (m_isResetting) {
+        while (m_states.size() > 1) {
+            m_states.pop();
+        }
+        if (!m_states.empty()) {
+            m_states.top()->resume();
+        }
+        m_isResetting = false;
+    }
+
+    // 3. Toevoegen (Push)
+    if (m_pendingState) {
+        // Pauzeer de huidige
+        if (!m_states.empty()) {
+            // m_states.top()->pause(); // Optioneel als je pause() hebt
+        }
+        m_states.push(std::move(m_pendingState));
+        m_pendingState = nullptr; // Reset pointer
+    }
+}
+
 void StateManager::update(float dt) {
+    // EERST wijzigingen verwerken (veilig moment)
+    processStateChanges();
+
     if (!m_states.empty()) {
         m_states.top()->update(dt);
     }
 }
+
 
 void StateManager::render() {
     if (!m_states.empty()) {

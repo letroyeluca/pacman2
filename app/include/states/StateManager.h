@@ -1,32 +1,29 @@
-//
-// Created by Luca Letroye on 27/11/2025.
-//
+// states/StateManager.h
 
-#ifndef PACMAN_STATEMANAGER_H
-#define PACMAN_STATEMANAGER_H
-
-#include "State.h"
-#include <memory>
 #include <stack>
+#include <memory>
+#include "State.h"
 
 class StateManager {
 public:
-    StateManager() = default;
-    ~StateManager() = default;
-
+    // ... bestaande functies ...
     void pushState(std::unique_ptr<State> newState);
     void popState();
+    void resetToMenu();
 
     void handleInput(sf::Event& event);
     void update(float dt);
     void render();
     void handleResize(sf::Event::SizeEvent size);
-    void resetToMenu();
 
-    bool isRunning() const { return !m_states.empty(); }
+    // NIEUW: Functie om de wijzigingen echt uit te voeren
+    void processStateChanges();
 
 private:
     std::stack<std::unique_ptr<State>> m_states;
-};
 
-#endif // PACMAN_STATEMANAGER_H
+    // NIEUW: Buffer voor nieuwe state en flags voor acties
+    std::unique_ptr<State> m_pendingState = nullptr;
+    bool m_isRemoving = false;
+    bool m_isResetting = false;
+};

@@ -7,13 +7,15 @@
 #include <iostream>
 
 namespace logic {
-
-ScoreModel::ScoreModel(double x, double y, double size)
-    : EntityModel(x, y, size, size), // Geef x, y door. Width/Height (1.0) maakt
-                                     // niet uit voor tekst.
-      m_currentScore(0), m_highScore(0), m_lastCoinEatTime(0.0f), m_timer(0.0f) {
-    loadHighScores();
-}
+    ScoreModel::ScoreModel(double x, double y, double size)
+            : EntityModel(x, y, size, size),
+              m_currentScore(0),
+              m_highScore(0),
+              m_lastCoinEatTime(0.0f),
+              m_timer(0.0f)
+    {
+        loadHighScores();
+    }
 
 void ScoreModel::update(float dt) {
     m_timer += dt;
