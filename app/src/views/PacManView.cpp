@@ -48,14 +48,12 @@ void PacManView::onNotify(const logic::Subject& subject, logic::Event event) {
 
 void PacManView::updateAnimation(float dt) {
     auto pacmanModel = std::dynamic_pointer_cast<logic::PacManModel>(m_model);
-    if (!pacmanModel)
-        return;
+    if (!pacmanModel) return;
 
     // Handle STOP state
     if (pacmanModel->getDirection() == logic::Direction::STOP) {
         m_animationTimer = 0.f;
-        m_currentFrame = 0;
-        // Apply the specific frame without overwriting position
+        m_currentFrame = 0; // Of 1, als je een 'open mond' wilt bij stop
         if (!m_animFrames.empty()) {
             m_sprite.setTextureRect(m_animFrames[m_currentFrame]);
         }
@@ -69,12 +67,13 @@ void PacManView::updateAnimation(float dt) {
         if (m_currentFrame >= m_animFrames.size()) {
             m_currentFrame = 0;
         }
-
-        // CRITICAL FIX: Only update the texture rectangle (the cutout).
-        // Do NOT assign m_sprite = ... because that resets position to (0,0).
-        m_sprite.setTextureRect(m_animFrames[m_currentFrame]);
-
         m_animationTimer -= m_animationSpeed;
+    }
+
+    // --- FIX: Update de sprite ALTIJD, niet alleen als de timer tikt ---
+    // Hierdoor pakt hij direct de nieuwe richting (m_animFrames) zodra die verandert.
+    if (!m_animFrames.empty()) {
+        m_sprite.setTextureRect(m_animFrames[m_currentFrame]);
     }
 }
 
