@@ -1,4 +1,161 @@
-s0242098@ad.ua.ac.be@pclab04:~/Downloads/pacman2-main/app$ valgrind --leak-check=full ./pacman_game 
+s0242098@ad.ua.ac.be@pclab04:~/CLionProjects/pacman2$ cd cmake-build-debug/
+s0242098@ad.ua.ac.be@pclab04:~/CLionProjects/pacman2/cmake-build-debug$ cd app
+s0242098@ad.ua.ac.be@pclab04:~/CLionProjects/pacman2/cmake-build-debug/app$ valgrind --leak-check=full ./pacman_game 
+==8040== Memcheck, a memory error detector
+==8040== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==8040== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==8040== Command: ./pacman_game
+==8040== 
+==8040== realloc() with size 0
+==8040==    at 0x484DB80: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==8040==    by 0x73D5B22: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x5A4BC26: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x5AB1C55: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x5A4B1EA: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x4005823: call_init (dl-init.c:120)
+==8040==    by 0x4005823: _dl_init (dl-init.c:121)
+==8040==    by 0x40015B1: _dl_catch_exception (dl-catch.c:211)
+==8040==    by 0x400CD7B: dl_open_worker (dl-open.c:829)
+==8040==    by 0x400CD7B: dl_open_worker (dl-open.c:792)
+==8040==    by 0x400151B: _dl_catch_exception (dl-catch.c:237)
+==8040==    by 0x400D163: _dl_open (dl-open.c:905)
+==8040==    by 0x4D3E1A3: dlopen_doit (dlopen.c:56)
+==8040==    by 0x400151B: _dl_catch_exception (dl-catch.c:237)
+==8040==  Address 0x5308670 is 0 bytes after a block of size 0 alloc'd
+==8040==    at 0x4846828: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==8040==    by 0x73D5B0F: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x5A4BC26: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x5AB1C55: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x5A4B1EA: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x4005823: call_init (dl-init.c:120)
+==8040==    by 0x4005823: _dl_init (dl-init.c:121)
+==8040==    by 0x40015B1: _dl_catch_exception (dl-catch.c:211)
+==8040==    by 0x400CD7B: dl_open_worker (dl-open.c:829)
+==8040==    by 0x400CD7B: dl_open_worker (dl-open.c:792)
+==8040==    by 0x400151B: _dl_catch_exception (dl-catch.c:237)
+==8040==    by 0x400D163: _dl_open (dl-open.c:905)
+==8040==    by 0x4D3E1A3: dlopen_doit (dlopen.c:56)
+==8040==    by 0x400151B: _dl_catch_exception (dl-catch.c:237)
+==8040== 
+==8040== posix_memalign() invalid size value: 0
+==8040==    at 0x484E2E8: posix_memalign (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==8040==    by 0x73D5B53: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x5A4BC26: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x5AB1C55: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x5A4B1EA: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x4005823: call_init (dl-init.c:120)
+==8040==    by 0x4005823: _dl_init (dl-init.c:121)
+==8040==    by 0x40015B1: _dl_catch_exception (dl-catch.c:211)
+==8040==    by 0x400CD7B: dl_open_worker (dl-open.c:829)
+==8040==    by 0x400CD7B: dl_open_worker (dl-open.c:792)
+==8040==    by 0x400151B: _dl_catch_exception (dl-catch.c:237)
+==8040==    by 0x400D163: _dl_open (dl-open.c:905)
+==8040==    by 0x4D3E1A3: dlopen_doit (dlopen.c:56)
+==8040==    by 0x400151B: _dl_catch_exception (dl-catch.c:237)
+==8040== 
+==8040== Syscall param sendmsg(msg.msg_iov[0]) points to uninitialised byte(s)
+==8040==    at 0x4DD2004: sendmsg (sendmsg.c:28)
+==8040==    by 0x5215A4C: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==8040==    by 0x5215C4E: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==8040==    by 0x5215DA6: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==8040==    by 0x5216DD7: xcb_flush (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==8040==    by 0x5AAFFE0: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x5AB0FD9: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x5AAB07E: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x5AAFD58: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x5A4CB34: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x5A4D48F: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x747B88D: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==  Address 0x52f053d is 4,557 bytes inside a block of size 21,176 alloc'd
+==8040==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==8040==    by 0x5218396: xcb_connect_to_fd (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==8040==    by 0x52190D9: xcb_connect_to_display_with_auth_info (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==8040==    by 0x50473C9: _XConnectXCB (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==8040==    by 0x50380FD: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==8040==    by 0x48DF283: ??? (in /usr/lib/x86_64-linux-gnu/libsfml-window.so.2.6.1)
+==8040==    by 0x48EBC05: ??? (in /usr/lib/x86_64-linux-gnu/libsfml-window.so.2.6.1)
+==8040==    by 0x48D4216: sf::GlResource::GlResource() (in /usr/lib/x86_64-linux-gnu/libsfml-window.so.2.6.1)
+==8040==    by 0x48D8F8A: sf::Window::Window() (in /usr/lib/x86_64-linux-gnu/libsfml-window.so.2.6.1)
+==8040==    by 0x4899E10: sf::RenderWindow::RenderWindow(sf::VideoMode, sf::String const&, unsigned int, sf::ContextSettings const&) (in /usr/lib/x86_64-linux-gnu/libsfml-graphics.so.2.6.1)
+==8040==    by 0x10FF0C: Game::run(int, int) (Game.cpp:17)
+==8040==    by 0x111E74: main (main.cpp:8)
+==8040== 
+GameState initialiseren...
+B
+R
+S
+O
+GameState setup compleet. Aantal views: 219
+Quitting game, returning to Menu...
+Quitting game, returning to Menu...
+Quitting game, returning to Menu...
+Quitting game, returning to Menu...
+Quitting game, returning to Menu...
+Quitting game, returning to Menu...
+Quitting game, returning to Menu...
+Quitting game, returning to Menu...
+Quitting game, returning to Menu...
+Quitting game, returning to Menu...
+Quitting game, returning to Menu...
+==8040== 
+==8040== HEAP SUMMARY:
+==8040==     in use at exit: 221,157 bytes in 1,769 blocks
+==8040==   total heap usage: 132,455 allocs, 130,686 frees, 695,241,429 bytes allocated
+==8040== 
+==8040== 128 bytes in 1 blocks are definitely lost in loss record 400 of 522
+==8040==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==8040==    by 0x73DC50B: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x73D1AA9: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x73D052E: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x73E06B8: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x5A4BC78: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x5AB1C55: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x5A4B1EA: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x4005823: call_init (dl-init.c:120)
+==8040==    by 0x4005823: _dl_init (dl-init.c:121)
+==8040==    by 0x40015B1: _dl_catch_exception (dl-catch.c:211)
+==8040==    by 0x400CD7B: dl_open_worker (dl-open.c:829)
+==8040==    by 0x400CD7B: dl_open_worker (dl-open.c:792)
+==8040==    by 0x400151B: _dl_catch_exception (dl-catch.c:237)
+==8040== 
+==8040== 624 (128 direct, 496 indirect) bytes in 1 blocks are definitely lost in loss record 439 of 522
+==8040==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==8040==    by 0x73DC50B: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x73D1AA9: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x73CEA58: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x73D00DC: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x73E0682: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x5A4BC78: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x5AB1C55: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x5A4B1EA: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x4005823: call_init (dl-init.c:120)
+==8040==    by 0x4005823: _dl_init (dl-init.c:121)
+==8040==    by 0x40015B1: _dl_catch_exception (dl-catch.c:211)
+==8040==    by 0x400CD7B: dl_open_worker (dl-open.c:829)
+==8040==    by 0x400CD7B: dl_open_worker (dl-open.c:792)
+==8040== 
+==8040== 28,134 (6,024 direct, 22,110 indirect) bytes in 1 blocks are definitely lost in loss record 520 of 522
+==8040==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==8040==    by 0x73DC50B: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x73D34E5: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x73CEA40: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x73D00DC: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x73E0682: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x5A4BC78: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x5AB1C55: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x5A4B1EA: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x4005823: call_init (dl-init.c:120)
+==8040==    by 0x4005823: _dl_init (dl-init.c:121)
+==8040==    by 0x40015B1: _dl_catch_exception (dl-catch.c:211)
+==8040==    by 0x400CD7B: dl_open_worker (dl-open.c:829)
+==8040==    by 0x400CD7B: dl_open_worker (dl-open.c:792)
+==8040== 
+==8040== 123,502 (896 direct, 122,606 indirect) bytes in 1 blocks are definitely lost in loss record 522 of 522
+==8040==    at 0x484DB80: realloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==8040==    by 0x73DB7B2: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x73D1B40: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x73CF1AE: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470.256.02)
+==8040==    by 0x73E13C8: ??? (in /usr/lib/x86_64-linux-gnu/libnvidia-glcore.so.470s0242098@ad.ua.ac.be@pclab04:~/Downloads/pacman2-main/app$ valgrind --leak-check=full ./pacman_game 
 ==6621== Memcheck, a memory error detector
 ==6621== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
 ==6621== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
@@ -172,4 +329,28 @@ GameState setup compleet. Aantal views: 219
 ==6621== 
 ==6621== Use --track-origins=yes to see where uninitialised values come from
 ==6621== For lists of detected and suppressed errors, rerun with: -s
-==6621== ERROR SUMMARY: 7 errors from 7 contexts (suppressed: 0 from 0)
+==6621== ERROR SUMMARY: 7 errors from 7 contexts (suppressed: 0 from 0).256.02)
+==8040==    by 0x5A4BC78: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x5AB1C55: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x5A4B1EA: ??? (in /usr/lib/x86_64-linux-gnu/libGLX_nvidia.so.470.256.02)
+==8040==    by 0x4005823: call_init (dl-init.c:120)
+==8040==    by 0x4005823: _dl_init (dl-init.c:121)
+==8040==    by 0x40015B1: _dl_catch_exception (dl-catch.c:211)
+==8040==    by 0x400CD7B: dl_open_worker (dl-open.c:829)
+==8040==    by 0x400CD7B: dl_open_worker (dl-open.c:792)
+==8040==    by 0x400151B: _dl_catch_exception (dl-catch.c:237)
+==8040== 
+==8040== LEAK SUMMARY:
+==8040==    definitely lost: 7,176 bytes in 4 blocks
+==8040==    indirectly lost: 145,212 bytes in 803 blocks
+==8040==      possibly lost: 0 bytes in 0 blocks
+==8040==    still reachable: 68,769 bytes in 962 blocks
+==8040==         suppressed: 0 bytes in 0 blocks
+==8040== Reachable blocks (those to which a pointer was found) are not shown.
+==8040== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==8040== 
+==8040== Use --track-origins=yes to see where uninitialised values come from
+==8040== For lists of detected and suppressed errors, rerun with: -s
+==8040== ERROR SUMMARY: 7 errors from 7 contexts (suppressed: 0 from 0)
+s0242098@ad.ua.ac.be@pclab04:~/CLionProjects/pacman2/cmake-build-debug/app$ 
+
