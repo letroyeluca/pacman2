@@ -48,15 +48,9 @@ void PausedState::handleResize(sf::Event::SizeEvent size) {
 // --- HIER ZIT DE BELANGRIJKE WIJZIGING ---
 void PausedState::handleInput(sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
-
-        // Situatie 1: Speler drukt op ESCAPE -> Stoppen met spelen (Terug naar
-        // Menu)
         if (event.key.code == sf::Keyboard::Escape) {
             std::cout << "Quitting game, returning to Menu..." << std::endl;
-
-            StateManager& manager = m_manager;
-            manager.popState();
-            manager.popState();
+            m_manager.resetToMenu();
 
         } else {
             std::cout << "Resuming game..." << std::endl;
