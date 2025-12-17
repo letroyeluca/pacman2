@@ -41,7 +41,16 @@ jobs:
         if: runner.os != 'Windows'
         run: ${{ matrix.install_cmd }}
 
-      # 3. Setup VCPKG (Alleen Windows)
+      # 3a. VCPKG Terugzetten (Windows FIX voor SFML 3 issue)
+      # We zetten VCPKG terug naar de release van november 2024, toen SFML nog op versie 2.6.x zat.
+      - name: Pin VCPKG Version (Windows)
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          cd "$VCPKG_INSTALLATION_ROOT"
+          git checkout 2024.11.16
+
+      # 3b. Setup VCPKG (Alleen Windows)
       - name: Setup VCPKG (Windows)
         if: runner.os == 'Windows'
         run: vcpkg install sfml:x64-windows
@@ -63,44 +72,42 @@ jobs:
       - name: Build
         run: cmake --build build --config Release
 
-      # 6. Pakketje Maken (Executable + Assets)
-      - name: Package Application
-        shell: bash
+      # 6. Dist map voorbereiden (Algemeen)
+      - name: Prepare Dist Folder
         run: |
           mkdir dist
-          
-          # Kopieer Assets
-          if [ -d "assets" ]; then
-            cp -r assets dist/
-          else
-            echo "WARNING: Assets folder not found!"
-          fi
-          
-          # --- HIER ZAT DE FOUT: NU GESPLITST PER OS ---
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            # Windows: Kopieer .exe en .dll
-            cp build/Release/*.exe dist/
-            find build -name "*.dll" -exec cp {} dist/ \;
-            
-          elif [ "$RUNNER_OS" == "macOS" ]; then
-            # Mac FIX: Gebruik -perm +0111 ipv -executable
-            find build -maxdepth 3 -type f -perm +0111 -not -path '*/.*' -exec cp {} dist/ \;
-            
-          else
-            # Linux: Gebruik -executable (standaard)
-            find build -maxdepth 3 -type f -executable -not -path '*/.*' -exec cp {} dist/ \;
-          fi
-          # ---------------------------------------------
-          
-          # Comprimeer de map
-          cd dist
-          if [ "$RUNNER_OS" == "Windows" ]; then
-            7z a ../${{ matrix.artifact_name }}${{ matrix.asset_ext }} *
-          else
-            tar -czvf ../${{ matrix.artifact_name }}${{ matrix.asset_ext }} *
-          fi
+          if [ -d "assets" ]; then cp -r assets dist/; fi
 
-      # 7. Uploaden naar GitHub Releases
+      # 7a. Package Windows (Exe + DLLs)
+      - name: Package Windows
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          cp build/Release/*.exe dist/
+          find build -name "*.dll" -exec cp {} dist/ \;
+          cd dist
+          7z a ../${{ matrix.artifact_name }}${{ matrix.asset_ext }} *
+
+      # 7b. Package macOS (Fix voor permissies)
+      - name: Package macOS
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          # Op Mac gebruiken we -perm +111 om executables te vinden (standaard BSD syntax)
+          find build -maxdepth 3 -type f -perm +111 -not -path '*/.*' -exec cp {} dist/ \;
+          cd dist
+          tar -czvf ../${{ matrix.artifact_name }}${{ matrix.asset_ext }} *
+
+      # 7c. Package Linux (Standaard executable)
+      - name: Package Linux
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          find build -maxdepth 3 -type f -executable -not -path '*/.*' -exec cp {} dist/ \;
+          cd dist
+          tar -czvf ../${{ matrix.artifact_name }}${{ matrix.asset_ext }} *
+
+      # 8. Uploaden naar GitHub Releases
       - name: Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
