@@ -40,12 +40,14 @@ jobs:
         if: runner.os != 'Windows'
         run: ${{ matrix.install_cmd }}
 
+      # FIX: Bootstrap toevoegen na checkout
       - name: Pin VCPKG Version (Windows)
         if: runner.os == 'Windows'
         shell: bash
         run: |
           cd "$VCPKG_INSTALLATION_ROOT"
           git checkout 2024.11.16
+          ./bootstrap-vcpkg.bat
 
       - name: Setup VCPKG (Windows)
         if: runner.os == 'Windows'
@@ -96,7 +98,6 @@ jobs:
           cd dist
           tar -czvf ../${{ matrix.artifact_name }}${{ matrix.asset_ext }} *
 
-      # BELANGRIJK: Hier uploaden we naar tijdelijke GitHub opslag in plaats van direct releasen
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -107,7 +108,7 @@ jobs:
   # FASE 2: RELEASEN (1x, pas als alles klaar is)
   release:
     name: Create Release
-    needs: build  # Wacht tot alle build jobs klaar zijn
+    needs: build
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     
@@ -115,7 +116,6 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
-          # Download alles van de vorige stap
           path: artifacts
           merge-multiple: true
 
