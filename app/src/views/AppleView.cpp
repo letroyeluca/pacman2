@@ -2,13 +2,13 @@
 // Created by Luca Letroye on 15/12/2025.
 //
 #include "views/AppleView.h"
+#include "AssetManager.h"
 #include "Camera.h"
 #include "logic/models/AppleModel.h"
-#include "AssetManager.h"
 #include <stdexcept>
 
 AppleView::AppleView(std::shared_ptr<logic::AppleModel> model, Camera& camera, sf::Texture& texture)
-        : EntityView(model, camera), m_isHidden(false) {
+    : EntityView(model, camera), m_isHidden(false) {
     auto& assets = Asset::AssetManager::getInstance();
     sf::FloatRect spriteBounds = m_sprite.getLocalBounds();
     m_sprite.setTexture(texture);

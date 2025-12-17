@@ -9,7 +9,7 @@
 #include <memory>
 
 namespace logic {
-    class AppleModel;
+class AppleModel;
 }
 
 class AppleView : public EntityView {
@@ -24,4 +24,4 @@ private:
     bool m_isHidden;
 };
 
-#endif //PACMAN_APPLEVIEW_H
+#endif // PACMAN_APPLEVIEW_H

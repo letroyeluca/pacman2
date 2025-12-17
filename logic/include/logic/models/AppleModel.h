@@ -9,12 +9,12 @@
 #include "logic/patterns/Visitor.h"
 
 namespace logic {
-    class AppleModel : public EntityModel {
-    public:
-        AppleModel(double x, double y, double width, double height);
-        void collect();
-        void update(float dt) override;
-        void accept(Visitor& visitor) override;
-    };
-}
-#endif //PACMAN_APPLEMODEL_H
+class AppleModel : public EntityModel {
+public:
+    AppleModel(double x, double y, double width, double height);
+    void collect();
+    void update(float dt) override;
+    void accept(Visitor& visitor) override;
+};
+} // namespace logic
+#endif // PACMAN_APPLEMODEL_H

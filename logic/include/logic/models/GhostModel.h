@@ -43,12 +43,10 @@ public:
     void frighten(float duration);
     bool isFrightened() const { return m_isFrightened; }
 
-    void die(); // Mark for removal
+    void die();                              // Mark for removal
     bool isDead() const { return m_isDead; } // Check status
     double getStartX() const { return m_startX; }
     double getStartY() const { return m_startY; }
-
-
 
 
 private:
