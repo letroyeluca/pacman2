@@ -9,27 +9,25 @@
 #include "logic/models/PacManModel.h"
 #include "logic/models/ScoreModel.h"
 #include "logic/models/WallModel.h"
+#include "states/VictoryState.h"
 #include "states/GameOverState.h"
 #include "states/PausedState.h"
 #include <algorithm>
 #include <iostream>
 
 // --- Constructor ---
-GameState::GameState(StateManager& manager, sf::RenderWindow& window)
-    : State(manager, window)
+GameState::GameState(StateManager& manager, sf::RenderWindow& window,int currentScore, int currentLives, int currentLevel): State(manager, window), m_levelIndex(currentLevel)
 // m_score wordt automatisch geinitialiseerd op 0
 {
-    std::cout << "GameState initialiseren..." << std::endl;
     m_camera = std::make_unique<Camera>(m_window.getSize().x, m_window.getSize().y);
     m_factory = std::make_unique<ConcreteFactory>(*m_camera);
     m_world = std::make_unique<logic::World>(m_factory.get());
+    m_world->initializeGameData(currentScore, currentLives, m_levelIndex);
     m_camera->setWorldDimensions(m_world->getWidth(), m_world->getHeight());
     m_views = m_factory->getCreatedViews();
 
-    std::sort(m_views.begin(), m_views.end(),
-              [](const auto& viewA, const auto& viewB) { return viewA->getRenderLayer() < viewB->getRenderLayer(); });
+    std::sort(m_views.begin(), m_views.end(),[](const auto& viewA, const auto& viewB) { return viewA->getRenderLayer() < viewB->getRenderLayer(); });
 
-    // Eenmalige resize triggeren om alles goed te zetten
     for (auto& view : m_views) {
         view->onWindowResize();
     }
@@ -82,22 +80,41 @@ void GameState::handleInput(sf::Event& event) {
 void GameState::update(float dt) {
     m_world->update(dt);
 
-    if (m_world->getPacMan()->getLives() <= 0) {
+    // 1. CHECK LEVEL COMPLETION
+    // De World checkt of munten op zijn en zet m_levelCompleted op true.
+    if (m_world->isLevelCompleted()) {
 
-        // Haal de score op
+        // Data ophalen uit de huidige wereld
+        int currentScore = 0;
+        if (m_world->getScoreModel()) {
+            currentScore = m_world->getScoreModel()->getScore();
+        }
+
+        int currentLives = m_world->getPacMan()->getLives();
+
+        // Naar VictoryState, en zeg dat het volgende level (index + 1) moet komen
+        m_manager.pushState(std::make_unique<VictoryState>(
+                m_manager,
+                m_window,
+                currentScore,
+                currentLives,
+                m_levelIndex + 1 // << VOLGEND LEVEL
+        ));
+        return;
+    }
+
+    // 2. CHECK GAME OVER
+    if (m_world->getPacMan()->getLives() <= 0) {
         int finalScore = 0;
         if (m_world->getScoreModel()) {
             finalScore = m_world->getScoreModel()->getScore();
-            // Sla eventueel de highscore op
             m_world->getScoreModel()->saveScoreIfPersonalBest();
         }
-
-        // Wissel naar Game Over State
         m_manager.pushState(std::make_unique<GameOverState>(m_manager, m_window, finalScore));
         return;
     }
 
-    // 2. Animaties updaten
+    // 3. Animaties updaten
     for (auto& view : m_views) {
         view->updateAnimation(dt);
     }

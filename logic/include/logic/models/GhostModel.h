@@ -32,6 +32,7 @@ public:
     Direction getDirection() const { return m_direction; }
     Direction getNextDirection() const { return m_nextDirection; }
     float getSpeed() const { return m_speed; }
+    void setSpeed(double newSpeed) {  m_speed = newSpeed; }
     char getType() const { return m_type; }
 
     bool isLocked() const { return m_locked; }
@@ -44,6 +45,9 @@ public:
 
     void die(); // Mark for removal
     bool isDead() const { return m_isDead; } // Check status
+    double getStartX() const { return m_startX; }
+    double getStartY() const { return m_startY; }
+
 
 
 
@@ -61,9 +65,11 @@ private:
     bool m_isFrightened = false;
     float m_frightenedTimer = 0.0f;
     bool m_isDead = false;
+    bool m_hasExitedHouse;
 
     // Het brein
     std::unique_ptr<GhostStrategy> m_strategy;
+    std::unique_ptr<GhostStrategy> m_normalStrategy;
     std::unique_ptr<GhostStrategy> m_frightenedStrategy;
 };
 

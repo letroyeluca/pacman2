@@ -5,6 +5,7 @@
 #include "logic/models/GhostModel.h"
 #include "logic/models/PacManModel.h"
 #include "logic/utils/Random.h"
+#include <iostream>
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
@@ -17,12 +18,120 @@ public:
     virtual ~GhostStrategy() = default;
     virtual Direction calculateNextMove(GhostModel& ghost, World& world) = 0;
 };
+
+// ------------------------------------------------------------------
+// FRIGHTENED STRATEGY (Vlucht weg van Pac-Man)
+// ------------------------------------------------------------------
+    class FrightenedStrategy : public GhostStrategy {
+    public:
+        Direction calculateNextMove(GhostModel& ghost, World& world) override {
+            std::cout << "GHOST [Type " << ghost.getType() << "] gebruikt FRIGHTENED strategie" << std::endl;
+            // 1. Check of Pac-Man bestaat
+            auto pacman = world.getPacMan();
+            if (!pacman)
+                return Direction::STOP;
+
+            // ----------------------------------------------------------
+            // STAP A: Bepaal het DOEL (Target is Pac-Man, om van weg te rennen)
+            // ----------------------------------------------------------
+            double targetX = pacman->getX();
+            double targetY = pacman->getY();
+
+            // ----------------------------------------------------------
+            // STAP B: Verzamel geldige opties (Boilerplate)
+            // ----------------------------------------------------------
+            Direction currentDir = ghost.getDirection();
+            Direction oppositeDir = Direction::STOP;
+            if (currentDir == Direction::UP) oppositeDir = Direction::DOWN;
+            if (currentDir == Direction::DOWN) oppositeDir = Direction::UP;
+            if (currentDir == Direction::LEFT) oppositeDir = Direction::RIGHT;
+            if (currentDir == Direction::RIGHT) oppositeDir = Direction::LEFT;
+
+            double gx = ghost.getX();
+            double gy = ghost.getY();
+            double ts = world.getTileSize();
+
+            // Check muren
+            bool freeUP = world.isMapPositionFree(gx, gy - ts);
+            bool freeDOWN = world.isMapPositionFree(gx, gy + ts);
+            bool freeLEFT = world.isMapPositionFree(gx - ts, gy);
+            bool freeRIGHT = world.isMapPositionFree(gx + ts, gy);
+
+            // Check Gates (Spook mag meestal niet terug het huis in vluchten)
+            if (world.isGateAt(gx, gy)) freeDOWN = false;
+            if (world.isGateAt(gx, gy + ts)) freeDOWN = false;
+
+            std::vector<Direction> options;
+            if (freeUP) options.push_back(Direction::UP);
+            if (freeDOWN) options.push_back(Direction::DOWN);
+            if (freeLEFT) options.push_back(Direction::LEFT);
+            if (freeRIGHT) options.push_back(Direction::RIGHT);
+
+            // Verwijder 'terug' optie (tenzij doodlopend)
+            if (options.size() > 1 && oppositeDir != Direction::STOP) {
+                auto it = std::find(options.begin(), options.end(), oppositeDir);
+                if (it != options.end())
+                    options.erase(it);
+            }
+
+            if (options.empty())
+                return Direction::STOP;
+
+            // ----------------------------------------------------------
+            // STAP C: Bereken Manhattan Distance & MAXIMALISEER
+            // ----------------------------------------------------------
+
+            // We beginnen met een zo klein mogelijke waarde (-1.0 is veilig omdat afstand altijd >= 0 is)
+            double maxDistance = -1.0;
+            std::vector<Direction> bestMoves;
+
+            for (Direction dir : options) {
+                double nextX = gx;
+                double nextY = gy;
+
+                if (dir == Direction::UP) nextY -= ts;
+                else if (dir == Direction::DOWN) nextY += ts;
+                else if (dir == Direction::LEFT) nextX -= ts;
+                else if (dir == Direction::RIGHT) nextX += ts;
+
+                // Formule: |x1 - x2| + |y1 - y2|
+                double dist = std::abs(nextX - targetX) + std::abs(nextY - targetY);
+
+                // LOGICA OMKERING: We willen de GROOTSTE afstand
+                if (dist > maxDistance) {
+                    maxDistance = dist;
+                    bestMoves.clear();
+                    bestMoves.push_back(dir);
+                } else if (std::abs(dist - maxDistance) < 0.001) {
+                    // Tie (gelijke afstand)
+                    bestMoves.push_back(dir);
+                }
+            }
+
+            // ----------------------------------------------------------
+            // STAP D: Tie-breaking (Random)
+            // ----------------------------------------------------------
+            if (bestMoves.empty())
+                return Direction::STOP;
+
+            // Kies willekeurig uit de opties die het verst weg leiden
+            double randVal = Random::getInstance().generate(0.0, static_cast<double>(bestMoves.size()));
+            int index = static_cast<int>(randVal);
+            if (index >= bestMoves.size())
+                index = static_cast<int>(bestMoves.size()) - 1;
+
+            return bestMoves[index];
+        }
+    };
+
+
 // ------------------------------------------------------------------
 // DIRECT CHASE STRATEGY (Jaagt direct op Pac-Man)
 // ------------------------------------------------------------------
 class DirectChaseStrategy : public GhostStrategy {
 public:
     Direction calculateNextMove(GhostModel& ghost, World& world) override {
+        std::cout << "GHOST [Type " << ghost.getType() << "] gebruikt CHASE strategie" << std::endl;
         // 1. Check of Pac-Man bestaat
         auto pacman = world.getPacMan();
         if (!pacman)

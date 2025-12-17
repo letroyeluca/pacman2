@@ -22,9 +22,10 @@ private:
     std::vector<std::unique_ptr<EntityView>> m_views;
     std::shared_ptr<logic::ScoreModel> m_scoreModel;
     std::shared_ptr<ScoreView> m_scoreView;
+    int m_levelIndex;
 
 public:
-    GameState(StateManager& manager, sf::RenderWindow& window);
+    GameState(StateManager& manager, sf::RenderWindow& window,int currentScore = 0, int currentLives = 3, int currentLevel = 1);
     ~GameState();
 
     void handleInput(sf::Event& event) override;
