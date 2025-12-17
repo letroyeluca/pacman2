@@ -15,7 +15,7 @@ public:
     void collect();
     void update(float dt) override;
     void accept(Visitor& visitor) override;
-    bool isCollected( ){return !m_isActive;}
+    bool isCollected() { return !m_isActive; }
 };
 } // namespace logic
 

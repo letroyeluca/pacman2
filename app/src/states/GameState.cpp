@@ -9,14 +9,16 @@
 #include "logic/models/PacManModel.h"
 #include "logic/models/ScoreModel.h"
 #include "logic/models/WallModel.h"
-#include "states/VictoryState.h"
 #include "states/GameOverState.h"
 #include "states/PausedState.h"
+#include "states/VictoryState.h"
 #include <algorithm>
 #include <iostream>
 
 // --- Constructor ---
-GameState::GameState(StateManager& manager, sf::RenderWindow& window,int currentScore, int currentLives, int currentLevel): State(manager, window), m_levelIndex(currentLevel)
+GameState::GameState(StateManager& manager, sf::RenderWindow& window, int currentScore, int currentLives,
+                     int currentLevel)
+    : State(manager, window), m_levelIndex(currentLevel)
 // m_score wordt automatisch geinitialiseerd op 0
 {
     m_camera = std::make_unique<Camera>(m_window.getSize().x, m_window.getSize().y);
@@ -26,7 +28,8 @@ GameState::GameState(StateManager& manager, sf::RenderWindow& window,int current
     m_camera->setWorldDimensions(m_world->getWidth(), m_world->getHeight());
     m_views = m_factory->getCreatedViews();
 
-    std::sort(m_views.begin(), m_views.end(),[](const auto& viewA, const auto& viewB) { return viewA->getRenderLayer() < viewB->getRenderLayer(); });
+    std::sort(m_views.begin(), m_views.end(),
+              [](const auto& viewA, const auto& viewB) { return viewA->getRenderLayer() < viewB->getRenderLayer(); });
 
     for (auto& view : m_views) {
         view->onWindowResize();
@@ -93,13 +96,9 @@ void GameState::update(float dt) {
         int currentLives = m_world->getPacMan()->getLives();
 
         // Naar VictoryState, en zeg dat het volgende level (index + 1) moet komen
-        m_manager.pushState(std::make_unique<VictoryState>(
-                m_manager,
-                m_window,
-                currentScore,
-                currentLives,
-                m_levelIndex + 1 // << VOLGEND LEVEL
-        ));
+        m_manager.pushState(std::make_unique<VictoryState>(m_manager, m_window, currentScore, currentLives,
+                                                           m_levelIndex + 1 // << VOLGEND LEVEL
+                                                           ));
         return;
     }
 

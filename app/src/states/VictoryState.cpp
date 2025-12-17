@@ -7,8 +7,8 @@
 #include "states/StateManager.h"
 #include <iostream>
 
-VictoryState::VictoryState(StateManager& manager, sf::RenderWindow& window,int score, int lives, int nextLevelIndex): State(manager, window), m_score(score), m_lives(lives), m_nextLevelIndex(nextLevelIndex)
-{
+VictoryState::VictoryState(StateManager& manager, sf::RenderWindow& window, int score, int lives, int nextLevelIndex)
+    : State(manager, window), m_score(score), m_lives(lives), m_nextLevelIndex(nextLevelIndex) {
 
     if (!m_font.loadFromFile("assets/font.ttf")) {
         std::cerr << "Could not load font for VictoryState" << std::endl;
@@ -41,8 +41,7 @@ void VictoryState::setupText() {
     // Titel
     m_titleText.setCharacterSize(windowSize.x / 15);
     sf::FloatRect titleBounds = m_titleText.getLocalBounds();
-    m_titleText.setOrigin(titleBounds.left + titleBounds.width / 2.0f,
-                          titleBounds.top + titleBounds.height / 2.0f);
+    m_titleText.setOrigin(titleBounds.left + titleBounds.width / 2.0f, titleBounds.top + titleBounds.height / 2.0f);
     m_titleText.setPosition(centerX, windowSize.y / 3.0f);
 
     // Score
@@ -67,15 +66,12 @@ void VictoryState::handleInput(sf::Event& event) {
 
             // En we starten direct een NIEUW level object
             // (Dit zorgt voor Menu -> Level 2 in de stack)
-            m_manager.pushState(std::make_unique<GameState>(
-                    m_manager,
-                    m_window,
-                    m_score,          // Score meenemen
-                    m_lives,          // Levens meenemen
-                    m_nextLevelIndex  // Difficulty verhogen
-            ));
-        }
-        else if (event.key.code == sf::Keyboard::Escape) {
+            m_manager.pushState(std::make_unique<GameState>(m_manager, m_window,
+                                                            m_score,         // Score meenemen
+                                                            m_lives,         // Levens meenemen
+                                                            m_nextLevelIndex // Difficulty verhogen
+                                                            ));
+        } else if (event.key.code == sf::Keyboard::Escape) {
             // Gewoon terug naar menu zonder nieuw level
             m_manager.resetToMenu();
         }

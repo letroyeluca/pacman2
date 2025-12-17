@@ -25,7 +25,8 @@ private:
     int m_levelIndex;
 
 public:
-    GameState(StateManager& manager, sf::RenderWindow& window,int currentScore = 0, int currentLives = 3, int currentLevel = 1);
+    GameState(StateManager& manager, sf::RenderWindow& window, int currentScore = 0, int currentLives = 3,
+              int currentLevel = 1);
     ~GameState();
 
     void handleInput(sf::Event& event) override;

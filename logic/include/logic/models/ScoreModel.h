@@ -19,7 +19,7 @@ public:
 
     int getScore() const { return m_currentScore; }
 
-    void setScore(int newScore) {m_currentScore = newScore;}
+    void setScore(int newScore) { m_currentScore = newScore; }
 
     const std::vector<int>& getTopScores() const { return m_highScores; }
 
