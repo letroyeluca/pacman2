@@ -19,19 +19,16 @@ jobs:
           - os: ubuntu-latest
             artifact_name: pacman-linux
             asset_ext: .tar.gz
-            # Linux installeert distro-versie (meestal 2.5/2.6, dat is OK)
             install_cmd: sudo apt-get update && sudo apt-get install -y libsfml-dev libx11-dev libxrandr-dev libudev-dev libgl1-mesa-dev libfreetype6-dev libopenal-dev libflac-dev libvorbis-dev
             
           - os: windows-latest
             artifact_name: pacman-windows
             asset_ext: .zip
-            # Windows commando is leeg hier, we doen dit in de steps
             install_cmd: echo "Windows dependencies managed by VCPKG"
             
           - os: macos-latest
             artifact_name: pacman-macos
             asset_ext: .tar.gz
-            # FIX: Specifiek versie 2 installeren op Mac!
             install_cmd: brew install sfml@2
 
     steps:
@@ -54,10 +51,8 @@ jobs:
         shell: bash
         run: |
           if [ "$RUNNER_OS" == "Windows" ]; then
-            # Gebruik de omgevingsvariabele voor het pad naar vcpkg (veiliger)
             cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="$VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
           else
-            # Mac heeft een hint nodig waar sfml@2 staat
             if [ "$RUNNER_OS" == "macOS" ]; then
                export CMAKE_PREFIX_PATH="/opt/homebrew/opt/sfml@2:$CMAKE_PREFIX_PATH"
             fi
@@ -74,22 +69,28 @@ jobs:
         run: |
           mkdir dist
           
-          # Kopieer Assets (Als deze map niet bestaat, faalt de build hier. Zorg dat 'assets' in je repo root staat!)
+          # Kopieer Assets
           if [ -d "assets" ]; then
             cp -r assets dist/
           else
             echo "WARNING: Assets folder not found!"
           fi
           
-          # Kopieer Executables en DLLs
+          # --- HIER ZAT DE FOUT: NU GESPLITST PER OS ---
           if [ "$RUNNER_OS" == "Windows" ]; then
+            # Windows: Kopieer .exe en .dll
             cp build/Release/*.exe dist/
-            # Probeer DLLs te vinden en mee te kopiëren (nodig als je niet statisch linkt)
             find build -name "*.dll" -exec cp {} dist/ \;
+            
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+            # Mac FIX: Gebruik -perm +0111 ipv -executable
+            find build -maxdepth 3 -type f -perm +0111 -not -path '*/.*' -exec cp {} dist/ \;
+            
           else
-            # Linux/Mac: Vind de executable (zonder extensie) en kopieer hem
+            # Linux: Gebruik -executable (standaard)
             find build -maxdepth 3 -type f -executable -not -path '*/.*' -exec cp {} dist/ \;
           fi
+          # ---------------------------------------------
           
           # Comprimeer de map
           cd dist
