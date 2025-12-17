@@ -28,7 +28,7 @@ public:
     void setSpeed(float newspeed) { m_speed = newspeed; }
     void die();
     int getLives();
-    void setLives(int newlives){m_lives = newlives;}
+    void setLives(int newlives) { m_lives = newlives; }
 
 private:
     Direction m_direction;

@@ -1,0 +1,101 @@
+name: Multi-Platform Release
+
+# Trigger de actie alleen als je een tag pusht die begint met 'v' (bijv. v1.0.0)
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Build for ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            artifact_name: pacman-linux
+            asset_ext: .tar.gz
+            install_cmd: sudo apt-get update && sudo apt-get install -y libsfml-dev libx11-dev libxrandr-dev libudev-dev libgl1-mesa-dev libfreetype6-dev libopenal-dev libflac-dev libvorbis-dev
+            
+          - os: windows-latest
+            artifact_name: pacman-windows
+            asset_ext: .zip
+            # Windows gebruikt vcpkg die vaak al op GitHub runners staat, 
+            # of we downloaden SFML. Hier gaan we uit van CMake FetchContent of VCPKG.
+            
+          - os: macos-latest
+            artifact_name: pacman-macos
+            asset_ext: .tar.gz
+            install_cmd: brew install sfml
+
+    steps:
+      # 1. Code ophalen
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Afhankelijkheden installeren (Linux & Mac)
+      - name: Install Dependencies (Linux/Mac)
+        if: runner.os != 'Windows'
+        run: ${{ matrix.install_cmd }}
+
+      # 3. Setup VCPKG (Alleen Windows - optioneel, afhankelijk van je CMakeLists)
+      # Als je CMakeLists.txt SFML automatisch ophaalt via FetchContent, is dit niet nodig.
+      # Als je VCPKG gebruikt:
+      - name: Setup VCPKG (Windows)
+        if: runner.os == 'Windows'
+        run: vcpkg install sfml:x64-windows
+
+      # 4. CMake Configureren
+      - name: Configure CMake
+        run: |
+          # Voor Windows voegen we de toolchain file toe voor vcpkg integratie
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake
+          else
+            cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+          fi
+        shell: bash
+
+      # 5. Bouwen
+      - name: Build
+        run: cmake --build build --config Release
+
+      # 6. Pakketje Maken (Executable + Assets)
+      - name: Package Application
+        shell: bash
+        run: |
+          mkdir dist
+          
+          # Kopieer de Assets map (CRUCIAAL voor jouw project!)
+          # Zorg dat je assets map in de root van je repo staat
+          cp -r assets dist/
+          
+          # Kopieer Executable afhankelijk van OS
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            cp build/Release/*.exe dist/
+            # Optioneel: Kopieer DLLs als je niet statisch linkt
+            # cp build/Release/*.dll dist/ || true 
+          else
+            # Linux/Mac binary naam kan variëren, pas eventueel aan (bijv. 'Pacman')
+            find build -maxdepth 2 -type f -executable -not -path '*/.*' -exec cp {} dist/ \;
+          fi
+          
+          # Comprimeer de map
+          cd dist
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            7z a ../${{ matrix.artifact_name }}${{ matrix.asset_ext }} *
+          else
+            tar -czvf ../${{ matrix.artifact_name }}${{ matrix.asset_ext }} *
+          fi
+
+      # 7. Uploaden naar GitHub Releases
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: ${{ matrix.artifact_name }}${{ matrix.asset_ext }}

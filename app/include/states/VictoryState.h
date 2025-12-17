@@ -10,7 +10,7 @@
 
 class VictoryState : public State {
 public:
-    VictoryState(StateManager& manager, sf::RenderWindow& window,int score, int lives, int nextLevelIndex);
+    VictoryState(StateManager& manager, sf::RenderWindow& window, int score, int lives, int nextLevelIndex);
     ~VictoryState() override = default;
 
     void handleInput(sf::Event& event) override;
@@ -31,4 +31,4 @@ private:
     int m_nextLevelIndex;
 };
 
-#endif //PACMAN_VICTORYSTATE_H
+#endif // PACMAN_VICTORYSTATE_H

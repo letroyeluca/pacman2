@@ -32,7 +32,7 @@ public:
     Direction getDirection() const { return m_direction; }
     Direction getNextDirection() const { return m_nextDirection; }
     float getSpeed() const { return m_speed; }
-    void setSpeed(double newSpeed) {  m_speed = newSpeed; }
+    void setSpeed(double newSpeed) { m_speed = newSpeed; }
     char getType() const { return m_type; }
 
     bool isLocked() const { return m_locked; }
@@ -47,7 +47,6 @@ public:
     bool isDead() const { return m_isDead; } // Check status
     double getStartX() const { return m_startX; }
     double getStartY() const { return m_startY; }
-
 
 private:
     Direction m_direction;
