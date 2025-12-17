@@ -9,7 +9,8 @@ permissions:
   contents: write
 
 jobs:
-  build-and-release:
+  # FASE 1: BOUWEN (3x Parallel)
+  build:
     name: Build for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -32,17 +33,13 @@ jobs:
             install_cmd: brew install sfml@2
 
     steps:
-      # 1. Code ophalen
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Afhankelijkheden installeren (Linux & Mac)
       - name: Install Dependencies (Linux/Mac)
         if: runner.os != 'Windows'
         run: ${{ matrix.install_cmd }}
 
-      # 3a. VCPKG Terugzetten (Windows FIX voor SFML 3 issue)
-      # We zetten VCPKG terug naar de release van november 2024, toen SFML nog op versie 2.6.x zat.
       - name: Pin VCPKG Version (Windows)
         if: runner.os == 'Windows'
         shell: bash
@@ -50,12 +47,10 @@ jobs:
           cd "$VCPKG_INSTALLATION_ROOT"
           git checkout 2024.11.16
 
-      # 3b. Setup VCPKG (Alleen Windows)
       - name: Setup VCPKG (Windows)
         if: runner.os == 'Windows'
         run: vcpkg install sfml:x64-windows
 
-      # 4. CMake Configureren
       - name: Configure CMake
         shell: bash
         run: |
@@ -68,17 +63,14 @@ jobs:
             cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
           fi
 
-      # 5. Bouwen
       - name: Build
         run: cmake --build build --config Release
 
-      # 6. Dist map voorbereiden (Algemeen)
       - name: Prepare Dist Folder
         run: |
           mkdir dist
           if [ -d "assets" ]; then cp -r assets dist/; fi
 
-      # 7a. Package Windows (Exe + DLLs)
       - name: Package Windows
         if: runner.os == 'Windows'
         shell: bash
@@ -88,17 +80,14 @@ jobs:
           cd dist
           7z a ../${{ matrix.artifact_name }}${{ matrix.asset_ext }} *
 
-      # 7b. Package macOS (Fix voor permissies)
       - name: Package macOS
         if: runner.os == 'macOS'
         shell: bash
         run: |
-          # Op Mac gebruiken we -perm +111 om executables te vinden (standaard BSD syntax)
           find build -maxdepth 3 -type f -perm +111 -not -path '*/.*' -exec cp {} dist/ \;
           cd dist
           tar -czvf ../${{ matrix.artifact_name }}${{ matrix.asset_ext }} *
 
-      # 7c. Package Linux (Standaard executable)
       - name: Package Linux
         if: runner.os == 'Linux'
         shell: bash
@@ -107,9 +96,33 @@ jobs:
           cd dist
           tar -czvf ../${{ matrix.artifact_name }}${{ matrix.asset_ext }} *
 
-      # 8. Uploaden naar GitHub Releases
-      - name: Release
-        uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
+      # BELANGRIJK: Hier uploaden we naar tijdelijke GitHub opslag in plaats van direct releasen
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
         with:
-          files: ${{ matrix.artifact_name }}${{ matrix.asset_ext }}
+          name: ${{ matrix.artifact_name }}
+          path: ${{ matrix.artifact_name }}${{ matrix.asset_ext }}
+          if-no-files-found: error
+
+  # FASE 2: RELEASEN (1x, pas als alles klaar is)
+  release:
+    name: Create Release
+    needs: build  # Wacht tot alle build jobs klaar zijn
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          # Download alles van de vorige stap
+          path: artifacts
+          merge-multiple: true
+
+      - name: List files (Debug)
+        run: ls -R artifacts
+
+      - name: Publish Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*
