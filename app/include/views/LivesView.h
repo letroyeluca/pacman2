@@ -1,8 +1,8 @@
 #ifndef PACMAN_LIVESVIEW_H
 #define PACMAN_LIVESVIEW_H
 
-#include "views/EntityView.h" // Pas aan naar jouw base view header
 #include "logic/models/PacManModel.h"
+#include "views/EntityView.h" // Pas aan naar jouw base view header
 #include <SFML/Graphics.hpp>
 #include <vector>
 
@@ -21,9 +21,9 @@ private:
     sf::Sprite m_sprite;
 
     // UI Instellingen
-    float m_startX = 20.0f; // Afstand van links
-    float m_startY = 20.0f; // Afstand van boven
+    float m_startX = 20.0f;  // Afstand van links
+    float m_startY = 20.0f;  // Afstand van boven
     float m_spacing = 35.0f; // Ruimte tussen de icoontjes
 };
 
-#endif //PACMAN_LIVESVIEW_H
+#endif // PACMAN_LIVESVIEW_H

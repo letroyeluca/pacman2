@@ -3,8 +3,8 @@
 #include <iostream>
 
 LivesView::LivesView(std::shared_ptr<logic::PacManModel> model, Camera& camera)
-        : EntityView(model, camera), // 2. PASS TO BASE: shared_ptr passed to EntityView (OK!)
-          m_model(model)             // 3. STORE LOCALLY: shared_ptr converts to weak_ptr (OK!)
+    : EntityView(model, camera), // 2. PASS TO BASE: shared_ptr passed to EntityView (OK!)
+      m_model(model)             // 3. STORE LOCALLY: shared_ptr converts to weak_ptr (OK!)
 {
     // Laad de texture (gebruik dezelfde als je PacMan, of een specifiek icoon)
     if (!m_texture.loadFromFile("assets/sprite.png")) {

@@ -11,10 +11,10 @@
 #include "views/AppleView.h"
 #include "views/CoinView.h"
 #include "views/GhostView.h"
+#include "views/LivesView.h"
 #include "views/PacManView.h"
 #include "views/ScoreView.h"
 #include "views/WallView.h"
-#include "views/LivesView.h"
 
 ConcreteFactory::ConcreteFactory(Camera& camera) : m_camera(camera) {
     if (!m_sharedTexture.loadFromFile("assets/sprite.png")) {
