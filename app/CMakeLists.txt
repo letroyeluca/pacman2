@@ -21,6 +21,7 @@ add_executable(pacman_game
         src/states/GameOverState.cpp
         src/views/AppleView.cpp
         src/states/VictoryState.cpp
+        src/views/LivesView.cpp
 )
 
 target_include_directories(pacman_game PRIVATE

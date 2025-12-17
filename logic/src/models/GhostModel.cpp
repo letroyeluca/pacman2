@@ -43,8 +43,17 @@ namespace logic {
     GhostModel::~GhostModel() = default;
 
     void GhostModel::frighten(float duration) {
+        if (m_isDead || !m_hasExitedHouse || !m_isActive) return;
+
         m_isFrightened = true;
         m_frightenedTimer = duration;
+
+        if (m_direction == Direction::UP) queueDirection(Direction::DOWN);
+        else if (m_direction == Direction::DOWN) queueDirection(Direction::UP);
+        else if (m_direction == Direction::LEFT) queueDirection(Direction::RIGHT);
+        else if (m_direction == Direction::RIGHT) queueDirection(Direction::LEFT);
+
+        commitDirection();
         notify(logic::Event::GhostVulnerable);
     }
 
@@ -66,10 +75,10 @@ namespace logic {
         m_nextDirection = Direction::UP;
         m_locked = false;
         m_isFrightened = false;
-        m_spawnTimer = m_spawnDelay;
         m_isActive = (m_spawnDelay <= 0.0f);
-        notify(logic::Event::DEFAULT);
         notify(logic::Event::GhostNormal);
+        notify(logic::Event::DEFAULT);
+
     }
 
     void GhostModel::think(World& world) {

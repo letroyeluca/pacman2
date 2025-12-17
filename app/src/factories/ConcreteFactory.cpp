@@ -14,6 +14,7 @@
 #include "views/PacManView.h"
 #include "views/ScoreView.h"
 #include "views/WallView.h"
+#include "views/LivesView.h"
 
 ConcreteFactory::ConcreteFactory(Camera& camera) : m_camera(camera) {
     if (!m_sharedTexture.loadFromFile("assets/sprite.png")) {
@@ -24,6 +25,9 @@ std::shared_ptr<logic::PacManModel> ConcreteFactory::createPacMan(double x, doub
     auto model = std::make_shared<logic::PacManModel>(x, y, width, height);
     auto view = std::make_unique<PacManView>(model, m_camera);
     view->setRenderLayer(4);
+    auto livesView = std::make_unique<LivesView>(model, m_camera);
+    livesView->setRenderLayer(100); // Als je views lagen ondersteunen
+    m_views.push_back(std::move(livesView));
     m_views.push_back(std::move(view));
     return model;
 }

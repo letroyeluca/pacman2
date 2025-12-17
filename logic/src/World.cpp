@@ -42,10 +42,7 @@ namespace logic {
 // HELPER: LEVEL DIFFICULTY CURVE
 // ------------------------------------------------------------------
     float World::getLevelMultiplier() const {
-        // Start op 100%. Elk level +2% snelheid.
         float mult = 1.0f + ((m_currentLevel - 1) * 0.02f);
-
-        // Cap de snelheid op 130% (Level 15+), anders wordt het onspeelbaar
         if (mult > 1.30f) return 1.30f;
         return mult;
     }
@@ -260,9 +257,9 @@ namespace logic {
         for (auto& wall : m_walls) wall->update(dt);
 
         std::erase_if(m_coins, [](const auto& coin) { return coin->isCollected(); });
+        std::erase_if(m_apples, [](const auto& apple) { return apple->isCollected(); });
 
-        // Check of level klaar is
-        if (m_coins.empty() && !m_levelCompleted) {
+        if (m_coins.empty() && !m_levelCompleted && m_apples.empty()) {
             m_levelCompleted = true;
         }
 
@@ -271,11 +268,8 @@ namespace logic {
 
     void World::updatePacMan(float dt) {
         if (!m_pacman) return;
-        // (Zelfde logica als je al had, alleen ingekort voor leesbaarheid hier)
-        // ...
-        // De bewegingslogica blijft hetzelfde, m_pacman->getSpeed()
-        // geeft nu wel de CORRECTE snelheid terug die we in addPacMan hebben gezet.
 
+        // ... (Grid berekeningen blijven hetzelfde) ...
         int gridX = std::round((m_pacman->getX() - m_startX - (m_tileSize / 2.0)) / m_tileSize);
         int gridY = std::round((m_pacman->getY() - m_startY - (m_tileSize / 2.0)) / m_tileSize);
         double centerX = m_startX + (gridX * m_tileSize) + (m_tileSize / 2.0);
@@ -285,6 +279,7 @@ namespace logic {
         Direction nextDir = m_pacman->getNextDirection();
         Direction currentDir = m_pacman->getDirection();
 
+        // ... (Opposite direction logic blijft hetzelfde) ...
         bool isOpposite = (currentDir == Direction::UP && nextDir == Direction::DOWN) ||
                           (currentDir == Direction::DOWN && nextDir == Direction::UP) ||
                           (currentDir == Direction::LEFT && nextDir == Direction::RIGHT) ||
@@ -292,9 +287,13 @@ namespace logic {
 
         if (isOpposite) {
             m_pacman->commitDirection();
-        } else if (nextDir != Direction::STOP && nextDir != currentDir) {
+        }
+        else if (nextDir != Direction::STOP && nextDir != currentDir) {
+            // ... (Target berekening blijft hetzelfde) ...
             double moveStep = m_pacman->getSpeed() * dt;
-            double turnThreshold = moveStep + 0.005;
+            // Gebruik hier de fix voor responsiveness uit mijn vorige antwoord als je wilt:
+            double turnThreshold = std::max(moveStep + 0.005, m_tileSize * 0.15);
+
             double targetX = centerX;
             double targetY = centerY;
 
@@ -303,7 +302,9 @@ namespace logic {
             else if (nextDir == Direction::LEFT) targetX -= m_tileSize;
             else if (nextDir == Direction::RIGHT) targetX += m_tileSize;
 
-            if (isMapPositionFree(targetX, targetY) && distToCenter <= turnThreshold) {
+            // --- AANPASSING 1: Check ook !isGateAt(...) ---
+            // Pac-Man mag alleen draaien als het GEEN muur is EN GEEN poortje is.
+            if (isMapPositionFree(targetX, targetY) && !isGateAt(targetX, targetY) && distToCenter <= turnThreshold) {
                 m_pacman->setPosition(centerX, centerY);
                 m_pacman->commitDirection();
             }
@@ -319,7 +320,10 @@ namespace logic {
             else if (currentDir == Direction::LEFT) forwardX -= m_tileSize;
             else if (currentDir == Direction::RIGHT) forwardX += m_tileSize;
 
-            if (!isMapPositionFree(forwardX, forwardY)) {
+            // --- AANPASSING 2: Check of de volgende tegel een Gate is ---
+            // Als het volgende vakje een muur is OF een gate, moet hij stoppen (pastCenter check).
+            if (!isMapPositionFree(forwardX, forwardY) || isGateAt(forwardX, forwardY)) {
+
                 bool pastCenter = false;
                 if (currentDir == Direction::UP && m_pacman->getY() < centerY) pastCenter = true;
                 if (currentDir == Direction::DOWN && m_pacman->getY() > centerY) pastCenter = true;
@@ -334,6 +338,7 @@ namespace logic {
         }
         m_pacman->update(dt);
 
+        // ... (Wrap around logic blijft hetzelfde) ...
         if (m_pacman->getX() < -1.0 - m_tileSize)
             m_pacman->setPosition(1.0 + m_tileSize, m_pacman->getY());
         else if (m_pacman->getX() > 1.0 + m_tileSize)
