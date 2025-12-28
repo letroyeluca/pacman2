@@ -54,6 +54,37 @@ GhostView::GhostView(std::shared_ptr<logic::GhostModel> model, Camera& camera)
     m_animDownFramesScared = assets.getAnimationFrames(0, 13, 2);  // Row 2
     m_animLeftFramesScared = assets.getAnimationFrames(0, 15, 2);  // Row 4
     m_animUpFramesScared = assets.getAnimationFrames(0, 17, 2);    // Row 6
+    m_animRightFramesScaredEnd = assets.getAnimationFrames(1, 11, 2);
+    m_animDownFramesScaredEnd = assets.getAnimationFrames(1, 13, 2);  // Row 2
+    m_animLeftFramesScaredEnd = assets.getAnimationFrames(1, 15, 2);  // Row 4
+    m_animUpFramesScaredEnd = assets.getAnimationFrames(1, 17, 2);    // Row 6
+
+    m_animRightFramesScaredEnd.insert(
+            m_animRightFramesScaredEnd.end(),    // Plak ze achteraan
+            m_animRightFramesScared.begin(),     // Kopieer vanaf begin...
+            m_animRightFramesScared.end()        // ...tot einde van de bange frames
+    );
+
+    // 2. DOWN
+    m_animDownFramesScaredEnd.insert(
+            m_animDownFramesScaredEnd.end(),
+            m_animDownFramesScared.begin(),
+            m_animDownFramesScared.end()
+    );
+
+    // 3. LEFT
+    m_animLeftFramesScaredEnd.insert(
+            m_animLeftFramesScaredEnd.end(),
+            m_animLeftFramesScared.begin(),
+            m_animLeftFramesScared.end()
+    );
+
+    // 4. UP
+    m_animUpFramesScaredEnd.insert(
+            m_animUpFramesScaredEnd.end(),
+            m_animUpFramesScared.begin(),
+            m_animUpFramesScared.end()
+    );
 
     // 5. Init
     m_animFrames = m_animRightFrames;
@@ -69,38 +100,49 @@ void GhostView::onNotify(const logic::Subject& subject, logic::Event event) {
     // Determine which animation list to use based on event
     switch (event) {
     case logic::Event::GhostVulnerable:
-        m_scared = true;
+        m_scared = 1;
+        break;
+    case logic::Event::GhostVulnerableEnd:
+        m_scared = 2;
         break;
     case logic::Event::GhostNormal:
-        m_scared = false;
+        m_scared = 0;
         break;
     case logic::Event::GhostUP:
-        if (!m_scared) {
+        if (m_scared == 0) {
             m_animFrames = m_animUpFrames;
-        } else {
+        } else if(m_scared == 1) {
             m_animFrames = m_animUpFramesScared;
+        }else{
+            m_animFrames = m_animUpFramesScaredEnd;
         }
 
         break;
     case logic::Event::GhostDOWN:
-        if (!m_scared) {
+        if (m_scared == 0) {
             m_animFrames = m_animDownFrames;
-        } else {
+        } else if(m_scared == 1) {
             m_animFrames = m_animDownFramesScared;
+        }else{
+            m_animFrames = m_animDownFramesScaredEnd;
         }
         break;
     case logic::Event::GhostLEFT:
-        if (!m_scared) {
+        if (m_scared == 0) {
             m_animFrames = m_animLeftFrames;
-        } else {
+        } else if(m_scared == 1) {
             m_animFrames = m_animLeftFramesScared;
+        }else{
+            m_animFrames = m_animLeftFramesScaredEnd;
         }
         break;
     case logic::Event::GhostRIGHT:
-        if (!m_scared) {
+        if (m_scared == 0) {
             m_animFrames = m_animRightFrames;
-        } else {
+        } else if(m_scared == 1) {
             m_animFrames = m_animRightFramesScared;
+        }else{
+            m_animFrames = m_animRightFramesScaredEnd;
         }
         break;
     default:
@@ -113,8 +155,6 @@ void GhostView::updateAnimation(float dt) {
     auto ghostModel = std::dynamic_pointer_cast<logic::GhostModel>(m_model);
     if (!ghostModel)
         return;
-
-    // Use TextureRect only to avoid resetting position
     m_animationTimer += dt;
     if (m_animationTimer >= m_animationSpeed) {
         m_currentFrame++;

@@ -40,17 +40,7 @@ void GhostModel::frighten(float duration) {
 
     m_isFrightened = true;
     m_frightenedTimer = duration;
-
-    if (m_direction == Direction::UP)
-        queueDirection(Direction::DOWN);
-    else if (m_direction == Direction::DOWN)
-        queueDirection(Direction::UP);
-    else if (m_direction == Direction::LEFT)
-        queueDirection(Direction::RIGHT);
-    else if (m_direction == Direction::RIGHT)
-        queueDirection(Direction::LEFT);
-
-    commitDirection();
+    m_hasWarnedEnding = false;
     notify(logic::Event::GhostVulnerable);
 }
 
@@ -161,6 +151,12 @@ void GhostModel::update(float dt) {
     // 2. FRIGHTENED TIMER
     if (m_isFrightened) {
         m_frightenedTimer -= dt;
+
+        if (m_frightenedTimer <= 2.0f && !m_hasWarnedEnding) {
+            notify(logic::Event::GhostVulnerableEnd);
+            m_hasWarnedEnding = true;
+        }
+
         if (m_frightenedTimer <= 0.0f) {
             m_isFrightened = false;
 

@@ -17,7 +17,7 @@ VictoryState::VictoryState(StateManager& manager, sf::RenderWindow& window, int 
     // 1. Titel
     m_titleText.setFont(m_font);
     m_titleText.setString("LEVEL COMPLETED!");
-    m_titleText.setFillColor(sf::Color::Green); // Groen voor winst
+    m_titleText.setFillColor(sf::Color::Green);
     m_titleText.setStyle(sf::Text::Bold);
 
     // 2. Score
@@ -38,20 +38,42 @@ void VictoryState::setupText() {
     float centerX = windowSize.x / 2.0f;
     float centerY = windowSize.y / 2.0f;
 
-    // Titel
-    m_titleText.setCharacterSize(windowSize.x / 15);
+    // --- 1. TITEL LOGICA ---
+
+    // Reset eerst de schaal (belangrijk als het scherm wordt geresized)
+    m_titleText.setScale(1.f, 1.f);
+
+    // Zet een basisgrootte (mag best groot zijn, we schalen hem toch omlaag als het moet)
+    // Bijvoorbeeld: 10% van de schermhoogte
+    m_titleText.setCharacterSize(static_cast<unsigned int>(windowSize.y * 0.1f));
+
+    // Haal de afmetingen op
     sf::FloatRect titleBounds = m_titleText.getLocalBounds();
-    m_titleText.setOrigin(titleBounds.left + titleBounds.width / 2.0f, titleBounds.top + titleBounds.height / 2.0f);
+
+    // Bepaal de maximale breedte die de tekst mag hebben (bv. 80% van het scherm)
+    float maxWidth = windowSize.x * 0.8f;
+
+    // Als de tekst breder is dan de limiet, bereken dan de verkleiningsfactor
+    if (titleBounds.width > maxWidth) {
+        float scaleFactor = maxWidth / titleBounds.width;
+        m_titleText.setScale(scaleFactor, scaleFactor);
+    }
+
+    // Nu pas de origin zetten (SFML gebruikt de localBounds voor origin, dit blijft correct)
+    m_titleText.setOrigin(titleBounds.left + titleBounds.width / 2.0f,
+                          titleBounds.top + titleBounds.height / 2.0f);
+
     m_titleText.setPosition(centerX, windowSize.y / 3.0f);
 
-    // Score
-    m_scoreText.setCharacterSize(windowSize.x / 20);
+
+    // --- 2. SCORE (Bestaande code) ---
+    m_scoreText.setCharacterSize(windowSize.x / 30);
     sf::FloatRect scoreBounds = m_scoreText.getLocalBounds();
     m_scoreText.setOrigin(scoreBounds.width / 2.0f, scoreBounds.height / 2.0f);
     m_scoreText.setPosition(centerX, centerY);
 
-    // Instructie
-    m_instructionText.setCharacterSize(windowSize.x / 35);
+    // --- 3. INSTRUCTIE (Bestaande code) ---
+    m_instructionText.setCharacterSize(windowSize.x / 50);
     sf::FloatRect instBounds = m_instructionText.getLocalBounds();
     m_instructionText.setOrigin(instBounds.width / 2.0f, instBounds.height / 2.0f);
     m_instructionText.setPosition(centerX, centerY + 150);
@@ -85,7 +107,7 @@ void VictoryState::update(float dt) {
 void VictoryState::render() {
     // We tekenen over de vorige state heen (transparantie zou kunnen),
     // maar hier clearen we voor een schoon scherm.
-    m_window.clear(sf::Color(20, 20, 20)); // Donkergrijs
+    m_window.clear(sf::Color::Black); // Donkergrijs
     m_window.draw(m_titleText);
     m_window.draw(m_scoreText);
     m_window.draw(m_instructionText);

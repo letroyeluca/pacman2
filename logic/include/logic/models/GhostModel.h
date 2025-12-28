@@ -63,6 +63,7 @@ private:
     float m_frightenedTimer = 0.0f;
     bool m_isDead = false;
     bool m_hasExitedHouse;
+    bool m_hasWarnedEnding = false;
 
     // Het brein
     std::unique_ptr<GhostStrategy> m_strategy;

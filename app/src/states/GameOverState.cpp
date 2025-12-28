@@ -58,8 +58,6 @@ void GameOverState::setupText() {
 
 void GameOverState::handleInput(sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
-        // FIX: Gebruik de veilige methode in de StateManager
-        // Dit voorkomt dat we 'm_manager' aanroepen vanuit een vernietigd object.
         m_manager.resetToMenu();
     }
 }
