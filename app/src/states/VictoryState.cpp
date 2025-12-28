@@ -60,11 +60,9 @@ void VictoryState::setupText() {
     }
 
     // Nu pas de origin zetten (SFML gebruikt de localBounds voor origin, dit blijft correct)
-    m_titleText.setOrigin(titleBounds.left + titleBounds.width / 2.0f,
-                          titleBounds.top + titleBounds.height / 2.0f);
+    m_titleText.setOrigin(titleBounds.left + titleBounds.width / 2.0f, titleBounds.top + titleBounds.height / 2.0f);
 
     m_titleText.setPosition(centerX, windowSize.y / 3.0f);
-
 
     // --- 2. SCORE (Bestaande code) ---
     m_scoreText.setCharacterSize(windowSize.x / 30);

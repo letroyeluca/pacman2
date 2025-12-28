@@ -55,36 +55,26 @@ GhostView::GhostView(std::shared_ptr<logic::GhostModel> model, Camera& camera)
     m_animLeftFramesScared = assets.getAnimationFrames(0, 15, 2);  // Row 4
     m_animUpFramesScared = assets.getAnimationFrames(0, 17, 2);    // Row 6
     m_animRightFramesScaredEnd = assets.getAnimationFrames(1, 11, 2);
-    m_animDownFramesScaredEnd = assets.getAnimationFrames(1, 13, 2);  // Row 2
-    m_animLeftFramesScaredEnd = assets.getAnimationFrames(1, 15, 2);  // Row 4
-    m_animUpFramesScaredEnd = assets.getAnimationFrames(1, 17, 2);    // Row 6
+    m_animDownFramesScaredEnd = assets.getAnimationFrames(1, 13, 2); // Row 2
+    m_animLeftFramesScaredEnd = assets.getAnimationFrames(1, 15, 2); // Row 4
+    m_animUpFramesScaredEnd = assets.getAnimationFrames(1, 17, 2);   // Row 6
 
-    m_animRightFramesScaredEnd.insert(
-            m_animRightFramesScaredEnd.end(),    // Plak ze achteraan
-            m_animRightFramesScared.begin(),     // Kopieer vanaf begin...
-            m_animRightFramesScared.end()        // ...tot einde van de bange frames
+    m_animRightFramesScaredEnd.insert(m_animRightFramesScaredEnd.end(), // Plak ze achteraan
+                                      m_animRightFramesScared.begin(),  // Kopieer vanaf begin...
+                                      m_animRightFramesScared.end()     // ...tot einde van de bange frames
     );
 
     // 2. DOWN
-    m_animDownFramesScaredEnd.insert(
-            m_animDownFramesScaredEnd.end(),
-            m_animDownFramesScared.begin(),
-            m_animDownFramesScared.end()
-    );
+    m_animDownFramesScaredEnd.insert(m_animDownFramesScaredEnd.end(), m_animDownFramesScared.begin(),
+                                     m_animDownFramesScared.end());
 
     // 3. LEFT
-    m_animLeftFramesScaredEnd.insert(
-            m_animLeftFramesScaredEnd.end(),
-            m_animLeftFramesScared.begin(),
-            m_animLeftFramesScared.end()
-    );
+    m_animLeftFramesScaredEnd.insert(m_animLeftFramesScaredEnd.end(), m_animLeftFramesScared.begin(),
+                                     m_animLeftFramesScared.end());
 
     // 4. UP
-    m_animUpFramesScaredEnd.insert(
-            m_animUpFramesScaredEnd.end(),
-            m_animUpFramesScared.begin(),
-            m_animUpFramesScared.end()
-    );
+    m_animUpFramesScaredEnd.insert(m_animUpFramesScaredEnd.end(), m_animUpFramesScared.begin(),
+                                   m_animUpFramesScared.end());
 
     // 5. Init
     m_animFrames = m_animRightFrames;
@@ -111,9 +101,9 @@ void GhostView::onNotify(const logic::Subject& subject, logic::Event event) {
     case logic::Event::GhostUP:
         if (m_scared == 0) {
             m_animFrames = m_animUpFrames;
-        } else if(m_scared == 1) {
+        } else if (m_scared == 1) {
             m_animFrames = m_animUpFramesScared;
-        }else{
+        } else {
             m_animFrames = m_animUpFramesScaredEnd;
         }
 
@@ -121,27 +111,27 @@ void GhostView::onNotify(const logic::Subject& subject, logic::Event event) {
     case logic::Event::GhostDOWN:
         if (m_scared == 0) {
             m_animFrames = m_animDownFrames;
-        } else if(m_scared == 1) {
+        } else if (m_scared == 1) {
             m_animFrames = m_animDownFramesScared;
-        }else{
+        } else {
             m_animFrames = m_animDownFramesScaredEnd;
         }
         break;
     case logic::Event::GhostLEFT:
         if (m_scared == 0) {
             m_animFrames = m_animLeftFrames;
-        } else if(m_scared == 1) {
+        } else if (m_scared == 1) {
             m_animFrames = m_animLeftFramesScared;
-        }else{
+        } else {
             m_animFrames = m_animLeftFramesScaredEnd;
         }
         break;
     case logic::Event::GhostRIGHT:
         if (m_scared == 0) {
             m_animFrames = m_animRightFrames;
-        } else if(m_scared == 1) {
+        } else if (m_scared == 1) {
             m_animFrames = m_animRightFramesScared;
-        }else{
+        } else {
             m_animFrames = m_animRightFramesScaredEnd;
         }
         break;
