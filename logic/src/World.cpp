@@ -152,54 +152,54 @@ void World::createScore(double x, double y, double size) {
 // ------------------------------------------------------------------
 // AFRAID TIME UPDATE
 // ------------------------------------------------------------------
-    void World::activateFrightenedMode() {
-        // 1. Bereken duur (zoals je al had)
-        float duration = std::max(2.0f, 7.0f - ((m_currentLevel - 1) * 0.5f));
+void World::activateFrightenedMode() {
+    // 1. Bereken duur (zoals je al had)
+    float duration = std::max(2.0f, 7.0f - ((m_currentLevel - 1) * 0.5f));
 
-        for (auto& ghost : m_ghosts) {
-            // Zet eerst de status om (visueel effect)
-            ghost->frighten(duration);
+    for (auto& ghost : m_ghosts) {
+        // Zet eerst de status om (visueel effect)
+        ghost->frighten(duration);
 
-            // 2. Bepaal de tegenovergestelde richting
-            Direction currentDir = ghost->getDirection();
-            Direction oppositeDir = Direction::STOP;
+        // 2. Bepaal de tegenovergestelde richting
+        Direction currentDir = ghost->getDirection();
+        Direction oppositeDir = Direction::STOP;
 
-            double checkX = ghost->getX();
-            double checkY = ghost->getY();
-            double ts = m_tileSize; // Gebruik de tile size van de wereld
+        double checkX = ghost->getX();
+        double checkY = ghost->getY();
+        double ts = m_tileSize; // Gebruik de tile size van de wereld
 
-            // 3. Kijk één stapje vooruit in de NIEUWE (omgekeerde) richting
-            switch (currentDir) {
-                case Direction::UP:
-                    oppositeDir = Direction::DOWN;
-                    checkY += ts;
-                    break;
-                case Direction::DOWN:
-                    oppositeDir = Direction::UP;
-                    checkY -= ts;
-                    break;
-                case Direction::LEFT:
-                    oppositeDir = Direction::RIGHT;
-                    checkX += ts;
-                    break;
-                case Direction::RIGHT:
-                    oppositeDir = Direction::LEFT;
-                    checkX -= ts;
-                    break;
-                default:
-                    break; // Bij STOP of onbekend doen we niets
-            }
-
-            // 4. De MAGIE: Check of die positie vrij is m.b.v. World functie
-            // We checken ook !isGateAt zodat ze niet terug het huis in rennen
-            if (oppositeDir != Direction::STOP && isMapPositionFree(checkX, checkY) && !isGateAt(checkX, checkY)) {
-                ghost->queueDirection(oppositeDir);
-                ghost->commitDirection();
-            }
-            // ELSE: Als de weg terug geblokkeerd is (muur), doen we NIETS.
-            // Het spook wordt wel bang (blauw), maar blijft zijn huidige pad volgen.
+        // 3. Kijk één stapje vooruit in de NIEUWE (omgekeerde) richting
+        switch (currentDir) {
+        case Direction::UP:
+            oppositeDir = Direction::DOWN;
+            checkY += ts;
+            break;
+        case Direction::DOWN:
+            oppositeDir = Direction::UP;
+            checkY -= ts;
+            break;
+        case Direction::LEFT:
+            oppositeDir = Direction::RIGHT;
+            checkX += ts;
+            break;
+        case Direction::RIGHT:
+            oppositeDir = Direction::LEFT;
+            checkX -= ts;
+            break;
+        default:
+            break; // Bij STOP of onbekend doen we niets
         }
+
+        // 4. De MAGIE: Check of die positie vrij is m.b.v. World functie
+        // We checken ook !isGateAt zodat ze niet terug het huis in rennen
+        if (oppositeDir != Direction::STOP && isMapPositionFree(checkX, checkY) && !isGateAt(checkX, checkY)) {
+            ghost->queueDirection(oppositeDir);
+            ghost->commitDirection();
+        }
+        // ELSE: Als de weg terug geblokkeerd is (muur), doen we NIETS.
+        // Het spook wordt wel bang (blauw), maar blijft zijn huidige pad volgen.
     }
+}
 
 void World::setGridDimensions(double startX, double startY, double tileSize) {
     m_startX = startX;
