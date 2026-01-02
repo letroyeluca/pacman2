@@ -17,10 +17,10 @@
 
 namespace logic {
 
-World::World(AbstractFactory* factory) : m_factory(factory) {
-    TxtMapLoader loader(*this);
-    loader.loadMap("map.txt");
-}
+    World::World(std::shared_ptr<AbstractFactory> factory) : m_factory(factory) {
+        TxtMapLoader loader(*this);
+        loader.loadMap("map.txt");
+    }
 
 World::~World() {}
 
@@ -50,13 +50,15 @@ float World::getLevelMultiplier() const {
 
 void World::addWall(double x, double y, double w, double h) { m_walls.push_back(m_factory->createWall(x, y, w, h)); }
 
-void World::addCoin(double x, double y, double w, double h) {
-    auto coin = m_factory->createCoin(x, y, w, h);
-    if (m_scoreModel) {
-        coin->attach(m_scoreModel.get());
+    void World::addCoin(double x, double y, double w, double h) {
+        auto coin = m_factory->createCoin(x, y, w, h);
+        if (m_scoreModel) {
+            // GEEN .get() meer! Geef de shared_ptr direct door.
+            // ScoreModel moet wel een Observer zijn.
+            coin->attach(m_scoreModel);
+        }
+        m_coins.push_back(std::move(coin));
     }
-    m_coins.push_back(std::move(coin));
-}
 
 void World::addApple(double x, double y, double w, double h) {
     auto apple = m_factory->createApple(x, y, w, h);
@@ -130,10 +132,10 @@ void World::addGhost(double x, double y, double w, double h, char type) {
 
     ghost->setSpeed(finalSpeed);
 
-    if (m_scoreModel) {
-        ghost->attach(m_scoreModel.get());
-    }
-    m_ghosts.push_back(std::move(ghost));
+        if (m_scoreModel) {
+            ghost->attach(m_scoreModel);
+        }
+        m_ghosts.push_back(std::move(ghost));
 }
 
 // ------------------------------------------------------------------
@@ -219,8 +221,8 @@ class CollisionVisitor : public Visitor {
 public:
     CollisionVisitor(double x, double y, double w, double h)
         : m_checkX(x), m_checkY(y), m_checkW(w), m_checkH(h), m_mode(Mode::WALL_CHECK) {}
-    CollisionVisitor(PacManModel& pacman, World& world)
-        : m_pacman(&pacman), m_world(&world), m_mode(Mode::ENTITY_CHECK) {}
+    CollisionVisitor(std::shared_ptr<PacManModel> pacman, World& world)
+        : m_pacman(pacman), m_world(&world), m_mode(Mode::ENTITY_CHECK) {}
 
     void visit(PacManModel& pacman) override {}
     bool hasCollided() const { return m_hasCollided; }
@@ -271,7 +273,7 @@ private:
     Mode m_mode;
     double m_checkX = 0, m_checkY = 0, m_checkW = 0, m_checkH = 0;
     bool m_hasCollided = false;
-    PacManModel* m_pacman = nullptr;
+    std::shared_ptr<PacManModel> m_pacman;
     World* m_world = nullptr;
 };
 
@@ -453,7 +455,7 @@ void World::updateGhosts(float dt) {
 void World::handleCollisions(float dt) {
     if (!m_pacman)
         return;
-    CollisionVisitor entityVisitor(*m_pacman, *this);
+    CollisionVisitor entityVisitor(m_pacman, *this);
     for (auto& coin : m_coins) {
         coin->update(dt);
         coin->accept(entityVisitor);

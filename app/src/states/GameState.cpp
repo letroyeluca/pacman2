@@ -14,6 +14,7 @@
 #include "states/VictoryState.h"
 #include <algorithm>
 #include <iostream>
+#include <memory>
 
 // --- Constructor ---
 GameState::GameState(StateManager& manager, sf::RenderWindow& window, int currentScore, int currentLives,
@@ -22,8 +23,9 @@ GameState::GameState(StateManager& manager, sf::RenderWindow& window, int curren
 // m_score wordt automatisch geinitialiseerd op 0
 {
     m_camera = std::make_unique<Camera>(m_window.getSize().x, m_window.getSize().y);
-    m_factory = std::make_unique<ConcreteFactory>(*m_camera);
-    m_world = std::make_unique<logic::World>(m_factory.get());
+    auto factory = std::make_shared<ConcreteFactory>(*m_camera);
+    m_factory = factory;
+    m_world = std::make_unique<logic::World>(m_factory);
     m_world->initializeGameData(currentScore, currentLives, m_levelIndex);
     m_camera->setWorldDimensions(m_world->getWidth(), m_world->getHeight());
     m_views = m_factory->getCreatedViews();

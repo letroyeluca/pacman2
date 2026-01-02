@@ -14,27 +14,38 @@ namespace logic {
 class Subject {
 private:
     // VERANDERING 1: Vector bewaart nu gewone pointers, geen shared_ptrs
-    std::vector<Observer*> m_observers;
+    std::vector<std::weak_ptr<Observer>> m_observers;
 
 public:
     virtual ~Subject() = default;
 
     // VERANDERING 2: Accepteer een raw pointer
-    void attach(Observer* observer) { m_observers.push_back(observer); }
+    void attach(std::shared_ptr<Observer> observer) {
+        m_observers.push_back(observer);
+    }
 
     // VERANDERING 3: Zoek en verwijder de raw pointer
-    void detach(Observer* observer) {
-        // Dit is de veilige standaardmanier om iets uit een vector te verwijderen
-        auto it = std::remove(m_observers.begin(), m_observers.end(), observer);
-        m_observers.erase(it, m_observers.end());
+    void detach(std::shared_ptr<Observer> observer) {
+        // Verwijder specifieke observer (locken is nodig om te vergelijken)
+        m_observers.erase(std::remove_if(m_observers.begin(), m_observers.end(),
+                                         [&](const std::weak_ptr<Observer>& wp) {
+                                             auto sp = wp.lock();
+                                             return !sp || sp == observer;
+                                         }),
+                          m_observers.end());
     }
 
 protected:
     void notify(Event event) {
-        // VERANDERING 4: Loop over raw pointers
-        for (Observer* observer : m_observers) {
-            if (observer != nullptr) {
-                observer->onNotify(*this, event);
+        // Loop over observers en verwijder verlopen pointers direct (cleanup)
+        auto it = m_observers.begin();
+        while (it != m_observers.end()) {
+            if (auto sp = it->lock()) { // Converteer weak naar shared
+                sp->onNotify(*this, event);
+                ++it;
+            } else {
+                // De observer bestaat niet meer, verwijder uit lijst
+                it = m_observers.erase(it);
             }
         }
     }

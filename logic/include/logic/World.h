@@ -21,7 +21,7 @@ namespace logic {
 
 class World {
 public:
-    World(AbstractFactory* factory);
+    World(std::shared_ptr<AbstractFactory> factory);
     ~World();
 
     void update(float dt);
@@ -36,7 +36,7 @@ public:
     void setWorldDimensions(double width, double height);
 
     // Getters
-    PacManModel* getPacMan() { return m_pacman.get(); }
+    std::shared_ptr<PacManModel> getPacMan() { return m_pacman; }
 
     double getWidth() const { return m_width; }
     double getHeight() const { return m_height; }
@@ -74,7 +74,7 @@ private:
 
     bool m_levelCompleted = false;
 
-    AbstractFactory* m_factory;
+    std::shared_ptr<AbstractFactory> m_factory;
     std::shared_ptr<logic::ScoreModel> m_scoreModel;
 
     std::shared_ptr<PacManModel> m_pacman;
