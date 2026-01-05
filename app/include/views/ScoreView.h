@@ -16,6 +16,7 @@ public:
     void onNotify(const logic::Subject& subject, logic::Event event) override;
 
     void onWindowResize() override;
+    void init();
 
     void draw(sf::RenderWindow& window) override;
 

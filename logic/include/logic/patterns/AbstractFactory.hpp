@@ -33,7 +33,7 @@ public:
     // Voeg 'size' toe aan de parameters
     virtual std::shared_ptr<ScoreModel> createScore(double x, double y, double size) = 0;
 
-    virtual std::vector<std::unique_ptr<EntityView>> getCreatedViews() = 0;
+    virtual std::vector<std::shared_ptr<EntityView>> getCreatedViews() = 0;
 };
 } // namespace logic
 

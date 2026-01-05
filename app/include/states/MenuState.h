@@ -18,7 +18,6 @@ public:
     void update(float dt) override;
     void render() override;
     void handleResize(sf::Event::SizeEvent size) override;
-
     void resume();
 
 private:

@@ -24,6 +24,9 @@ add_executable(pacman_game
         src/views/LivesView.cpp
 )
 
+target_compile_options(pacman_game PRIVATE -fsanitize=address -g -fno-omit-frame-pointer)
+target_link_options(pacman_game PRIVATE -fsanitize=address)
+
 target_include_directories(pacman_game PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )

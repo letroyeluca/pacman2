@@ -18,11 +18,14 @@ ScoreView::ScoreView(std::shared_ptr<logic::ScoreModel> model, Camera& camera)
 
     m_scoreText.setString("SCORE:0");
     m_highScoreText.setString("HIGH:" + std::to_string(m_scoreModel->getHighScore()));
-
-    // Attachen aan het model
-    m_scoreModel->attach(this);
 }
 
+void ScoreView::init() {
+    // Hier is het object veilig aangemaakt en mag je shared_from_this() gebruiken
+    if (m_scoreModel) {
+        m_scoreModel->attach(shared_from_this());
+    }
+}
 void ScoreView::onNotify(const logic::Subject& subject, logic::Event event) {
     if (!m_scoreModel)
         return;

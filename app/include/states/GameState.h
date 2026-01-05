@@ -19,7 +19,7 @@ private:
     std::unique_ptr<Camera> m_camera;
     std::shared_ptr<logic::AbstractFactory> m_factory;
     std::unique_ptr<logic::World> m_world;
-    std::vector<std::unique_ptr<EntityView>> m_views;
+    std::vector<std::shared_ptr<EntityView>> m_views;
     std::shared_ptr<logic::ScoreModel> m_scoreModel;
     std::shared_ptr<ScoreView> m_scoreView;
     int m_levelIndex;

@@ -10,7 +10,7 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 
-class EntityView : public logic::Observer {
+class EntityView : public logic::Observer, public std::enable_shared_from_this<EntityView> {
 public:
     // Accepteer shared_ptr (mag nullptr zijn)
     EntityView(std::shared_ptr<logic::EntityModel> model, Camera& camera);
@@ -23,6 +23,7 @@ public:
     virtual void onNotify(const logic::Subject& subject, logic::Event event) override;
     int getRenderLayer() const { return m_renderLayer; }
     void setRenderLayer(int layer) { m_renderLayer = layer; }
+    void init();
 
 protected:
     std::shared_ptr<logic::EntityModel> m_model;

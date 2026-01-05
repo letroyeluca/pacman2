@@ -6,10 +6,8 @@
 #include "logic/patterns/Subject.h"
 
 EntityView::EntityView(std::shared_ptr<logic::EntityModel> model, Camera& camera) : m_model(model), m_camera(camera) {
-    // Alleen attachen als het model bestaat (ScoreView heeft geen model)
-    if (m_model) {
-        m_model->attach(this);
-    }
+
+
 }
 
 void EntityView::onNotify(const logic::Subject& subject, logic::Event event) {
@@ -18,6 +16,10 @@ void EntityView::onNotify(const logic::Subject& subject, logic::Event event) {
         // Gebruik pijl-operator -> voor pointers
         m_sprite.setPosition(m_camera.project(m_model->getX(), m_model->getY()));
     }
+}
+
+void EntityView::init() {
+    m_model->attach(shared_from_this());
 }
 
 void EntityView::draw(sf::RenderWindow& window) { window.draw(m_sprite); }

@@ -1,5 +1,3 @@
-
-
 #include "factories/ConcreteFactory.h"
 #include "Camera.h"
 #include "logic/models/AppleModel.h"
@@ -18,58 +16,93 @@
 
 ConcreteFactory::ConcreteFactory(Camera& camera) : m_camera(camera) {
     if (!m_sharedTexture.loadFromFile("assets/sprite.png")) {
+        // Foutafhandeling indien nodig
     }
 }
 
 std::shared_ptr<logic::PacManModel> ConcreteFactory::createPacMan(double x, double y, double width, double height) {
     auto model = std::make_shared<logic::PacManModel>(x, y, width, height);
-    auto view = std::make_unique<PacManView>(model, m_camera);
+
+    // FIX 1: Gebruik make_shared i.p.v. make_unique
+    auto view = std::make_shared<PacManView>(model, m_camera);
     view->setRenderLayer(4);
-    auto livesView = std::make_unique<LivesView>(model, m_camera);
-    livesView->setRenderLayer(100); // Als je views lagen ondersteunen
-    m_views.push_back(std::move(livesView));
-    m_views.push_back(std::move(view));
+
+    // FIX 2: Init aanroepen (hier gebeurt de attach)
+    view->init();
+    m_views.push_back(view);
+
+    // LivesView
+    auto livesView = std::make_shared<LivesView>(model, m_camera); // <-- make_shared
+    livesView->setRenderLayer(100);
+
+    // FIX 3: Vergeet init() niet voor LivesView!
+    livesView->init();
+
+    m_views.push_back(livesView);
+
     return model;
 }
 
-std::shared_ptr<logic::GhostModel> ConcreteFactory::createGhost(double x, double y, double width, double height,
-                                                                char type) {
+std::shared_ptr<logic::GhostModel> ConcreteFactory::createGhost(double x, double y, double width, double height, char type) {
     auto model = std::make_shared<logic::GhostModel>(x, y, width, height, type);
-    auto view = std::make_unique<GhostView>(model, m_camera);
+
+    // FIX: make_shared
+    auto view = std::make_shared<GhostView>(model, m_camera);
     view->setRenderLayer(3);
-    m_views.push_back(std::move(view));
+
+    // Roep init aan (ook als GhostView het nu nog niet gebruikt, is het veilig voor de toekomst)
+    view->init();
+
+    m_views.push_back(view);
     return model;
 }
 
 std::shared_ptr<logic::CoinModel> ConcreteFactory::createCoin(double x, double y, double width, double height) {
     auto model = std::make_shared<logic::CoinModel>(x, y, width, height);
-    auto view = std::make_unique<CoinView>(model, m_camera, m_sharedTexture);
+
+    // FIX: make_shared
+    auto view = std::make_shared<CoinView>(model, m_camera, m_sharedTexture);
     view->setRenderLayer(2);
-    m_views.push_back(std::move(view));
+    view->init();
+
+    m_views.push_back(view);
     return model;
 }
 
 std::shared_ptr<logic::AppleModel> ConcreteFactory::createApple(double x, double y, double width, double height) {
     auto model = std::make_shared<logic::AppleModel>(x, y, width, height);
-    auto view = std::make_unique<AppleView>(model, m_camera, m_sharedTexture);
+
+    // FIX: make_shared
+    auto view = std::make_shared<AppleView>(model, m_camera, m_sharedTexture);
     view->setRenderLayer(2);
-    m_views.push_back(std::move(view));
+    view->init();
+
+    m_views.push_back(view);
     return model;
 }
 
 std::shared_ptr<logic::WallModel> ConcreteFactory::createWall(double x, double y, double width, double height) {
     auto model = std::make_shared<logic::WallModel>(x, y, width, height);
-    auto view = std::make_unique<WallView>(model, m_camera, m_sharedTexture);
+
+    // FIX: make_shared
+    auto view = std::make_shared<WallView>(model, m_camera, m_sharedTexture);
     view->setRenderLayer(1);
-    m_views.push_back(std::move(view));
+    view->init();
+
+    m_views.push_back(view);
     return model;
 }
 
 std::shared_ptr<logic::ScoreModel> ConcreteFactory::createScore(double x, double y, double size) {
-
     auto model = std::make_shared<logic::ScoreModel>(x, y, size);
-    auto view = std::make_unique<ScoreView>(model, m_camera);
+
+    // FIX: make_shared (DIT was je specifieke crash bij ScoreView)
+    auto view = std::make_shared<ScoreView>(model, m_camera);
     view->setRenderLayer(5);
-    m_views.push_back(std::move(view));
+
+    // Dit crashte omdat 'view' een unique_ptr was. Nu is het shared_ptr, dus veilig.
+    view->init();
+
+    m_views.push_back(view);
     return model;
 }
