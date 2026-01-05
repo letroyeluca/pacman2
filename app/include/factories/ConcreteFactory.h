@@ -29,9 +29,7 @@ public:
 
     std::shared_ptr<logic::ScoreModel> createScore(double x, double y, double size) override;
 
-    std::vector<std::shared_ptr<EntityView>> getCreatedViews() override {
-        return std::move(m_views);
-    }
+    std::vector<std::shared_ptr<EntityView>> getCreatedViews() override { return std::move(m_views); }
 
 private:
     std::vector<std::shared_ptr<EntityView>> m_views;

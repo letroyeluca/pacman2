@@ -43,7 +43,8 @@ std::shared_ptr<logic::PacManModel> ConcreteFactory::createPacMan(double x, doub
     return model;
 }
 
-std::shared_ptr<logic::GhostModel> ConcreteFactory::createGhost(double x, double y, double width, double height, char type) {
+std::shared_ptr<logic::GhostModel> ConcreteFactory::createGhost(double x, double y, double width, double height,
+                                                                char type) {
     auto model = std::make_shared<logic::GhostModel>(x, y, width, height, type);
 
     // FIX: make_shared

@@ -5,10 +5,7 @@
 #include "Camera.h"
 #include "logic/patterns/Subject.h"
 
-EntityView::EntityView(std::shared_ptr<logic::EntityModel> model, Camera& camera) : m_model(model), m_camera(camera) {
-
-
-}
+EntityView::EntityView(std::shared_ptr<logic::EntityModel> model, Camera& camera) : m_model(model), m_camera(camera) {}
 
 void EntityView::onNotify(const logic::Subject& subject, logic::Event event) {
     // Check pointer validiteit
@@ -18,9 +15,7 @@ void EntityView::onNotify(const logic::Subject& subject, logic::Event event) {
     }
 }
 
-void EntityView::init() {
-    m_model->attach(shared_from_this());
-}
+void EntityView::init() { m_model->attach(shared_from_this()); }
 
 void EntityView::draw(sf::RenderWindow& window) { window.draw(m_sprite); }
 
