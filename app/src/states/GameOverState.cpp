@@ -62,17 +62,17 @@ void GameOverState::handleInput(sf::Event& event) {
     }
 }
 
-void GameOverState::update(float dt) {
-    // Hier kun je eventueel een knipper-effect toevoegen voor de instructie tekst
-}
+void GameOverState::update(float dt) {}
 
+//toon alles op het scherm
 void GameOverState::render() {
-    m_window.clear(sf::Color::Black); // Zwarte achtergrond
+    m_window.clear(sf::Color::Black);
     m_window.draw(m_titleText);
     m_window.draw(m_scoreText);
     m_window.draw(m_instructionText);
 }
 
+//bij resize alles opnieuw verschuiven en plaatsen
 void GameOverState::handleResize(sf::Event::SizeEvent size) {
     m_window.setView(sf::View(sf::FloatRect(0.f, 0.f, size.width, size.height)));
     setupText();

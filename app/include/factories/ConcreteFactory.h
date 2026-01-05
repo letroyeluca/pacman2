@@ -1,11 +1,6 @@
 //
 // Created by Luca Letroye on 26/10/2025.
 //
-
-//
-// Created by Luca Letroye on 26/10/2025.
-//
-
 #ifndef PACMAN_CONCRETEFACTORY_H
 #define PACMAN_CONCRETEFACTORY_H
 
@@ -20,13 +15,12 @@ class ConcreteFactory : public logic::AbstractFactory {
 public:
     ConcreteFactory(Camera& camera);
 
-    // Overrides moeten shared_ptr teruggeven
+    // functies om entities aan te maken waaronder models en views
     std::shared_ptr<logic::PacManModel> createPacMan(double x, double y, double w, double h) override;
     std::shared_ptr<logic::GhostModel> createGhost(double x, double y, double w, double h, char type) override;
     std::shared_ptr<logic::CoinModel> createCoin(double x, double y, double w, double h) override;
     std::shared_ptr<logic::AppleModel> createApple(double x, double y, double w, double h) override;
     std::shared_ptr<logic::WallModel> createWall(double x, double y, double w, double h) override;
-
     std::shared_ptr<logic::ScoreModel> createScore(double x, double y, double size) override;
 
     std::vector<std::shared_ptr<EntityView>> getCreatedViews() override { return std::move(m_views); }

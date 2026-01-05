@@ -2,28 +2,28 @@
 #define PACMAN_LIVESVIEW_H
 
 #include "logic/models/PacManModel.h"
-#include "views/EntityView.h" // Pas aan naar jouw base view header
+#include "views/EntityView.h"
 #include <SFML/Graphics.hpp>
 #include <vector>
 
+// UI component: Toont resterende levens linksboven in beeld
 class LivesView : public EntityView {
 public:
-    // We hebben het model nodig om de levens te tellen
     LivesView(std::shared_ptr<logic::PacManModel> model, Camera& camera);
 
     void updateAnimation(float dt) override;
-    void draw(sf::RenderWindow& window) override;
-    void onWindowResize() override; // Om te zorgen dat ze in de hoek blijven
+    void draw(sf::RenderWindow& window) override; // Tekent meerdere icoontjes in een loop
+    void onWindowResize() override; // Zorgt dat UI op zijn plek blijft bij resize
 
 private:
     std::weak_ptr<logic::PacManModel> m_model;
     sf::Texture m_texture;
     sf::Sprite m_sprite;
 
-    // UI Instellingen
-    float m_startX = 20.0f;  // Afstand van links
-    float m_startY = 20.0f;  // Afstand van boven
-    float m_spacing = 35.0f; // Ruimte tussen de icoontjes
+    // UI Positionering
+    float m_startX = 20.0f;
+    float m_startY = 20.0f;
+    float m_spacing = 35.0f;
 };
 
 #endif // PACMAN_LIVESVIEW_H

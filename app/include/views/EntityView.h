@@ -1,6 +1,3 @@
-//
-// Created by Luca Letroye on 26/10/2025.
-//
 #ifndef PACMAN_ENTITYVIEW_H
 #define PACMAN_ENTITYVIEW_H
 
@@ -10,26 +7,28 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 
+// Basisklasse voor alle visuele objecten. Koppelt een Logisch Model aan een SFML Sprite.
 class EntityView : public logic::Observer, public std::enable_shared_from_this<EntityView> {
 public:
-    // Accepteer shared_ptr (mag nullptr zijn)
+    // Koppelt model en camera. Shared_ptr mag nullptr zijn (bv. voor UI elementen)
     EntityView(std::shared_ptr<logic::EntityModel> model, Camera& camera);
 
     virtual ~EntityView() = default;
 
-    virtual void updateAnimation(float dt);
-    virtual void onWindowResize();
-    virtual void draw(sf::RenderWindow& window);
-    virtual void onNotify(const logic::Subject& subject, logic::Event event) override;
+    virtual void updateAnimation(float dt);      // Wordt elke frame aangeroepen voor animaties
+    virtual void onWindowResize();               // Past grootte/positie aan bij schermwijziging
+    virtual void draw(sf::RenderWindow& window); // Tekent de sprite op het scherm
+    virtual void onNotify(const logic::Subject& subject, logic::Event event) override; // Luistert naar updates van het Model
+
     int getRenderLayer() const { return m_renderLayer; }
-    void setRenderLayer(int layer) { m_renderLayer = layer; }
+    void setRenderLayer(int layer) { m_renderLayer = layer; } // Bepaalt tekenvolgorde (z-index)
     void init();
 
 protected:
     std::shared_ptr<logic::EntityModel> m_model;
     Camera& m_camera;
-    sf::Sprite m_sprite; // Deze variabele is nodig voor alle subklassen!
-    int m_renderLayer = 0;
+    sf::Sprite m_sprite;     // De visuele representatie (gedeeld door alle child-classes)
+    int m_renderLayer = 0;   // 0 = achtergrond, hoger = voorgrond
 };
 
 #endif // PACMAN_ENTITYVIEW_H

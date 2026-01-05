@@ -13,7 +13,7 @@ namespace logic {
 class GhostModel;
 }
 class Camera;
-
+// Visuele weergave van een spook, inclusief "Bang" en "Knipper" statussen
 class GhostView : public EntityView {
 public:
     // Constructor neemt shared_ptr
@@ -40,7 +40,8 @@ private:
     std::vector<sf::IntRect> m_animDownFramesScaredEnd;
     std::vector<sf::IntRect> m_animLeftFramesScaredEnd;
     std::vector<sf::IntRect> m_animRightFramesScaredEnd;
-    int m_scared = 0;
+
+    int m_scared = 0; // 0 = Normaal, 1 = Bang, 2 = Einde Bang
     int m_currentFrame;
     float m_animationTimer;
     const float m_animationSpeed = 0.1f;
