@@ -1,0 +1,43 @@
+{
+   ignore_nvidia_glcore
+   Memcheck:Leak
+   ...
+   obj:*/libnvidia-glcore.so*
+}
+{
+   ignore_nvidia_glx
+   Memcheck:Leak
+   ...
+   obj:*/libGLX_nvidia.so*
+}
+{
+   ignore_libGLX
+   Memcheck:Leak
+   ...
+   obj:*/libGLX.so*
+}
+{
+   ignore_libX11
+   Memcheck:Leak
+   ...
+   obj:*/libX11.so*
+}
+{
+   ignore_libxcb
+   Memcheck:Leak
+   ...
+   obj:*/libxcb.so*
+}
+{
+   ignore_sfml_window
+   Memcheck:Leak
+   ...
+   obj:*/libsfml-window.so*
+}
+{
+   ignore_calloc_nvidia
+   Memcheck:Leak
+   fun:calloc
+   ...
+   obj:*/libnvidia-glcore.so*
+}
