@@ -13,9 +13,9 @@ public:
 
     void handleInput(sf::Event& event) override; // Start game bij Enter/Klik
     void update(float dt) override;
-    void render() override;                      // Tekent titel en highscores
+    void render() override; // Tekent titel en highscores
     void handleResize(sf::Event::SizeEvent size) override;
-    void resume();                               // Herlaadt highscores als men terugkeert naar menu
+    void resume(); // Herlaadt highscores als men terugkeert naar menu
 
 private:
     sf::Font m_font;
@@ -24,9 +24,9 @@ private:
     std::unique_ptr<Camera> m_camera;
 
     // Leaderboard functionaliteit
-    void initLeaderboard();                      // Leest txt-bestand uit voor scores
+    void initLeaderboard(); // Leest txt-bestand uit voor scores
     sf::Text m_leaderboardTitle;
-    std::vector<sf::Text> m_scoreTexts;          // Lijst van teksten voor top-scores
+    std::vector<sf::Text> m_scoreTexts;                  // Lijst van teksten voor top-scores
     std::unique_ptr<logic::ScoreModel> m_tempScoreModel; // Tijdelijk model om scores op te halen
 };
 

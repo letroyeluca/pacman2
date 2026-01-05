@@ -20,7 +20,7 @@ private:
     void setupText();
 
     sf::Font m_font;
-    sf::Text m_titleText;       // "Level Complete!"
+    sf::Text m_titleText; // "Level Complete!"
     sf::Text m_scoreText;
     sf::Text m_instructionText;
 

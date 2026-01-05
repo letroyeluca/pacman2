@@ -16,28 +16,29 @@
 #include <iostream>
 #include <memory>
 
-
-GameState::GameState(StateManager& manager, sf::RenderWindow& window, int currentScore, int currentLives,int currentLevel): State(manager, window), m_levelIndex(currentLevel)
-{
-    //maak een camera aan voor alles te kunnen renderen
+GameState::GameState(StateManager& manager, sf::RenderWindow& window, int currentScore, int currentLives,
+                     int currentLevel)
+    : State(manager, window), m_levelIndex(currentLevel) {
+    // maak een camera aan voor alles te kunnen renderen
     m_camera = std::make_unique<Camera>(m_window.getSize().x, m_window.getSize().y);
 
-    //maak de factory aan zodat je alle entities kan aanmaken en ontvangen
+    // maak de factory aan zodat je alle entities kan aanmaken en ontvangen
     auto factory = std::make_shared<ConcreteFactory>(*m_camera);
     m_factory = factory;
 
-    //maak de world aan ahv de factory
+    // maak de world aan ahv de factory
     m_world = std::make_unique<logic::World>(m_factory);
     m_world->initializeGameData(currentScore, currentLives, m_levelIndex);
 
-    //gebruik de camera om de dimensies door te geven
+    // gebruik de camera om de dimensies door te geven
     m_camera->setWorldDimensions(m_world->getWidth(), m_world->getHeight());
     m_views = m_factory->getCreatedViews();
 
-    //herschik alle views zodat alles juist staat volgens de render layer
-    std::sort(m_views.begin(), m_views.end(),[](const auto& viewA, const auto& viewB) { return viewA->getRenderLayer() < viewB->getRenderLayer(); });
+    // herschik alle views zodat alles juist staat volgens de render layer
+    std::sort(m_views.begin(), m_views.end(),
+              [](const auto& viewA, const auto& viewB) { return viewA->getRenderLayer() < viewB->getRenderLayer(); });
 
-    //op voorhand alle views al is resizing zodat ze zeker goed staan.
+    // op voorhand alle views al is resizing zodat ze zeker goed staan.
     for (auto& view : m_views) {
         view->onWindowResize();
     }
@@ -53,7 +54,7 @@ void GameState::handleResize(sf::Event::SizeEvent size) {
     m_window.setView(sf::View(sf::FloatRect(0.f, 0.f, size.width, size.height)));
     m_camera->onWindowResize(size.width, size.height);
 
-    //update alle views
+    // update alle views
     for (auto& view : m_views) {
         view->onWindowResize();
     }
@@ -63,7 +64,7 @@ void GameState::handleResize(sf::Event::SizeEvent size) {
 void GameState::handleInput(sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
 
-        //indien escape geduwt slaag op en pauseer
+        // indien escape geduwt slaag op en pauseer
         if (event.key.code == sf::Keyboard::Escape) {
             if (m_world->getScoreModel()) {
                 m_world->getScoreModel()->saveScoreIfPersonalBest();
@@ -71,7 +72,7 @@ void GameState::handleInput(sf::Event& event) {
             m_manager.pushState(std::make_unique<PausedState>(m_manager, m_window));
             return; // Stop verdere input verwerking als we pauzeren
         }
-        //bij de bewingen knoppen queue de volgende beweging
+        // bij de bewingen knoppen queue de volgende beweging
         auto pacman = m_world->getPacMan();
         if (pacman) {
             if (event.key.code == sf::Keyboard::Up)
@@ -103,7 +104,8 @@ void GameState::update(float dt) {
         int currentLives = m_world->getPacMan()->getLives();
 
         // Naar VictoryState, en zeg dat het volgende level (index + 1) moet komen
-        m_manager.pushState(std::make_unique<VictoryState>(m_manager, m_window, currentScore, currentLives,m_levelIndex + 1 ));
+        m_manager.pushState(
+            std::make_unique<VictoryState>(m_manager, m_window, currentScore, currentLives, m_levelIndex + 1));
         return;
     }
 

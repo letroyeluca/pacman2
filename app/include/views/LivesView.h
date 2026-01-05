@@ -13,7 +13,7 @@ public:
 
     void updateAnimation(float dt) override;
     void draw(sf::RenderWindow& window) override; // Tekent meerdere icoontjes in een loop
-    void onWindowResize() override; // Zorgt dat UI op zijn plek blijft bij resize
+    void onWindowResize() override;               // Zorgt dat UI op zijn plek blijft bij resize
 
 private:
     std::weak_ptr<logic::PacManModel> m_model;

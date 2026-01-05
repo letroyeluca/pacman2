@@ -16,7 +16,7 @@ public:
     WallView(std::shared_ptr<logic::WallModel> model, Camera& camera, sf::Texture& texture);
 
 private:
-    //texture van de muur
+    // texture van de muur
     sf::Texture m_texture;
 };
 #endif // PACMAN_WALLVIEW_H

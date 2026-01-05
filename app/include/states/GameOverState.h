@@ -20,9 +20,9 @@ private:
     void setupText(); // Configureert posities en stijl van de teksten
 
     sf::Font m_font;
-    sf::Text m_titleText;      // "GAME OVER"
-    sf::Text m_scoreText;      // Behaalde score
-    sf::Text m_instructionText;// "Press Space to menu"
+    sf::Text m_titleText;       // "GAME OVER"
+    sf::Text m_scoreText;       // Behaalde score
+    sf::Text m_instructionText; // "Press Space to menu"
 };
 
 #endif // PACMAN_GAMEOVERSTATE_H
