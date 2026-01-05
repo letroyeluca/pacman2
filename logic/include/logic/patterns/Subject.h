@@ -20,9 +20,7 @@ public:
     virtual ~Subject() = default;
 
     // VERANDERING 2: Accepteer een raw pointer
-    void attach(std::shared_ptr<Observer> observer) {
-        m_observers.push_back(observer);
-    }
+    void attach(std::shared_ptr<Observer> observer) { m_observers.push_back(observer); }
 
     // VERANDERING 3: Zoek en verwijder de raw pointer
     void detach(std::shared_ptr<Observer> observer) {

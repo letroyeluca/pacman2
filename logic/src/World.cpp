@@ -17,10 +17,10 @@
 
 namespace logic {
 
-    World::World(std::shared_ptr<AbstractFactory> factory) : m_factory(factory) {
-        TxtMapLoader loader(*this);
-        loader.loadMap("map.txt");
-    }
+World::World(std::shared_ptr<AbstractFactory> factory) : m_factory(factory) {
+    TxtMapLoader loader(*this);
+    loader.loadMap("map.txt");
+}
 
 World::~World() {}
 
@@ -50,15 +50,15 @@ float World::getLevelMultiplier() const {
 
 void World::addWall(double x, double y, double w, double h) { m_walls.push_back(m_factory->createWall(x, y, w, h)); }
 
-    void World::addCoin(double x, double y, double w, double h) {
-        auto coin = m_factory->createCoin(x, y, w, h);
-        if (m_scoreModel) {
-            // GEEN .get() meer! Geef de shared_ptr direct door.
-            // ScoreModel moet wel een Observer zijn.
-            coin->attach(m_scoreModel);
-        }
-        m_coins.push_back(std::move(coin));
+void World::addCoin(double x, double y, double w, double h) {
+    auto coin = m_factory->createCoin(x, y, w, h);
+    if (m_scoreModel) {
+        // GEEN .get() meer! Geef de shared_ptr direct door.
+        // ScoreModel moet wel een Observer zijn.
+        coin->attach(m_scoreModel);
     }
+    m_coins.push_back(std::move(coin));
+}
 
 void World::addApple(double x, double y, double w, double h) {
     auto apple = m_factory->createApple(x, y, w, h);
@@ -132,10 +132,10 @@ void World::addGhost(double x, double y, double w, double h, char type) {
 
     ghost->setSpeed(finalSpeed);
 
-        if (m_scoreModel) {
-            ghost->attach(m_scoreModel);
-        }
-        m_ghosts.push_back(std::move(ghost));
+    if (m_scoreModel) {
+        ghost->attach(m_scoreModel);
+    }
+    m_ghosts.push_back(std::move(ghost));
 }
 
 // ------------------------------------------------------------------
