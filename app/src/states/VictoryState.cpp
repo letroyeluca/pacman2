@@ -7,7 +7,8 @@
 #include "states/StateManager.h"
 #include <iostream>
 
-VictoryState::VictoryState(StateManager& manager, sf::RenderWindow& window, int score, int lives, int nextLevelIndex): State(manager, window), m_score(score), m_lives(lives), m_nextLevelIndex(nextLevelIndex) {
+VictoryState::VictoryState(StateManager& manager, sf::RenderWindow& window, int score, int lives, int nextLevelIndex)
+    : State(manager, window), m_score(score), m_lives(lives), m_nextLevelIndex(nextLevelIndex) {
     if (!m_font.loadFromFile("assets/font.ttf")) {
         std::cerr << "Could not load font for VictoryState" << std::endl;
     }
@@ -93,9 +94,7 @@ void VictoryState::handleInput(sf::Event& event) {
     }
 }
 
-void VictoryState::update(float dt) {
-
-}
+void VictoryState::update(float dt) {}
 
 void VictoryState::render() {
     // We tekenen over de vorige state heen (transparantie zou kunnen),
