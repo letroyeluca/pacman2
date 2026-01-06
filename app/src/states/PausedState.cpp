@@ -33,7 +33,7 @@ void PausedState::setupText() {
 }
 
 // teken alle UI elementen
-void PausedState::render() {
+void PausedState::render() const{
     m_window.draw(m_title);
     m_window.draw(m_instruction);
 }

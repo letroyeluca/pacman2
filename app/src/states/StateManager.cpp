@@ -64,7 +64,7 @@ void StateManager::update(float dt) {
 }
 
 // render doorgeven naar de bovenste stack
-void StateManager::render() {
+void StateManager::render() const{
     if (!m_states.empty()) {
         m_states.top()->render();
     }

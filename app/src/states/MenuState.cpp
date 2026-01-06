@@ -123,7 +123,7 @@ void MenuState::update(float dt) {
 }
 
 // render alles van de menu op het scherm
-void MenuState::render() {
+void MenuState::render() const {
     // Renderen in normale UI volgorde
     m_window.draw(m_titleText);
     m_window.draw(m_leaderboardTitle);
