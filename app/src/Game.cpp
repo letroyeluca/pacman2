@@ -9,7 +9,7 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 
-void Game::run(int width, int height) {
+void Game::run() {
 
     // initialiseer de window
     sf::VideoMode desktopMode = sf::VideoMode::getDesktopMode();
@@ -20,6 +20,7 @@ void Game::run(int width, int height) {
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
 
+    //maak de statemanager en geef het direct de startmenu
     StateManager stateManager;
     stateManager.pushState(std::make_unique<MenuState>(stateManager, window));
 

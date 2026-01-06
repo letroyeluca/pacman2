@@ -54,7 +54,7 @@ void PacManView::updateAnimation(float dt) {
     // Handle STOP state
     if (pacmanModel->getDirection() == logic::Direction::STOP) {
         m_animationTimer = 0.f;
-        m_currentFrame = 0; // Of 1, als je een 'open mond' wilt bij stop
+        m_currentFrame = 0;
         if (!m_animFrames.empty()) {
             m_sprite.setTextureRect(m_animFrames[m_currentFrame]);
         }
@@ -71,8 +71,7 @@ void PacManView::updateAnimation(float dt) {
         m_animationTimer -= m_animationSpeed;
     }
 
-    // --- FIX: Update de sprite ALTIJD, niet alleen als de timer tikt ---
-    // Hierdoor pakt hij direct de nieuwe richting (m_animFrames) zodra die verandert.
+
     if (!m_animFrames.empty()) {
         m_sprite.setTextureRect(m_animFrames[m_currentFrame]);
     }

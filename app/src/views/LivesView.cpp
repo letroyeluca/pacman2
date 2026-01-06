@@ -2,9 +2,7 @@
 #include "AssetManager.h"
 #include <iostream>
 
-LivesView::LivesView(std::shared_ptr<logic::PacManModel> model, Camera& camera)
-    : EntityView(model, camera), // 2. PASS TO BASE: shared_ptr passed to EntityView (OK!)
-      m_model(model)             // 3. STORE LOCALLY: shared_ptr converts to weak_ptr (OK!)
+LivesView::LivesView(std::shared_ptr<logic::PacManModel> model, Camera& camera): EntityView(model, camera),m_model(model)
 {
     // Laad de texture (gebruik dezelfde als je PacMan, of een specifiek icoon)
     if (!m_texture.loadFromFile("assets/sprite.png")) {
@@ -20,12 +18,9 @@ LivesView::LivesView(std::shared_ptr<logic::PacManModel> model, Camera& camera)
 }
 
 void LivesView::updateAnimation(float dt) {
-    // UI is meestal statisch, maar je zou de icoontjes kunnen laten happen
 }
 
 void LivesView::onWindowResize() {
-    // UI hoeft vaak niet herrekend te worden als we DefaultView gebruiken,
-    // maar je kunt hier posities resetten als je wilt schalen met het scherm.
 }
 
 void LivesView::draw(sf::RenderWindow& window) {
@@ -38,10 +33,7 @@ void LivesView::draw(sf::RenderWindow& window) {
         // 2. SCHAKEL NAAR UI VIEW (Scherm coordinaten, linksboven is 0,0)
         window.setView(window.getDefaultView());
 
-        // 3. TEKEN DE LEVENS
-        // We tekenen 'lives - 1' omdat de huidige PacMan in het spel is.
-        // Maar in de arcade game tonen ze vaak het TOTAAL aantal levens of de RESERVES.
-        // Laten we hier het totaal aantal levens tekenen (huidige + reserves).
+
         for (int i = 0; i < lives; ++i) {
             m_sprite.setPosition(m_startX + (i * m_spacing), m_startY);
             window.draw(m_sprite);

@@ -13,7 +13,7 @@ public:
 
     void handleInput(sf::Event& event) override; // Wacht op input om te herstarten of stoppen
     void update(float dt) override;
-    void render() override;
+    void render() const override;
     void handleResize(sf::Event::SizeEvent size) override;
 
 private:

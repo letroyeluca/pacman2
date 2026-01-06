@@ -13,9 +13,9 @@ public:
 
     void handleInput(sf::Event& event) override; // Start game bij Enter/Klik
     void update(float dt) override;
-    void render() override; // Tekent titel en highscores
+    void render() const override;
     void handleResize(sf::Event::SizeEvent size) override;
-    void resume(); // Herlaadt highscores als men terugkeert naar menu
+    void resume() override; // Herlaadt highscores als men terugkeert naar menu
 
 private:
     sf::Font m_font;

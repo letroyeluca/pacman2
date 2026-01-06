@@ -34,7 +34,7 @@ public:
 
     void handleInput(sf::Event& event) override;           // Verwerkt toetsenbordinvoer
     void update(float dt) override;                        // Update spellogica (beweging, botsingen)
-    void render() override;                                // Tekent alles op het scherm
+    void render() const override;                               // Tekent alles op het scherm
     void handleResize(sf::Event::SizeEvent size) override; // Past beeld aan bij venstergrootte
 };
 #endif // PACMAN_GAMESTATE_H

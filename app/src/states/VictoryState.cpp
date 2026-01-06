@@ -82,11 +82,7 @@ void VictoryState::handleInput(sf::Event& event) {
 
             // En we starten direct een NIEUW level object
             // (Dit zorgt voor Menu -> Level 2 in de stack)
-            m_manager.pushState(std::make_unique<GameState>(m_manager, m_window,
-                                                            m_score,         // Score meenemen
-                                                            m_lives,         // Levens meenemen
-                                                            m_nextLevelIndex // Difficulty verhogen
-                                                            ));
+            m_manager.pushState(std::make_unique<GameState>(m_manager, m_window,m_score,m_lives,m_nextLevelIndex));
         } else if (event.key.code == sf::Keyboard::Escape) {
             // Gewoon terug naar menu zonder nieuw level
             m_manager.resetToMenu();

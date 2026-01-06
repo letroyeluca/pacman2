@@ -13,7 +13,7 @@ public:
     // Pure virtual functies: elke child-klasse MOET deze implementeren
     virtual void handleInput(sf::Event& event) = 0; // Verwerkt toetsenbord/muis events
     virtual void update(float dt) = 0;              // Update spellogica (tijdsgebonden)
-    virtual void render() = 0;                      // Tekent de state op het scherm
+    virtual void render() const = 0;                      // Tekent de state op het scherm
 
     // Optionele functies (hooks)
     virtual void resume() {} // Wordt aangeroepen als deze state weer actief wordt (na een pop)

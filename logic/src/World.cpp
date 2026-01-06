@@ -24,6 +24,7 @@ World::World(std::shared_ptr<AbstractFactory> factory) : m_factory(factory) {
 
 World::~World() {}
 
+//alle data voor het starten van het level ophalen voor de juiste aantal levels etc
 void World::initializeGameData(int score, int lives, int level) {
     m_startScore = score;
     m_startLives = lives;
@@ -48,13 +49,15 @@ float World::getLevelMultiplier() const {
     return mult;
 }
 
+
+//--------------------------------------------------------------------------
+// HELPER: functie om via de maploader entities toe toe voegen en te inialiseren
+//--------------------------------------------------------------------------
 void World::addWall(double x, double y, double w, double h) { m_walls.push_back(m_factory->createWall(x, y, w, h)); }
 
 void World::addCoin(double x, double y, double w, double h) {
     auto coin = m_factory->createCoin(x, y, w, h);
     if (m_scoreModel) {
-        // GEEN .get() meer! Geef de shared_ptr direct door.
-        // ScoreModel moet wel een Observer zijn.
         coin->attach(m_scoreModel);
     }
     m_coins.push_back(std::move(coin));
@@ -84,63 +87,32 @@ bool World::isGateAt(double x, double y) const {
     return false;
 }
 
-// ------------------------------------------------------------------
-// BALANS UPDATE: PACMAN SNELHEID
-// ------------------------------------------------------------------
 void World::addPacMan(double x, double y, double w, double h, int mapsize) {
     m_pacman = m_factory->createPacMan(x, y, w, h);
-
-    // 1. Tiles Per Second (TPS)
-    // 6.0 TPS is een fijne arcade snelheid.
     float baseTPS = 3.0f;
-
-    // 2. Level Multiplier (wordt sneller in hogere levels)
     float levelMult = getLevelMultiplier();
-
-    // 3. Berekening: TPS * LevelFactor * GrootteVan1Tegel
-    // m_tileSize is in coordinate space (-1 tot 1), dus dit klopt altijd!
     float finalSpeed = baseTPS * levelMult * m_tileSize;
-
     m_pacman->setSpeed(finalSpeed);
-
-    // Zet levens correct (doorgegeven vanuit vorig level)
     m_pacman->setLives(m_startLives);
 }
 
-// ------------------------------------------------------------------
-// BALANS UPDATE: SPOOK SNELHEID
-// ------------------------------------------------------------------
 void World::addGhost(double x, double y, double w, double h, char type) {
     auto ghost = m_factory->createGhost(x, y, w, h, type);
-
-    // 1. Basis TPS (Zelfde referentie als Pacman)
     float baseTPS = 2.0f;
     float levelMult = getLevelMultiplier();
-
-    // 2. Ghost Ratio (Relatief t.o.v. Pacman)
-    // Level 1-4:   95% (Iets trager, speler kan ontsnappen)
-    // Level 5-9:  100% (Even snel)
-    // Level 10+:  103% (Sneller, speler moet slimme bochten maken)
     float ghostRatio = 0.95f;
     if (m_currentLevel >= 5)
         ghostRatio = 1.00f;
     if (m_currentLevel >= 10)
         ghostRatio = 1.03f;
-
-    // 3. Finale Snelheid
     float finalSpeed = baseTPS * levelMult * ghostRatio * m_tileSize;
-
     ghost->setSpeed(finalSpeed);
-
     if (m_scoreModel) {
         ghost->attach(m_scoreModel);
     }
     m_ghosts.push_back(std::move(ghost));
 }
 
-// ------------------------------------------------------------------
-// SCORE UPDATE: OVERNEMEN
-// ------------------------------------------------------------------
 void World::createScore(double x, double y, double size) {
     m_scoreModel = m_factory->createScore(x, y, size);
     if (m_scoreModel) {
@@ -150,10 +122,10 @@ void World::createScore(double x, double y, double size) {
 }
 
 // ------------------------------------------------------------------
-// AFRAID TIME UPDATE
+// AFRAID HANDLER
 // ------------------------------------------------------------------
 void World::activateFrightenedMode() {
-    // 1. Bereken duur (zoals je al had)
+    // 1. Bereken duur
     float duration = std::max(2.0f, 7.0f - ((m_currentLevel - 1) * 0.5f));
 
     for (auto& ghost : m_ghosts) {
@@ -212,21 +184,18 @@ void World::setWorldDimensions(double width, double height) {
     m_height = height;
 }
 
-// ... (Rest van CollisionVisitor code blijft exact hetzelfde) ...
 
-// --- DE REST VAN DE FILE (CollisionVisitor, isMapPositionFree, update, etc.) ---
-// --- HIERONDER STAAT GEEN NIEUWE LOGICA MEER, ALLEEN DE STANDAARD UPDATE LOOP ---
-
+//visitor patterns voor de collision
 class CollisionVisitor : public Visitor {
 public:
-    CollisionVisitor(double x, double y, double w, double h)
-        : m_checkX(x), m_checkY(y), m_checkW(w), m_checkH(h), m_mode(Mode::WALL_CHECK) {}
-    CollisionVisitor(std::shared_ptr<PacManModel> pacman, World& world)
-        : m_pacman(pacman), m_world(&world), m_mode(Mode::ENTITY_CHECK) {}
+    CollisionVisitor(double x, double y, double w, double h): m_checkX(x), m_checkY(y), m_checkW(w), m_checkH(h), m_mode(Mode::WALL_CHECK) {}
+    CollisionVisitor(std::shared_ptr<PacManModel> pacman, World& world): m_pacman(pacman), m_world(&world), m_mode(Mode::ENTITY_CHECK) {}
 
+    //visit functie voor pacman
     void visit(PacManModel& pacman) override {}
     bool hasCollided() const { return m_hasCollided; }
 
+    //visit wall en check collision
     void visit(WallModel& wall) override {
         if (m_mode == Mode::WALL_CHECK) {
             if (wall.collidesWithBox(m_checkX, m_checkY, m_checkW, m_checkH)) {
@@ -235,6 +204,7 @@ public:
         }
     }
 
+    //visit voin en check collision
     void visit(CoinModel& coin) override {
         if (m_mode == Mode::ENTITY_CHECK && m_pacman) {
             if (coin.isActive() && m_pacman->collidesWith(coin)) {
@@ -243,6 +213,7 @@ public:
         }
     }
 
+    //check coliision voor appel
     void visit(AppleModel& apple) override {
         if (m_mode == Mode::ENTITY_CHECK && m_pacman) {
             if (apple.isActive() && m_pacman->collidesWith(apple)) {
@@ -254,6 +225,7 @@ public:
         }
     }
 
+    //check collision voor ghost
     void visit(GhostModel& ghost) override {
         if (m_mode == Mode::ENTITY_CHECK && m_pacman) {
             if (ghost.collidesWith(*m_pacman)) {
@@ -277,6 +249,7 @@ private:
     World* m_world = nullptr;
 };
 
+//CHECK van mappositie check
 bool World::isMapPositionFree(double x, double y) {
     double checkSize = m_tileSize * 0.9;
     CollisionVisitor visitor(x, y, checkSize, checkSize);
@@ -288,19 +261,22 @@ bool World::isMapPositionFree(double x, double y) {
     return true;
 }
 
+//MAIN UPDATE FUNCTIE
 void World::update(float dt) {
     updatePacMan(dt);
     updateGhosts(dt);
     handleCollisions(dt);
 
+    //als er een scoremodel bestaat update
     if (m_scoreModel)
         m_scoreModel->update(dt);
-    for (auto& wall : m_walls)
-        wall->update(dt);
 
+    //CLEANUP van opgegeten items
     std::erase_if(m_coins, [](const auto& coin) { return coin->isCollected(); });
     std::erase_if(m_apples, [](const auto& apple) { return apple->isCollected(); });
 
+
+    //LEVEL COMPLETE CHECK
     if (m_coins.empty() && !m_levelCompleted && m_apples.empty()) {
         m_levelCompleted = true;
     }
@@ -308,165 +284,183 @@ void World::update(float dt) {
     respawnDeadGhosts();
 }
 
-void World::updatePacMan(float dt) {
-    if (!m_pacman)
-        return;
+    void World::updatePacMan(float dt) {
+        if (!m_pacman)
+            return;
 
-    // ... (Grid berekeningen blijven hetzelfde) ...
-    int gridX = std::round((m_pacman->getX() - m_startX - (m_tileSize / 2.0)) / m_tileSize);
-    int gridY = std::round((m_pacman->getY() - m_startY - (m_tileSize / 2.0)) / m_tileSize);
-    double centerX = m_startX + (gridX * m_tileSize) + (m_tileSize / 2.0);
-    double centerY = m_startY + (gridY * m_tileSize) + (m_tileSize / 2.0);
-    double distToCenter = std::sqrt(std::pow(m_pacman->getX() - centerX, 2) + std::pow(m_pacman->getY() - centerY, 2));
-
-    Direction nextDir = m_pacman->getNextDirection();
-    Direction currentDir = m_pacman->getDirection();
-
-    // ... (Opposite direction logic blijft hetzelfde) ...
-    bool isOpposite = (currentDir == Direction::UP && nextDir == Direction::DOWN) ||
-                      (currentDir == Direction::DOWN && nextDir == Direction::UP) ||
-                      (currentDir == Direction::LEFT && nextDir == Direction::RIGHT) ||
-                      (currentDir == Direction::RIGHT && nextDir == Direction::LEFT);
-
-    if (isOpposite) {
-        m_pacman->commitDirection();
-    } else if (nextDir != Direction::STOP && nextDir != currentDir) {
-        // ... (Target berekening blijft hetzelfde) ...
-        double moveStep = m_pacman->getSpeed() * dt;
-        // Gebruik hier de fix voor responsiveness uit mijn vorige antwoord als je wilt:
-        double turnThreshold = std::max(moveStep + 0.005, m_tileSize * 0.15);
-
-        double targetX = centerX;
-        double targetY = centerY;
-
-        if (nextDir == Direction::UP)
-            targetY -= m_tileSize;
-        else if (nextDir == Direction::DOWN)
-            targetY += m_tileSize;
-        else if (nextDir == Direction::LEFT)
-            targetX -= m_tileSize;
-        else if (nextDir == Direction::RIGHT)
-            targetX += m_tileSize;
-
-        // --- AANPASSING 1: Check ook !isGateAt(...) ---
-        // Pac-Man mag alleen draaien als het GEEN muur is EN GEEN poortje is.
-        if (isMapPositionFree(targetX, targetY) && !isGateAt(targetX, targetY) && distToCenter <= turnThreshold) {
-            m_pacman->setPosition(centerX, centerY);
-            m_pacman->commitDirection();
-        }
-    }
-
-    currentDir = m_pacman->getDirection();
-    if (currentDir != Direction::STOP) {
-        double forwardX = centerX;
-        double forwardY = centerY;
-
-        if (currentDir == Direction::UP)
-            forwardY -= m_tileSize;
-        else if (currentDir == Direction::DOWN)
-            forwardY += m_tileSize;
-        else if (currentDir == Direction::LEFT)
-            forwardX -= m_tileSize;
-        else if (currentDir == Direction::RIGHT)
-            forwardX += m_tileSize;
-
-        // --- AANPASSING 2: Check of de volgende tegel een Gate is ---
-        // Als het volgende vakje een muur is OF een gate, moet hij stoppen (pastCenter check).
-        if (!isMapPositionFree(forwardX, forwardY) || isGateAt(forwardX, forwardY)) {
-
-            bool pastCenter = false;
-            if (currentDir == Direction::UP && m_pacman->getY() < centerY)
-                pastCenter = true;
-            if (currentDir == Direction::DOWN && m_pacman->getY() > centerY)
-                pastCenter = true;
-            if (currentDir == Direction::LEFT && m_pacman->getX() < centerX)
-                pastCenter = true;
-            if (currentDir == Direction::RIGHT && m_pacman->getX() > centerX)
-                pastCenter = true;
-
-            if (pastCenter) {
-                m_pacman->setPosition(centerX, centerY);
-                m_pacman->stop();
-            }
-        }
-    }
-    m_pacman->update(dt);
-
-    // ... (Wrap around logic blijft hetzelfde) ...
-    if (m_pacman->getX() < -1.0 - m_tileSize)
-        m_pacman->setPosition(1.0 + m_tileSize, m_pacman->getY());
-    else if (m_pacman->getX() > 1.0 + m_tileSize)
-        m_pacman->setPosition(-1.0 - m_tileSize, m_pacman->getY());
-}
-
-void World::updateGhosts(float dt) {
-    // (Zelfde logica als je al had, alleen ingekort voor leesbaarheid hier)
-    for (auto& ghost : m_ghosts) {
-        int gridX = std::round((ghost->getX() - m_startX - (m_tileSize / 2.0)) / m_tileSize);
-        int gridY = std::round((ghost->getY() - m_startY - (m_tileSize / 2.0)) / m_tileSize);
+        // 1. Grid-positie berekenen:
+        // We bepalen op welke 'tegel' (gridX, gridY) Pac-Man zich bevindt en waar het exacte midden is.
+        // Dit is essentieel voor soepele bochten; je mag alleen draaien als je precies in het midden bent.
+        int gridX = std::round((m_pacman->getX() - m_startX - (m_tileSize / 2.0)) / m_tileSize);
+        int gridY = std::round((m_pacman->getY() - m_startY - (m_tileSize / 2.0)) / m_tileSize);
         double centerX = m_startX + (gridX * m_tileSize) + (m_tileSize / 2.0);
         double centerY = m_startY + (gridY * m_tileSize) + (m_tileSize / 2.0);
 
-        double moveStep = ghost->getSpeed() * dt;
-        double distToCenter = std::sqrt(std::pow(ghost->getX() - centerX, 2) + std::pow(ghost->getY() - centerY, 2));
-        bool atCenter = distToCenter <= (moveStep + 0.005);
+        // Hoe ver is Pac-Man verwijderd van het perfecte midden van de tegel?
+        double distToCenter = std::sqrt(std::pow(m_pacman->getX() - centerX, 2) + std::pow(m_pacman->getY() - centerY, 2));
 
-        if (!atCenter) {
-            ghost->setLocked(false);
+        Direction nextDir = m_pacman->getNextDirection(); // De richting die de speler wil (buffer)
+        Direction currentDir = m_pacman->getDirection();  // De richting die hij nu gaat
+
+        // 2. Directe ommekeer (180 graden):
+        // Als de speler direct de andere kant op wil (bv. links naar rechts), hoeft hij niet te wachten
+        // tot het midden van de tegel. Dit mag direct.
+        bool isOpposite = (currentDir == Direction::UP && nextDir == Direction::DOWN) ||
+                          (currentDir == Direction::DOWN && nextDir == Direction::UP) ||
+                          (currentDir == Direction::LEFT && nextDir == Direction::RIGHT) ||
+                          (currentDir == Direction::RIGHT && nextDir == Direction::LEFT);
+
+        if (isOpposite) {
+            m_pacman->commitDirection();
         }
+            // 3. Bocht nemen (90 graden):
+            // Dit mag ALLEEN als Pac-Man dicht genoeg bij het midden van de tegel is ('distToCenter').
+        else if (nextDir != Direction::STOP && nextDir != currentDir) {
+            double moveStep = m_pacman->getSpeed() * dt;
+            // Marge om te bepalen of we 'in' het kruispunt zijn
+            double turnThreshold = std::max(moveStep + 0.005, m_tileSize * 0.15);
 
-        if (atCenter && !ghost->isLocked()) {
-            bool freeUP = isMapPositionFree(centerX, centerY - m_tileSize);
-            bool freeDOWN = isMapPositionFree(centerX, centerY + m_tileSize);
-            bool freeLEFT = isMapPositionFree(centerX - m_tileSize, centerY);
-            bool freeRIGHT = isMapPositionFree(centerX + m_tileSize, centerY);
+            double targetX = centerX;
+            double targetY = centerY;
 
-            int exits = (freeUP ? 1 : 0) + (freeDOWN ? 1 : 0) + (freeLEFT ? 1 : 0) + (freeRIGHT ? 1 : 0);
-            bool isIntersection = (exits > 2);
+            // Kijk naar de tegel waar we heen willen draaien
+            if (nextDir == Direction::UP) targetY -= m_tileSize;
+            else if (nextDir == Direction::DOWN) targetY += m_tileSize;
+            else if (nextDir == Direction::LEFT) targetX -= m_tileSize;
+            else if (nextDir == Direction::RIGHT) targetX += m_tileSize;
 
-            Direction curr = ghost->getDirection();
-            bool hitWall = false;
-            if (curr == Direction::UP && !freeUP)
-                hitWall = true;
-            if (curr == Direction::DOWN && !freeDOWN)
-                hitWall = true;
-            if (curr == Direction::LEFT && !freeLEFT)
-                hitWall = true;
-            if (curr == Direction::RIGHT && !freeRIGHT)
-                hitWall = true;
-
-            if (isIntersection || hitWall) {
-                ghost->setPosition(centerX, centerY);
-                ghost->think(*this);
-                ghost->commitDirection();
-                ghost->setLocked(true);
+            // Als de doel-tegel vrij is EN we zijn dicht bij het midden:
+            if (isMapPositionFree(targetX, targetY) && !isGateAt(targetX, targetY) && distToCenter <= turnThreshold) {
+                // "Snap" positie naar exact het midden om vastlopen in muren te voorkomen
+                m_pacman->setPosition(centerX, centerY);
+                m_pacman->commitDirection();
             }
         }
 
-        ghost->update(dt);
+        // 4. Botsing met muur (Rechtdoor):
+        // Controleren of Pac-Man tegen een muur aanloopt in zijn huidige richting.
+        currentDir = m_pacman->getDirection();
+        if (currentDir != Direction::STOP) {
+            double forwardX = centerX;
+            double forwardY = centerY;
 
-        if (ghost->getX() < -1.0 - m_tileSize)
-            ghost->setPosition(1.0 + m_tileSize, ghost->getY());
-        else if (ghost->getX() > 1.0 + m_tileSize)
-            ghost->setPosition(-1.0 - m_tileSize, ghost->getY());
-    }
-}
+            // Bepaal de coördinaten van de volgende tegel
+            if (currentDir == Direction::UP) forwardY -= m_tileSize;
+            else if (currentDir == Direction::DOWN) forwardY += m_tileSize;
+            else if (currentDir == Direction::LEFT) forwardX -= m_tileSize;
+            else if (currentDir == Direction::RIGHT) forwardX += m_tileSize;
 
-void World::handleCollisions(float dt) {
-    if (!m_pacman)
-        return;
-    CollisionVisitor entityVisitor(m_pacman, *this);
-    for (auto& coin : m_coins) {
-        coin->update(dt);
-        coin->accept(entityVisitor);
+            // Als de volgende tegel een muur of hek is...
+            if (!isMapPositionFree(forwardX, forwardY) || isGateAt(forwardX, forwardY)) {
+                // ... controleren of we het midden al voorbij zijn.
+                bool pastCenter = false;
+                if (currentDir == Direction::UP && m_pacman->getY() < centerY) pastCenter = true;
+                if (currentDir == Direction::DOWN && m_pacman->getY() > centerY) pastCenter = true;
+                if (currentDir == Direction::LEFT && m_pacman->getX() < centerX) pastCenter = true;
+                if (currentDir == Direction::RIGHT && m_pacman->getX() > centerX) pastCenter = true;
+
+                // Zo ja: Stop exact op het midden.
+                if (pastCenter) {
+                    m_pacman->setPosition(centerX, centerY);
+                    m_pacman->stop();
+                }
+            }
+        }
+
+        // Fysieke positie updaten op basis van snelheid en tijd
+        m_pacman->update(dt);
+
+        // 5. Screen Wrapping (Teleport links/rechts):
+        // Als Pac-Man buiten het scherm gaat, komt hij aan de andere kant terug.
+        if (m_pacman->getX() < -1.0 - m_tileSize)
+            m_pacman->setPosition(1.0 + m_tileSize, m_pacman->getY());
+        else if (m_pacman->getX() > 1.0 + m_tileSize)
+            m_pacman->setPosition(-1.0 - m_tileSize, m_pacman->getY());
     }
-    for (auto& ghost : m_ghosts) {
-        ghost->accept(entityVisitor);
+
+    void World::updateGhosts(float dt) {
+        for (auto& ghost : m_ghosts) {
+            // Grid positie berekenen (zelfde logica als Pac-Man)
+            int gridX = std::round((ghost->getX() - m_startX - (m_tileSize / 2.0)) / m_tileSize);
+            int gridY = std::round((ghost->getY() - m_startY - (m_tileSize / 2.0)) / m_tileSize);
+            double centerX = m_startX + (gridX * m_tileSize) + (m_tileSize / 2.0);
+            double centerY = m_startY + (gridY * m_tileSize) + (m_tileSize / 2.0);
+
+            double moveStep = ghost->getSpeed() * dt;
+            double distToCenter = std::sqrt(std::pow(ghost->getX() - centerX, 2) + std::pow(ghost->getY() - centerY, 2));
+
+            // Is het spook "precies" (binnen marge) op het midden van een kruispunt?
+            bool atCenter = distToCenter <= (moveStep + 0.005);
+
+            // Reset lock zodra we het midden verlaten hebben, zodat we bij het volgende kruispunt weer mogen kiezen.
+            if (!atCenter) {
+                ghost->setLocked(false);
+            }
+
+            // AI Besluitvorming: Alleen als we op het midden staan en nog geen keuze hebben gemaakt (locked)
+            if (atCenter && !ghost->isLocked()) {
+                // Check welke kanten op kunnen
+                bool freeUP = isMapPositionFree(centerX, centerY - m_tileSize);
+                bool freeDOWN = isMapPositionFree(centerX, centerY + m_tileSize);
+                bool freeLEFT = isMapPositionFree(centerX - m_tileSize, centerY);
+                bool freeRIGHT = isMapPositionFree(centerX + m_tileSize, centerY);
+
+                // Tel aantal uitgangen
+                int exits = (freeUP ? 1 : 0) + (freeDOWN ? 1 : 0) + (freeLEFT ? 1 : 0) + (freeRIGHT ? 1 : 0);
+                bool isIntersection = (exits > 2);
+
+                // Check of we tegen een muur aanlopen
+                Direction curr = ghost->getDirection();
+                bool hitWall = false;
+                if (curr == Direction::UP && !freeUP) hitWall = true;
+                if (curr == Direction::DOWN && !freeDOWN) hitWall = true;
+                if (curr == Direction::LEFT && !freeLEFT) hitWall = true;
+                if (curr == Direction::RIGHT && !freeRIGHT) hitWall = true;
+
+                // Spoken denken alleen na op kruispunten of als ze vastlopen
+                if (isIntersection || hitWall) {
+                    ghost->setPosition(centerX, centerY); // Snap naar midden
+                    ghost->think(*this);                  // AI berekent nieuwe richting
+                    ghost->commitDirection();             // Bevestig richting
+                    ghost->setLocked(true);               // Voorkom dat we elke frame opnieuw nadenken op hetzelfde punt
+                }
+            }
+
+            ghost->update(dt);
+
+            // Teleport logica (screen wrap) ook voor spoken
+            if (ghost->getX() < -1.0 - m_tileSize)
+                ghost->setPosition(1.0 + m_tileSize, ghost->getY());
+            else if (ghost->getX() > 1.0 + m_tileSize)
+                ghost->setPosition(-1.0 - m_tileSize, ghost->getY());
+        }
     }
-    for (auto& apple : m_apples) {
-        apple->accept(entityVisitor);
+
+    void World::handleCollisions(float dt) {
+        if (!m_pacman)
+            return;
+
+        // Visitor Pattern:
+        // We maken een bezoeker aan die weet wie de 'agressor' is (Pac-Man).
+        // Deze bezoeker gaat langs alle objecten.
+        CollisionVisitor entityVisitor(m_pacman, *this);
+
+        // Check botsingen met munten
+        for (auto& coin : m_coins) {
+            coin->update(dt); // Animatie update van de munt
+            coin->accept(entityVisitor); // De munt accepteert de bezoeker -> triggers logic
+        }
+
+        // Check botsingen met spoken
+        for (auto& ghost : m_ghosts) {
+            ghost->accept(entityVisitor);
+        }
+
+        // Check botsingen met fruit (appels)
+        for (auto& apple : m_apples) {
+            apple->accept(entityVisitor);
+        }
     }
-}
 
 void World::respawnDeadGhosts() {
     struct GhostSpawnData {

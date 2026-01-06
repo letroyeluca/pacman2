@@ -11,7 +11,7 @@ public:
     ~Game() = default;
 
     // functie die alles in gang zet
-    void run(int width, int height);
+    void run();
 };
 
 #endif // PACMAN_GAME_H

@@ -17,35 +17,29 @@ GhostView::GhostView(std::shared_ptr<logic::GhostModel> model, Camera& camera)
     // 2. Set Texture (Only once, from Manager)
     m_sprite.setTexture(assets.getTexture());
 
-    // 3. Determine Sprite Coordinates based on Ghost Type
-    // Assuming standard Pacman spritesheet layout.
-    // You might need to adjust these 'y' or 'x' values to match your specific png image.
-    int startX = 0; // Column index
 
-    char type = model->getType(); // Make sure GhostModel has this getter!
+    int startX = 0;
+
+    char type = model->getType();
     std::cout << type << std::endl;
     switch (type) {
-    case 'R': // Red (Blinky)
+    case 'R':
         startX = 0;
         break;
-    case 'S':       // Pink (Pinky)
-        startX = 1; // Example: 2 columns to the right
+    case 'S':
+        startX = 1;
         break;
-    case 'B': // Blue (Inky)
+    case 'B':
         startX = 2;
         break;
-    case 'O': // Orange (Clyde)
+    case 'O':
         startX = 3;
         break;
     default:
-        startX = 0; // Default to Red
+        startX = 0;
         break;
     }
 
-    // 4. Load Frames
-    // We pass startX and startY.
-    // The 4 directions usually follow a specific pattern in the sheet relative to the start position.
-    // Adjust the "offset" (e.g., +0, +2, +4, +6) based on your specific PNG layout.
     m_animRightFrames = assets.getAnimationFrames(startX, 0, 2);   // Row 0
     m_animDownFrames = assets.getAnimationFrames(startX, 2, 2);    // Row 2
     m_animLeftFrames = assets.getAnimationFrames(startX, 4, 2);    // Row 4
@@ -87,7 +81,6 @@ GhostView::GhostView(std::shared_ptr<logic::GhostModel> model, Camera& camera)
 }
 
 void GhostView::onNotify(const logic::Subject& subject, logic::Event event) {
-    // Determine which animation list to use based on event
     switch (event) {
     case logic::Event::GhostVulnerable:
         m_scared = 1;

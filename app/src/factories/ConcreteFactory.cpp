@@ -21,7 +21,7 @@ ConcreteFactory::ConcreteFactory(Camera& camera) : m_camera(camera) {
     }
 }
 
-std::shared_ptr<logic::PacManModel> ConcreteFactory::createPacMan(double x, double y, double width, double height) {
+std::shared_ptr<logic::PacManModel> ConcreteFactory::createPacMan(const double x,const double y,const double width,const double height) {
     // maak de model en view van pacman aan
     auto model = std::make_shared<logic::PacManModel>(x, y, width, height);
     auto view = std::make_shared<PacManView>(model, m_camera);
@@ -45,8 +45,7 @@ std::shared_ptr<logic::PacManModel> ConcreteFactory::createPacMan(double x, doub
     return model;
 }
 
-std::shared_ptr<logic::GhostModel> ConcreteFactory::createGhost(double x, double y, double width, double height,
-                                                                char type) {
+std::shared_ptr<logic::GhostModel> ConcreteFactory::createGhost(const double x, const double y, const double width,const double height,const char type) {
     // maak de model en view aan
     auto model = std::make_shared<logic::GhostModel>(x, y, width, height, type);
     auto view = std::make_shared<GhostView>(model, m_camera);
@@ -61,8 +60,7 @@ std::shared_ptr<logic::GhostModel> ConcreteFactory::createGhost(double x, double
     return model;
 }
 
-std::shared_ptr<logic::CoinModel> ConcreteFactory::createCoin(double x, double y, double width, double height) {
-    // maak de model en view ineens
+std::shared_ptr<logic::CoinModel> ConcreteFactory::createCoin(const double x, const double y, const double width, const double height) {
     auto model = std::make_shared<logic::CoinModel>(x, y, width, height);
     auto view = std::make_shared<CoinView>(model, m_camera, m_sharedTexture);
 
@@ -76,7 +74,7 @@ std::shared_ptr<logic::CoinModel> ConcreteFactory::createCoin(double x, double y
     return model;
 }
 
-std::shared_ptr<logic::AppleModel> ConcreteFactory::createApple(double x, double y, double width, double height) {
+std::shared_ptr<logic::AppleModel> ConcreteFactory::createApple(const double x,const  double y,const  double width, const double height) {
     // maak de model en de view aan van deze entity
     auto model = std::make_shared<logic::AppleModel>(x, y, width, height);
     auto view = std::make_shared<AppleView>(model, m_camera, m_sharedTexture);
@@ -91,7 +89,7 @@ std::shared_ptr<logic::AppleModel> ConcreteFactory::createApple(double x, double
     return model;
 }
 
-std::shared_ptr<logic::WallModel> ConcreteFactory::createWall(double x, double y, double width, double height) {
+std::shared_ptr<logic::WallModel> ConcreteFactory::createWall(const double x, const double y, const double width,const  double height) {
     // maak de model en de view aan van deze entity
     auto model = std::make_shared<logic::WallModel>(x, y, width, height);
     auto view = std::make_shared<WallView>(model, m_camera, m_sharedTexture);
@@ -106,7 +104,7 @@ std::shared_ptr<logic::WallModel> ConcreteFactory::createWall(double x, double y
     return model;
 }
 
-std::shared_ptr<logic::ScoreModel> ConcreteFactory::createScore(double x, double y, double size) {
+std::shared_ptr<logic::ScoreModel> ConcreteFactory::createScore(const double x, const double y, const double size) {
     // maak de model en de view aan van deze entity
     auto model = std::make_shared<logic::ScoreModel>(x, y, size);
     auto view = std::make_shared<ScoreView>(model, m_camera);

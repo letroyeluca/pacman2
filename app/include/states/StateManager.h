@@ -21,8 +21,8 @@ public:
     // Delegeert de game-loop aanroepen naar de bovenste (actieve) state
     void handleInput(sf::Event& event);
     void update(float dt);
-    void render();
-    void handleResize(sf::Event::SizeEvent size);
+    void render() const;
+    void handleResize(const sf::Event::SizeEvent size);
 
     // Controleert of het spel nog draait (states heeft)
     bool isRunning() const { return !m_states.empty(); }

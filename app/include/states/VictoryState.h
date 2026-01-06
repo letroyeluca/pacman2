@@ -13,7 +13,7 @@ public:
 
     void handleInput(sf::Event& event) override; // Enter drukken om volgend level te starten
     void update(float dt) override;
-    void render() override;
+    void render() const override;
     void handleResize(sf::Event::SizeEvent size) override;
 
 private:

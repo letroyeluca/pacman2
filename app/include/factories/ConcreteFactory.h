@@ -7,7 +7,7 @@
 #include "logic/patterns/AbstractFactory.hpp"
 #include "views/EntityView.h"
 #include <memory>
-#include <vector>
+#include <vector>=
 
 class Camera;
 
@@ -16,12 +16,12 @@ public:
     ConcreteFactory(Camera& camera);
 
     // functies om entities aan te maken waaronder models en views
-    std::shared_ptr<logic::PacManModel> createPacMan(double x, double y, double w, double h) override;
-    std::shared_ptr<logic::GhostModel> createGhost(double x, double y, double w, double h, char type) override;
-    std::shared_ptr<logic::CoinModel> createCoin(double x, double y, double w, double h) override;
-    std::shared_ptr<logic::AppleModel> createApple(double x, double y, double w, double h) override;
-    std::shared_ptr<logic::WallModel> createWall(double x, double y, double w, double h) override;
-    std::shared_ptr<logic::ScoreModel> createScore(double x, double y, double size) override;
+    std::shared_ptr<logic::PacManModel> createPacMan(const double x, const double y, const double w, const double h) override;
+    std::shared_ptr<logic::GhostModel> createGhost(const double x, const double y, const double w, const double h, char type) override;
+    std::shared_ptr<logic::CoinModel> createCoin(const double x, const double y, const double w, const double h) override;
+    std::shared_ptr<logic::AppleModel> createApple(const double x, const double y, const double w, const double h) override;
+    std::shared_ptr<logic::WallModel> createWall(const double x, const double y, const double w, const double h) override;
+    std::shared_ptr<logic::ScoreModel> createScore(const double x, const double y, const double size) override;
 
     std::vector<std::shared_ptr<EntityView>> getCreatedViews() override { return std::move(m_views); }
 
