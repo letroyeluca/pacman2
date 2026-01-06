@@ -71,7 +71,6 @@ void PacManView::updateAnimation(float dt) {
         m_animationTimer -= m_animationSpeed;
     }
 
-
     if (!m_animFrames.empty()) {
         m_sprite.setTextureRect(m_animFrames[m_currentFrame]);
     }

@@ -17,7 +17,6 @@ GhostView::GhostView(std::shared_ptr<logic::GhostModel> model, Camera& camera)
     // 2. Set Texture (Only once, from Manager)
     m_sprite.setTexture(assets.getTexture());
 
-
     int startX = 0;
 
     char type = model->getType();
