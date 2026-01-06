@@ -65,7 +65,7 @@ void GameOverState::handleInput(sf::Event& event) {
 void GameOverState::update(float dt) {}
 
 // toon alles op het scherm
-void GameOverState::render() const{
+void GameOverState::render() const {
     m_window.clear(sf::Color::Black);
     m_window.draw(m_titleText);
     m_window.draw(m_scoreText);

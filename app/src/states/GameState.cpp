@@ -127,7 +127,7 @@ void GameState::update(float dt) {
 }
 
 // --- Render ---
-void GameState::render()const  {
+void GameState::render() const {
     m_window.clear(sf::Color::Black);
     for (const auto& view : m_views) {
         view->draw(m_window);
