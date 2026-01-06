@@ -7,9 +7,7 @@
 #include "states/StateManager.h"
 #include <iostream>
 
-VictoryState::VictoryState(StateManager& manager, sf::RenderWindow& window, int score, int lives, int nextLevelIndex)
-    : State(manager, window), m_score(score), m_lives(lives), m_nextLevelIndex(nextLevelIndex) {
-
+VictoryState::VictoryState(StateManager& manager, sf::RenderWindow& window, int score, int lives, int nextLevelIndex): State(manager, window), m_score(score), m_lives(lives), m_nextLevelIndex(nextLevelIndex) {
     if (!m_font.loadFromFile("assets/font.ttf")) {
         std::cerr << "Could not load font for VictoryState" << std::endl;
     }
@@ -38,13 +36,10 @@ void VictoryState::setupText() {
     float centerX = windowSize.x / 2.0f;
     float centerY = windowSize.y / 2.0f;
 
-    // --- 1. TITEL LOGICA ---
-
     // Reset eerst de schaal (belangrijk als het scherm wordt geresized)
     m_titleText.setScale(1.f, 1.f);
 
     // Zet een basisgrootte (mag best groot zijn, we schalen hem toch omlaag als het moet)
-    // Bijvoorbeeld: 10% van de schermhoogte
     m_titleText.setCharacterSize(static_cast<unsigned int>(windowSize.y * 0.1f));
 
     // Haal de afmetingen op
@@ -64,13 +59,13 @@ void VictoryState::setupText() {
 
     m_titleText.setPosition(centerX, windowSize.y / 3.0f);
 
-    // --- 2. SCORE (Bestaande code) ---
+    // --- 2. SCORE
     m_scoreText.setCharacterSize(windowSize.x / 30);
     sf::FloatRect scoreBounds = m_scoreText.getLocalBounds();
     m_scoreText.setOrigin(scoreBounds.width / 2.0f, scoreBounds.height / 2.0f);
     m_scoreText.setPosition(centerX, centerY);
 
-    // --- 3. INSTRUCTIE (Bestaande code) ---
+    // --- 3. INSTRUCTIE
     m_instructionText.setCharacterSize(windowSize.x / 50);
     sf::FloatRect instBounds = m_instructionText.getLocalBounds();
     m_instructionText.setOrigin(instBounds.width / 2.0f, instBounds.height / 2.0f);
@@ -99,7 +94,7 @@ void VictoryState::handleInput(sf::Event& event) {
 }
 
 void VictoryState::update(float dt) {
-    // Eventuele animaties
+
 }
 
 void VictoryState::render() {

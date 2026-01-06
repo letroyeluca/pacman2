@@ -11,8 +11,6 @@ PausedState::PausedState(StateManager& manager, sf::RenderWindow& window) : Stat
     }
     m_title.setFont(m_font);
     m_title.setString("PAUSED");
-
-    // Update de instructie tekst zodat de speler het weet
     m_instruction.setFont(m_font);
     m_instruction.setString("Press ESC to Quit\nPress ANY KEY to Resume"); // <--- AANGEPAST
 
@@ -20,12 +18,13 @@ PausedState::PausedState(StateManager& manager, sf::RenderWindow& window) : Stat
 }
 
 void PausedState::setupText() {
-    // ... (deze functie blijft hetzelfde als je had) ...
+    //alles voor de UI voorstelling van de titel
     m_title.setCharacterSize(m_window.getSize().x / 15);
     sf::FloatRect titleBounds = m_title.getLocalBounds();
     m_title.setOrigin(titleBounds.left + titleBounds.width / 2.0f, titleBounds.top + titleBounds.height / 2.0f);
     m_title.setPosition(m_window.getSize().x / 2.0f, m_window.getSize().y / 3.0f);
 
+    //alles voor de UI voorstelling van de instructies
     m_instruction.setCharacterSize(m_window.getSize().x / 40);
     sf::FloatRect instBounds = m_instruction.getLocalBounds();
     m_instruction.setOrigin(instBounds.left + instBounds.width / 2.0f, instBounds.top + instBounds.height / 2.0f);
@@ -33,6 +32,7 @@ void PausedState::setupText() {
     m_instruction.setPosition(m_window.getSize().x / 2.0f, (m_window.getSize().y / 2.0f) + y_offset);
 }
 
+//teken alle UI elementen
 void PausedState::render() {
     m_window.draw(m_title);
     m_window.draw(m_instruction);
@@ -40,12 +40,13 @@ void PausedState::render() {
 
 void PausedState::update(float dt) {}
 
+//alles opnieuw berekenen voor de juiste posities
 void PausedState::handleResize(sf::Event::SizeEvent size) {
     m_window.setView(sf::View(sf::FloatRect(0.f, 0.f, size.width, size.height)));
-    setupText(); // Tekst opnieuw centreren na resize
+    setupText();
 }
 
-// --- HIER ZIT DE BELANGRIJKE WIJZIGING ---
+//alle input handelen
 void PausedState::handleInput(sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
         if (event.key.code == sf::Keyboard::Escape) {
@@ -54,8 +55,7 @@ void PausedState::handleInput(sf::Event& event) {
 
         } else {
             std::cout << "Resuming game..." << std::endl;
-            m_manager.popState(); // Verwijder alleen PausedState -> Je landt terug in
-                                  // GameState
+            m_manager.popState();
         }
     }
 }

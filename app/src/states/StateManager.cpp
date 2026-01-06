@@ -4,21 +4,21 @@
 
 #include "states/StateManager.h"
 
+//een staat bovenop de stack steken
 void StateManager::pushState(std::unique_ptr<State> newState) {
-    // Sla hem op, voeg later toe (Safe Push)
     m_pendingState = std::move(newState);
 }
 
+//de bovenste staat van de stack pushen
 void StateManager::popState() {
-    // Markeer voor verwijdering (Safe Pop)
     m_isRemoving = true;
 }
-
+//reset van de stack
 void StateManager::resetToMenu() {
-    // Markeer voor reset
     m_isResetting = true;
 }
 
+//het verwerken van elke verandering aan de stack
 void StateManager::processStateChanges() {
     // 1. Verwijderen (Pop)
     if (m_isRemoving && !m_states.empty()) {
@@ -53,11 +53,13 @@ void StateManager::processStateChanges() {
     }
 }
 
+//de input handle doorgeven naar de bovenste staat
 void StateManager::handleInput(sf::Event& event) {
     if (!m_states.empty()) {
         m_states.top()->handleInput(event);
     }
 }
+
 
 void StateManager::update(float dt) {
     // EERST de wijzigingen verwerken (voordat we updaten)
@@ -68,12 +70,14 @@ void StateManager::update(float dt) {
     }
 }
 
+//render doorgeven naar de bovenste stack
 void StateManager::render() {
     if (!m_states.empty()) {
         m_states.top()->render();
     }
 }
 
+//resize doorgeven naar de bovenste stack
 void StateManager::handleResize(sf::Event::SizeEvent size) {
     if (!m_states.empty()) {
         m_states.top()->handleResize(size);

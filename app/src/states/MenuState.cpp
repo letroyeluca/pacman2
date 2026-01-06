@@ -26,7 +26,7 @@ MenuState::MenuState(StateManager& manager, sf::RenderWindow& window) : State(ma
     // 3. Leaderboard Setup
     m_leaderboardTitle.setFont(m_font);
     m_leaderboardTitle.setString("TOP 5 SCORES");
-    m_leaderboardTitle.setFillColor(sf::Color::Cyan); // Blauw/Cyaan zoals arcade
+    m_leaderboardTitle.setFillColor(sf::Color::Cyan);
     m_leaderboardTitle.setCharacterSize(35);
 
     // 4. Data laden
@@ -36,15 +36,16 @@ MenuState::MenuState(StateManager& manager, sf::RenderWindow& window) : State(ma
     initLeaderboard();
 
     // Zet alles direct goed neer
-    sf::Event::SizeEvent size = {static_cast<unsigned int>(window.getSize().x),
-                                 static_cast<unsigned int>(window.getSize().y)};
+    sf::Event::SizeEvent size = {static_cast<unsigned int>(window.getSize().x),static_cast<unsigned int>(window.getSize().y)};
     handleResize(size);
 }
 
 void MenuState::resume() { initLeaderboard(); }
 
+
+//leaderboard klaarzetten en opnieuw ordenen
 void MenuState::initLeaderboard() {
-    // BELANGRIJK: Maak de oude lijst leeg, anders krijg je dubbele scores
+    //Maak de oude lijst leeg zodat er geen dubbele scores ontstaan
     m_scoreTexts.clear();
 
     // Data opnieuw laden
@@ -61,8 +62,7 @@ void MenuState::initLeaderboard() {
     }
 
     // Forceer een resize update om de nieuwe teksten direct goed te positioneren
-    sf::Event::SizeEvent size = {static_cast<unsigned int>(m_window.getSize().x),
-                                 static_cast<unsigned int>(m_window.getSize().y)};
+    sf::Event::SizeEvent size = {static_cast<unsigned int>(m_window.getSize().x),static_cast<unsigned int>(m_window.getSize().y)};
     handleResize(size);
 }
 
@@ -108,6 +108,7 @@ void MenuState::handleInput(sf::Event& event) {
     }
 }
 
+//flikkerende text
 void MenuState::update(float dt) {
     static float timer = 0;
     timer += dt;
@@ -120,6 +121,7 @@ void MenuState::update(float dt) {
     }
 }
 
+//render alles van de menu op het scherm
 void MenuState::render() {
     // Renderen in normale UI volgorde
     m_window.draw(m_titleText);
