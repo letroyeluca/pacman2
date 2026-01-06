@@ -19,7 +19,7 @@ public:
 
     void handleInput(sf::Event& event) override; // ESC om te hervatten
     void update(float dt) override;              // Doet meestal niets (tijd staat stil)
-    void render() const override;                  // Tekent "PAUSED" over het huidige beeld heen
+    void render() const override;                // Tekent "PAUSED" over het huidige beeld heen
     void handleResize(sf::Event::SizeEvent size) override;
     void setupText();
 };

@@ -4,7 +4,7 @@
 #include "AssetManager.h"
 namespace Asset {
 
-    //singleton enforce
+// singleton enforce
 AssetManager& AssetManager::getInstance() {
     static AssetManager instance;
     return instance;
@@ -17,17 +17,17 @@ AssetManager::AssetManager() {
     m_texture.setSmooth(true);
 }
 
-//single sprite return
+// single sprite return
 sf::Sprite AssetManager::getSpriteAtIndex(int x, int y, int size) {
     sf::Sprite sprite(m_texture);
     sprite.setTextureRect(sf::IntRect({(x * 50) + (-6), (y * 50) + (-4)}, {size, size}));
     return sprite;
 }
 
-//de volledige texture returne
+// de volledige texture returne
 const sf::Texture& AssetManager::getTexture() const { return m_texture; }
 
-//meerdere intrects returne voor makkelijke integratie met animation sprites
+// meerdere intrects returne voor makkelijke integratie met animation sprites
 std::vector<sf::IntRect> AssetManager::getAnimationFrames(int x, int y, int count, int size) {
     std::vector<sf::IntRect> frames;
     frames.reserve(count);

@@ -20,7 +20,7 @@ void Game::run() {
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
 
-    //maak de statemanager en geef het direct de startmenu
+    // maak de statemanager en geef het direct de startmenu
     StateManager stateManager;
     stateManager.pushState(std::make_unique<MenuState>(stateManager, window));
 
