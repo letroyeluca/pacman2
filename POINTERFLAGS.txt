@@ -1,9 +1,0 @@
-AppleView.cpp - 18
-CoinView.cpp - 27
-GhostView.cpp - 98
-WallView.cpp - 29
-AppleModel - 14
-CoinModel - 15
-GhostModel - 111, 119, 136,
-PacManModel - 60
-WallModel - 16
