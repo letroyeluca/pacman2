@@ -13,6 +13,12 @@ De logic kan ook apart worden compilerd en dit kan via github action bewezen wor
 - G++: 13.2.0
 - Clang: 18.0.0
 
+## Disclaimer
+bj het runnen van valgrind komen er driver errors op. ik heb deze onderdrukt met een .supp file. deze onderdrukt ALLEEN de driver leaks en niet van het project. je kan dit runnen met:
+```bash
+valgrind --leak-check=full --suppressions=ignore_external.supp ./pacman_game
+```
+
 ---
 
 ## Handleiding
