@@ -92,7 +92,7 @@ void VictoryState::handleInput(sf::Event& event) {
 
 void VictoryState::update(float dt) {}
 
-void VictoryState::render() const{
+void VictoryState::render() const {
     // We tekenen over de vorige state heen (transparantie zou kunnen),
     // maar hier clearen we voor een schoon scherm.
     m_window.clear(sf::Color::Black); // Donkergrijs
